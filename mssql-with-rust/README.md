@@ -9,11 +9,10 @@ Pada dokumentasi kali ini, kita akan mempelajari bagaimana menggunakan Rust untu
 
 Kita akan membuat project baru menggunakan `cargo new rust_sqlserver` untuk memulai. Lalu kita akan menambahkan `Cargo.toml` dan `main.rs` seperti berikut:
 
-<pre>
-<code class="hljs language-bash">cargo new rust_sqlserver</code>
-<code class="hljs language-bash">cd rust_sqlserver</code>
-</pre>
-
+```bash
+$ cargo new rust_sqlserver
+$ cd rust_sqlserver
+```
 Kemudian buka dengan menggunakan code editor, disini saya menggunakan Visual Studio Code. Secara default, kita akan dibuatkan project baru seperti berikut:
 
 ```bash
