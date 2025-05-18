@@ -9,10 +9,11 @@ Pada dokumentasi kali ini, kita akan mempelajari bagaimana menggunakan Rust untu
 
 Kita akan membuat project baru menggunakan `cargo new rust_sqlserver` untuk memulai. Lalu kita akan menambahkan `Cargo.toml` dan `main.rs` seperti berikut:
 
-```bash
-cargo new rust_sqlserver
-cd rust_sqlserver
-```
+<pre>
+<code class="language-bash">cargo new rust_sqlserver</code>
+<code class="language-bash">cd rust_sqlserver</code>
+</pre>
+
 Kemudian buka dengan menggunakan code editor, disini saya menggunakan Visual Studio Code. Secara default, kita akan dibuatkan project baru seperti berikut:
 
 ```bash
@@ -24,7 +25,7 @@ Kemudian buka dengan menggunakan code editor, disini saya menggunakan Visual Stu
 └── README.md
 ```
 
-#### Isi filw `main.rs`
+#### Isi file `main.rs`
 ```rust
 fn main() {
     println!("Hello, world!");
