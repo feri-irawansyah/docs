@@ -515,7 +515,7 @@ GO
 SELECT * FROM sys.tables WHERE name = 'OrderanLaundry'
 ```
 Output:
-![Logo](./assets/orderanlaundry.png)
+![Logo](https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/mssql-with-rust/assets/orderanlaundry.png)
 Nah sekarang gue punya table OrderanLaundry.
 
-Sebagai programmer **`CRUD`** sejati😁, yakali ngga bikin (`*C*reate, *R*ead, *U*pdate dan *D*elete`)  
+Sebagai programmer **`CRUD`** sejati😁, yakali ngga bikin (`Create, Read, Update dan Delete`)  
