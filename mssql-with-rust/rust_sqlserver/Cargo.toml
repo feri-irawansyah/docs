@@ -4,6 +4,6 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-tiberius = "0.12.3"
+tiberius = { version="0.12.3" ,features = ["sql-browser-tokio"]}
 tokio = { version = "1.45.0",features = ["net", "macros", "rt-multi-thread"] }
 tokio-util = {version = "0.7.15",features = ["compat"]}

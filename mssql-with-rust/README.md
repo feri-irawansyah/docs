@@ -1,11 +1,11 @@
-Pada dokumentasi kali ini, kita akan mempelajari bagaimana menggunakan Rust untuk mengakses database Microsoft SQL Server. Berikut adalah tools yang digunakan:
+Pada catatan kali ini, kita akan mempelajari bagaimana menggunakan Rust untuk mengakses database Microsoft SQL Server. Berikut adalah tools yang digunakan:
 
 - [Rust](https://www.rust-lang.org/)
 - [Microsoft SQL Server](https://www.microsoft.com/en-us/sql-server)
 - [Tokio](https://tokio.rs/)
 - [Tiberius](https://docs.rs/tiberius/latest/tiberius/)
 
-# Create a new project
+## Create a new project
 
 Kita akan membuat project baru menggunakan `cargo new rust_sqlserver` untuk memulai. Lalu kita akan menambahkan `Cargo.toml` dan `main.rs` seperti berikut:
 
@@ -39,7 +39,7 @@ edition = "2021"
 
 [dependencies]
 ```
-# Preparation
+## Preparation
 Sebelum menggunakan Rust untuk mengakses database Microsoft SQL Server, kita perlu melakukan beberapa persiapan terlebih dahulu:
 
 - Menginstal Tokio
@@ -61,7 +61,7 @@ mv main.rs lib.rs
 ```
 Atau bisa langsung rename file `main.rs` menjadi `lib.rs` pada code editor.
 
-# Run the program
+## Run the program
 
 Untuk menjalankan program, kita bisa menggunakan perintah `cargo test --exact nama_function --show-output` untuk menampilkan output dengan unit test. 
 
@@ -87,7 +87,7 @@ Di local komputer saya SQL Server berjalan di host `127.0.0.1` dan port `1434`.
 ## Let's Code it!
 Setelah persiapan selesai, kita bisa menulis kode untuk terkoneksi ke database SQL Server seperti berikut:
 
-### Connect to SQL Server with Windows Authentication `host` and `post`
+### Connect ke SQL Server dengan Windows Authentication `host` and `post`
 ```rust
 pub async fn connect_with_host_port() -> Result<(), Box<dyn std::error::Error>> {
     let mut config = Config::new();
@@ -145,3 +145,67 @@ successes:
 
 test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
 ```
+Hasil output `test result: ok. 1 passed;` artinya kita berhasil terkoneksi ke database SQL Server menggunakan Windows Authentication.
+
+---
+
+## Agenda Pada Catatan Ini
+> Connect SQL Server menggunakan Username dan Password.
+
+> Connect SQL Server menggunakan Connection String.
+
+> CRUD pada table.
+
+> CRUD dengan stored procedure.
+
+> CRUD dengan function.
+
+### Connect ke SQL Server dengan SQL Server Authentication `host` and `post`
+Sebelumnya kita telah terkoneksi ke database SQL Server menggunakan Windows Authentication. Sekarang kita akan mempelajari bagaimana menggunakan Username dan Password Authentication.
+
+Tambahkan function connect_with_host_port_username_password di file `lib.rs`.
+
+```rust
+// Connect with SQL Server Authentication
+pub async fn connect_with_host_port_username_password() -> Result<(), Box<dyn std::error::Error>> {
+    let mut config = Config::new();
+
+    // Use SQL Server Authentication (user name and password)
+    config.authentication(AuthMethod::sql_server("sa", "Snakesystem"));
+
+    config.host("127.0.0.1");
+    config.port(1434);
+    config.trust_cert();
+
+    let tcp = TcpStream::connect(config.get_addr()).await?;
+    let client = Client::connect(config, tcp.compat_write()).await?;
+    println!("Connected to SQL Server");
+    let _ = client.close().await?;
+
+    Ok(())
+}
+```
+
+Kemudian buat test function di bawahnya seperti ini di file `lib.rs`:
+
+```rust
+#[tokio::test]
+async fn connect_to_sql_server_using_host_port_username_password() {
+    let result = connect_with_host_port_username_password().await;
+    assert_eq!(result.is_ok(), true);
+}
+```
+Dan jalankan program dengan perintah `cargo t connect_to_sql_server_using_host_port_username_password`
+
+```bash
+$ cargo t connect_to_sql_server_using_host_port_username_password
+...
+running 1 test
+test connect_to_sql_server_using_host_port_username_password ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1 filtered out; finished in 0.04s
+```
+
+Hasil output `test result: ok. 1 passed;` artinya kita berhasil terkoneksi ke database SQL Server menggunakan Username dan Password.
+
+---
