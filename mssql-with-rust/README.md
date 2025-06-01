@@ -150,15 +150,15 @@ Hasil output `test result: ok. 1 passed;` artinya kita berhasil terkoneksi ke da
 ---
 
 ## Agenda Pada Catatan Ini
-> Connect SQL Server menggunakan Username dan Password.
+> - Connect SQL Server menggunakan Username dan Password.
 
-> Connect SQL Server menggunakan Connection String.
+> - Connect SQL Server menggunakan Connection String.
 
-> CRUD pada table.
+> - CRUD pada table.
 
-> CRUD dengan stored procedure.
+> - CRUD dengan stored procedure.
 
-> CRUD dengan function.
+> - CRUD dengan function.
 
 ### Connect ke SQL Server dengan SQL Server Authentication `host` and `post`
 Sebelumnya kita telah terkoneksi ke database SQL Server menggunakan Windows Authentication. Sekarang kita akan mempelajari bagaimana menggunakan Username dan Password Authentication.
