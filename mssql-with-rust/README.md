@@ -79,10 +79,7 @@ Jika menggunakan Command Prompt:
 ```bash
 sqlcmd -S localhost\SQLEXPRESS -E -Q "EXEC xp_readerrorlog 0, 1, N'Server is listening on';"
 ```
-| LogDate | ProcessInfo | Text |
-| -------- | -------- | -------- |
-| 2025-05-18 08:14:45.670   | Server   | Server is listening on [ ::1 <ipv6> 1434] accept sockets 1.   |
-| 2025-05-18 08:14:45.680   | Server   | Server is listening on [ 127.0.0.1 <ipv4> 1434] accept sockets 1. |
+![Server List](https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/mssql-with-rust/assets/server-list.png)
 
 Di local komputer saya SQL Server berjalan di host `127.0.0.1` dan port `1434`.
 
