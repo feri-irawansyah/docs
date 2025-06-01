@@ -341,6 +341,7 @@ jdbc:sqlserver://127.0.0.1:1434;user=sa;password=Snakesystem;trustServerCertific
 ```
 
 Oke untuk connection string kurang lebih kaya gitu bang. Untuk lebih lengkapnya semua format connection stringnya di SQL Server ada di [link ini](https://docs.microsoft.com/en-us/sql/connect/jdbc/building-the-connection-string?view=sql-server-ver15). Jadi bisa lu custom - custom bang connection stringnya.
+
 ---
 ## Refactoring
 Lanjut...., eh sek... sebelum itu kita refactoring dulu projectnya biar lebih enak dilihat. Buat file baru di folder `src` namanya `connection.rs` kaya gini:
