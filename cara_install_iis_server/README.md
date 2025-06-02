@@ -35,14 +35,30 @@ Sebelum lu install iis ada beberapa kebutuhan terlebih dahulu bang, yaitu:
 Tadi harusnya lu udah baca pre requisite nya bang. Jadi sekarang kita install IISnya bang.
 ### 1. Remote dulu pake RDP
 ![Server List](https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/cara_install_iis_server/assets/rdp.png)
+
 Kalo udh bisa terhubung ke server langkah selanjutnya ke server manager bang.
+
+---
 ### 2. Ke Menu Windows
-![Server List](https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/cara_install_iis_server/assets/window.png)
+![Windows Menu](https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/cara_install_iis_server/assets/window.png)
+
 Menunya ada di pojok kiri bawah bang, kalo ngga ada tekan tombol windows di keyboard aja.
+
+---
 ### 3. Pilih Server Manager
-![Server List](https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/cara_install_iis_server/assets/server-manager.png)
+![Server Manager](https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/cara_install_iis_server/assets/server-manager.png)
+
 Kalo udh kebuka nanti `Add Role and Features` bang. Kurang lebibh kaya gini tampilannya:
-![Server List](https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/cara_install_iis_server/assets/role-features.png)
+
+![Role Features](https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/cara_install_iis_server/assets/role-features.png)
+
+---
+
 Setelah di klik biasanya muncul Window baru bang kaya gini, nanti tinggal `Next` aja:
-![Server List](https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/cara_install_iis_server/assets/prepare.png)
+
+![Preparation](https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/cara_install_iis_server/assets/prepare.png)
+
+---
+
 Setelah next lalu pilih yang `Role-based or feature-based installation` bang, dan selanjutnya `Next` aja:
+![Role Based and Feature](https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/cara_install_iis_server/assets/role-based.png)
