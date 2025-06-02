@@ -62,3 +62,63 @@ Setelah di klik biasanya muncul Window baru bang kaya gini, nanti tinggal `Next`
 
 Setelah next lalu pilih yang `Role-based or feature-based installation` bang, dan selanjutnya `Next` aja:
 ![Role Based and Feature](https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/cara_install_iis_server/assets/role-based.png)
+
+---
+Kemudian pilih dimana ingin menginstall IISnya, kaya gini:
+
+![IIS](https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/cara_install_iis_server/assets/pilih-server.png)
+
+Karena gue mau menginstall di Server ini jadi gue pilih yang tersedia. Kemudian tekan `Next` aja.
+
+---
+
+Setelah itu akan kita pilih apa aja yang mau di tambahkan di Server Rolesnya, kaya gini:
+
+![Role](https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/cara_install_iis_server/assets/server-roles.png)
+
+Kalo misalnya ada pop up seperti ini, tekan `Add Features` dan `Next` aja:
+
+![Next](https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/cara_install_iis_server/assets/misal.png)
+
+---
+
+Next kita akan memilih features yang mau di install, kaya gini:
+
+![Features](https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/cara_install_iis_server/assets/features1.png)
+![Features](https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/cara_install_iis_server/assets/features2.png)
+
+---
+
+Setelah itu tekan `Next` aja, kemudian tekan `Install` aja, dan selesai! IIS sudah terinstall di servermu.
+
+![Done](https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/cara_install_iis_server/assets/prepare-install.png)
+
+![Done](https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/cara_install_iis_server/assets/done.png)
+
+---
+
+### 4. Cek IISnya
+
+Kalo udh terinstall, kita check dulu di server manager, untuk mengecek hasil installasi Web Server (IIS) bisa dilihat pada menu `Server Manager > Tools > Internet Information Services (IIS) Manager`. kaya gini:
+
+![Cek IIS](https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/cara_install_iis_server/assets/cek-iis.png)
+
+### 5. Buka IIS Manager
+
+Setelah iis terbuka tampilannya seperti ini:
+
+![IIS Manager](https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/cara_install_iis_server/assets/iis-manager.png)
+
+Halamannya kurang lebih seperti ini bang, tapi awal install biasanya ada Default Application Pool dan Default Web Site.
+
+![IIS Manager](https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/cara_install_iis_server/assets/image.png)
+
+### 6. Buka Default Web Site Di Browser
+
+Kalo udh ada Default Web Site, kita buka di browser aja, kaya gini:
+
+![Default Web Site](https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/cara_install_iis_server/assets/default-web-site.png)
+
+Mungkin segitu aja catatan gue bang. Semoga bermanfaat.
+
+Terimakasih...
