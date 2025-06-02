@@ -117,7 +117,7 @@ Halamannya kurang lebih seperti ini bang, tapi awal install biasanya ada Default
 
 Kalo udh ada Default Web Site, kita buka di browser aja, kaya gini:
 
-![Default Web Site](https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/cara_install_iis_server/assets/default-web-site.png)
+![Default Web Site](https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/cara_install_iis_server/assets/localhost.png)
 
 Mungkin segitu aja catatan gue bang. Semoga bermanfaat.
 
