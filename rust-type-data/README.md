@@ -224,3 +224,33 @@ println!("{} {} {} {} {}", x[1][0], x[1][1], x[1][2], x[1][3], x[1][4]);
 ```
 
 ### Reference Type
+Data dari reference type akan disimpan di Heap, type data diheap ini sangat berbeda perilakunya dengan type data di stack. Sebelumnya di stack ketika kita membuat variable yang di isi kemudian kita gunakan, datanya bisa digunakan di semua tempat, sedangkan di heap ketika kita menggunakan data maka data akan langsung hilang. Contoh:
+```rust
+let a = "hello world";
+let b = a; // data punya a akan di ambil oleh b
+println!("{}", a); ❌// ini akan error, karena a sudah hilang
+println!("{}", b);
+```
+
+#### String dan &str
+
+`String` dan `&str` adalah type data text di rust. `String` adalah type data yang terdiri dari beberapa karakter.
+
+##### &str
+
+Ukuran &str ini fixed, artinya ukurannya tidak bisa diubah. Jadi ketika kita mengubah isi dari variable yang typenya &str, maka yang terjadi adalah mengganti isinya, bukan merubah data aslinya. Jadi, misalnya kita menggunakan method yang ada di &str, maka akan membuat nilai baru. (namun perlu diingat, nilai baru ini typenya `String`, bukan `&str`). Contoh:
+```rust
+let a: &str = "hello world";
+println!("{}", a);
+let b: String = a.trim();
+println!("{}", b);
+```
+
+##### String
+String di Rust merupakan tipe data text UTF-8, dan bisa berkembang ukurannya. Namun Ketika kita buat dalam bentuk immutable variable, maka String tidak bisa berkembang, namun tetap disimpan di Heap. Contoh:
+```rust
+let a: String = "hello world".to_string();
+println!("{}", a);
+let b: String = a.trim().to_string();
+println!("{}", b);
+```
