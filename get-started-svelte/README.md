@@ -1,0 +1,1 @@
+Framework itu ada untuk mempermudah kita dalam proses pengembangan aplikasi, jangan sampai dengan menggunakan framework malah membuat kita kesulitan.

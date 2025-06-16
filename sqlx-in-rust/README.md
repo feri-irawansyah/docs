@@ -1,0 +1,1 @@
+Membuat aplikasi backend tentunya kita memerlukan suatu database, rasanya kurang sedap kalo bikin CRUD tanpa database ygy. Untuk itu kita akan mempelajari bagaimana menggunakan SQLX untuk mengakses database PostgreSQL pada Rust.
