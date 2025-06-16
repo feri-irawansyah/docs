@@ -131,4 +131,4 @@ export const authDocs = {
 ```
 
 Setelah itu jalankan kembali hono app, namun secara default ketika menjalankan `bun run dev`, maka bun akan melakukan hot reload, jadi kita hanya perlu merefresh browser. Kaya gini:
-![Hono Swagger Reload](https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/swagger-hono-api/assets/hono-swagger-reload.png)
+<img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/swagger-hono-api/assets/hono-swagger-reload.png" alt="Hono Swagger" />

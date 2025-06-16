@@ -79,7 +79,8 @@ Jika menggunakan Command Prompt:
 ```bash
 sqlcmd -S localhost\SQLEXPRESS -E -Q "EXEC xp_readerrorlog 0, 1, N'Server is listening on';"
 ```
-![Server List](https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/mssql-with-rust/assets/server-list.png)
+
+<img src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/mssql-with-rust/assets/server-list.png" alt="image" class="img-fluid" />
 
 Di local komputer saya SQL Server berjalan di host `127.0.0.1` dan port `1434`.
 
@@ -513,7 +514,7 @@ GO
 SELECT * FROM sys.tables WHERE name = 'OrderanLaundry'
 ```
 Output:
-![Logo](https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/mssql-with-rust/assets/orderanlaundry.png)
+<img src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/mssql-with-rust/assets/orderanlaundry.png" alt="image" class="img-fluid" />
 Nah sekarang gue punya table OrderanLaundry.
 
 Sebagai programmer **`CRUD`** sejati😁, yakali ngga bikin (`Create, Read, Update dan Delete`)  
