@@ -1,1 +1,81 @@
-Dokumentasi API merupakan hal yang sangat penting bagi seorang backend, bukan hanya backend harusnya frontend juga mampu menggunakannya.
+Dokumentasi API merupakan hal yang sangat penting bagi seorang backend, bukan hanya backend harusnya frontend juga mampu menggunakannya. Pada catatan gue kali ini gue mau membuat dokumentasi API menggunakan [Swagger](https://swagger.io/) pada [Hono](https://hono.dev/).
+
+Agenda pada catatan ini:
+- Membuat Aplikasi Hono
+- Install Swagger
+- Membuat Dokumentasi API
+
+## Membuat Aplikasi Hono
+Pertama-tama, kita harus membuat aplikasi Hono. Sebelum membuatnya coba cek dulu apakan udah install [Bun](https://bun.sh/). Jika belum, install dulu dengan cara seperti berikut:
+
+Windows
+```bash
+powershell -c "irm bun.sh/install.ps1 | iex"
+```
+Atau kalo di komputer lu udah ada npm atau node, install dulu dengan cara seperti berikut:
+npm
+```bash
+npm install -g bun
+```
+
+Kalo udh di install check dulu pake terminal atau cmd, kaya gini:
+```bash
+bun --version
+1.2.15 // ini versi bun yang gue install
+```
+
+Kalo udh di install, kita buat aplikasi Hono dengan cara seperti berikut:
+```bash
+bun create hono@latest swagger-hono-api
+```
+
+Nanti ada beberapa pilihan seperti template pake bun, package manager pilih bun, dan langsung install dependencies.
+
+Setelah terbuat nanti harusnya dibuatkan otomatis struktur folder, kaya gini:
+```bash
+swagger-hono-api
+├── src
+│   └── index.ts // entry point
+├── bun.lock
+├── README.md
+├── .gitignore
+├── package.json
+└── tsconfig.json
+```
+
+## Install Swagger
+Kalo udah terbuat aplikasi Hono, kita install swagger dengan cara seperti berikut:
+```bash
+bun add @hono/swagger-ui
+```
+
+Setupnya seperti berikut:
+```js
+import { swaggerUI } from '@hono/swagger-ui'
+import { Hono } from 'hono'
+
+const app = new Hono()
+
+app.get('/docs', swaggerUI({ url: '/openapi' })) // memerlikan url openapi
+
+app.get('/openapi', (c) => {
+    return c.json({
+        openapi: '3.0.0',
+        info: {
+            title: 'Hono API Documentation',
+            version: '1.0.0',
+        },
+    })
+})
+```
+
+Setup dasarnya kira kira seperti itu bang. Setelah selsai coba jalankan hono app nya, kaya gini:
+```bash
+bun run dev
+
+Started http server on http://localhost:3000
+```
+
+Kemudian buka url http://localhost:3000/docs di browser.
+
+![Hono Swagger](https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/swagger-hono-api/assets/hono-swagger.png)
