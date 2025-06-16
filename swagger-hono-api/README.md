@@ -80,7 +80,7 @@ Started http server on http://localhost:3000
 
 Kemudian buka url http://localhost:3000/docs di browser.
 
-![Hono Swagger](https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/swagger-hono-api/assets/hono-swagger.png)
+<img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/swagger-hono-api/assets/hono-swagger.png" alt="Hono Swagger" />
 
 <hr/>
 
