@@ -157,7 +157,7 @@ Kira kira seperti ini:
 
 ```js
 export const authDocs = {
-  '/login': {
+  '/api/auth/login': { // disini kita ubah /login menjadi /api/auth/login
     post: {
       tags: ['Authentication'],
       summary: 'Login User',
@@ -189,3 +189,57 @@ export const authDocs = {
 Setelah menambahkan coba refresh browser, kaya gini:
 
 <img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/swagger-hono-api/assets/json-request-body.png" alt="Hono Swagger" />
+
+### JSON Response Body
+Ada request, maka ada response. Untuk response, kita bisa menggunakan JSON response body. Kaya gini:
+```json
+{
+  "data": {
+    "message": "Login successful"
+  }
+}
+```
+Untuk membuat JSON response body pada swagger, kita bisa menggunakan `application/json` seperti berikut:
+```js
+export const authDocs = {
+  '/login': {
+    post: {
+      tags: ['Authentication'],
+      summary: 'Login User',
+      responses: { // tambahkan responses
+        // disini kita bisa menambahkan konfigurasi responses nya
+      }
+    },
+  },
+}
+```
+
+Kira kira seperti ini:
+
+```js
+export const authDocs = {
+  "/api/auth/login": {
+    post: {
+      tags: ["Authentication"],
+      summary: "Login User",
+      // requestBody: {
+        // required: true
+      // }
+      responses: { // tambahkan responses 
+        200: { // status code 200
+          description: "Login Success", // deskripsi
+          content: {
+            "application/json": { // content type json
+              example: { data: { message: "Login Successfully" } }, // contoh response
+            },
+          },
+        },
+      },
+    },
+  },
+};
+```
+
+Setelah menambahkan coba refresh browser, kaya gini:
+
+<img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/swagger-hono-api/assets/response-200.png" alt="Hono Swagger" />
