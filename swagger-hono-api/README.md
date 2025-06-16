@@ -85,6 +85,8 @@ Sebelum membuat dokumentasi API, kita buat code project kita dulu biar lebih rap
 ```bash
 swagger-hono-api
 ├── src
+│   ├── controllers // disini kita untuk taro controller
+│   │   └── auth-controller.ts // file controller untuk auth
 │   ├── docs // disini kita untuk taro file dokumentasi
 │   │   └── auth-docs.ts // file dokumentasi API untuk auth
 │   └── index.ts // entry point
@@ -120,11 +122,6 @@ export const authDocs = {
     post: {
       tags: ['Authentication'],
       summary: 'Login User',
-      responses: {
-        200: {
-          description: 'Login Success',
-        },
-      },
     },
   },
 }
@@ -132,3 +129,63 @@ export const authDocs = {
 
 Setelah itu jalankan kembali hono app, namun secara default ketika menjalankan `bun run dev`, maka bun akan melakukan hot reload, jadi kita hanya perlu merefresh browser. Kaya gini:
 <img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/swagger-hono-api/assets/hono-swagger-reload.png" alt="Hono Swagger" />
+
+### JSON Request Body
+Untuk API dengan method POST, kita bisa menggunakan JSON request body. Kaya gini:
+```json
+{
+  "email": "satriabajaringan@gmail.com",
+  "password": "amanbanget123"
+}
+```
+Untuk membuat JSON request body pada swagger, kita bisa menggunakan `application/json` seperti berikut:
+```js
+export const authDocs = {
+  '/login': {
+    post: {
+      tags: ['Authentication'],
+      summary: 'Login User',
+      requestBody: { // tambahkan requestBody
+        // disini kita bisa menambahkan konfigurasi requestBody nya
+      }
+    },
+  },
+}
+```
+
+Kira kira seperti ini:
+
+```js
+export const authDocs = {
+  '/login': {
+    post: {
+      tags: ['Authentication'],
+      summary: 'Login User',
+      requestBody: {
+        required: true, // untuk menandakan bahwa field email dan password wajib diisi
+        content: {
+          'application/json': { // content type json
+            schema: {
+              type: 'object', // type object
+              required: ['email', 'password'], // field email dan password wajib diisi
+              properties: { // properties
+                email: {
+                  type: 'string', // type string
+                  format: 'email', // format email
+                },
+                password: {
+                  type: 'string', // type string
+                },
+              },
+            },
+          },
+        },
+      }
+    },
+  },
+}
+```
+
+Setelah menambahkan coba refresh browser, kaya gini:
+
+<img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/swagger-hono-api/assets/json-request-body.png" alt="Hono Swagger" />

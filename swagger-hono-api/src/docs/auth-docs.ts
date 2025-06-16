@@ -3,11 +3,26 @@ export const authDocs = {
     post: {
       tags: ['Authentication'],
       summary: 'Login User',
-      responses: {
-        200: {
-          description: 'Login Success',
+      requestBody: {
+        required: true,
+        content: {
+          'application/json': {
+            schema: {
+              type: 'object',
+              required: ['email', 'password'],
+              properties: {
+                email: {
+                  type: 'string',
+                  format: 'email',
+                },
+                password: {
+                  type: 'string',
+                },
+              },
+            },
+          },
         },
-      },
+      }
     },
   },
 }
