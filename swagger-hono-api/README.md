@@ -43,6 +43,8 @@ swagger-hono-api
 └── tsconfig.json
 ```
 
+<hr/>
+
 ## Install Swagger
 Kalo udah terbuat aplikasi Hono, kita install swagger dengan cara seperti berikut:
 ```bash
@@ -79,6 +81,8 @@ Started http server on http://localhost:3000
 Kemudian buka url http://localhost:3000/docs di browser.
 
 ![Hono Swagger](https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/swagger-hono-api/assets/hono-swagger.png)
+
+<hr/>
 
 ## Membuat Dokumentasi API
 Sebelum membuat dokumentasi API, kita buat code project kita dulu biar lebih rapih, kaya gini:
@@ -129,6 +133,8 @@ export const authDocs = {
 
 Setelah itu jalankan kembali hono app, namun secara default ketika menjalankan `bun run dev`, maka bun akan melakukan hot reload, jadi kita hanya perlu merefresh browser. Kaya gini:
 <img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/swagger-hono-api/assets/hono-swagger-reload.png" alt="Hono Swagger" />
+
+<hr/>
 
 ### JSON Request Body
 Untuk API dengan method POST, kita bisa menggunakan JSON request body. Kaya gini:
@@ -189,6 +195,8 @@ export const authDocs = {
 Setelah menambahkan coba refresh browser, kaya gini:
 
 <img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/swagger-hono-api/assets/json-request-body.png" alt="Hono Swagger" />
+
+<hr/>
 
 ### JSON Response Body
 Ada request, maka ada response. Untuk response, kita bisa menggunakan JSON response body. Kaya gini:
