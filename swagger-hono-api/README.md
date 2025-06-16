@@ -79,3 +79,56 @@ Started http server on http://localhost:3000
 Kemudian buka url http://localhost:3000/docs di browser.
 
 ![Hono Swagger](https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/swagger-hono-api/assets/hono-swagger.png)
+
+## Membuat Dokumentasi API
+Sebelum membuat dokumentasi API, kita buat code project kita dulu biar lebih rapih, kaya gini:
+```bash
+swagger-hono-api
+├── src
+│   ├── docs // disini kita untuk taro file dokumentasi
+│   │   └── auth-docs.ts // file dokumentasi API untuk auth
+│   └── index.ts // entry point
+├── bun.lock
+├── README.md
+├── .gitignore
+├── package.json
+└── tsconfig.json
+```
+
+Kemudian tambahkan pada endpoint `/openapi` di file `index.ts` seperti berikut:
+```js
+import { authDocs } from './docs/auth-docs'
+
+app.get('/openapi', (c) => 
+  c.json({
+    openapi: '3.0.0',
+    info: {
+      title: 'Hono API Documentation',
+      version: '1.0.0',
+    },
+    paths: {
+      ...authDocs, // import dan tambahkan authDocs
+    },
+  })
+)
+```
+
+Untuk authDocs, kita buat file baru di folder `docs` dengan nama `auth-docs.ts` seperti berikut:
+```js
+export const authDocs = {
+  '/login': {
+    post: {
+      tags: ['Authentication'],
+      summary: 'Login User',
+      responses: {
+        200: {
+          description: 'Login Success',
+        },
+      },
+    },
+  },
+}
+```
+
+Setelah itu jalankan kembali hono app, namun secara default ketika menjalankan `bun run dev`, maka bun akan melakukan hot reload, jadi kita hanya perlu merefresh browser. Kaya gini:
+![Hono Swagger Reload](https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/swagger-hono-api/assets/hono-swagger-reload.png)
