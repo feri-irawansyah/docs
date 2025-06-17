@@ -2,6 +2,8 @@ import { swaggerUI } from '@hono/swagger-ui'
 import { Hono } from 'hono'
 import { authDocs } from './docs/auth-docs'
 import authController from './controllers/auth-controller'
+import { orderDocs } from './docs/order-docs'
+import orderController from './controllers/order-controller'
 
 const app = new Hono()
 
@@ -10,6 +12,7 @@ app.get('/', (c) => {
 })
 
 app.route('/api/auth', authController)
+app.route('/api/order', orderController)
 
 app.get('/openapi', (c) => 
   c.json({
@@ -20,6 +23,7 @@ app.get('/openapi', (c) =>
     },
     paths: {
       ...authDocs,
+      ...orderDocs
     },
   })
 )

@@ -302,6 +302,8 @@ Untuk response `500` lebih baik tampilkan message Internal Server Error aja, unt
 
 Untuk response lainnya bisa disesuaikan sesuai kebutuhan.
 
+<hr/>
+
 ### Try It Out
 Kita akan mencoba menjalankan swagger di browser. Namun sebelum itu, kita buat api login seperti berikut:
 
@@ -370,9 +372,158 @@ Setelah menambahkan coba refresh browser dan lakukan steps seperti ini:
 3. Execute
 <img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/swagger-hono-api/assets/try-it-out-2.png" alt="Hono Swagger" />
 Response 400 karena username dan password salah.
-Coba ganti username dan password yang benar `email: admin@example.com, password: password`.
+Coba ganti username dan password yang benar `email: admin@example.com` , `password: password`.
 <img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/swagger-hono-api/assets/try-it-out-3.png" alt="Hono Swagger" />
 Response 200 karena username dan password benar.
-Coba ganti username dan password yang salah `email: error@example.com, password: password`.
+Coba ganti username dan password yang salah `email: error@example.com`,  `password: password`.
 <img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/swagger-hono-api/assets/try-it-out-4.png" alt="Hono Swagger" />
 Response 500 karena terjadi error internal server.
+
+### Query Parameter
+Biasanya ketika membuat api untuk mengambil data, kita menggunakan query parameter pada url untuk menentukan data apa yang ingin kita ambil. Misalnya `http://localhost:3000/api/order/data?limit=10&offset=0`. Untuk membuat query parameter pada swagger, kita akan membuat file baru yaitu `src/docs/order-docs.ts` dan `src/controllers/order-controller.ts` seperti berikut:
+
+```bash
+swagger-hono-api
+├── src
+│   ├── controllers 
+│   │   └── auth-controller.ts
+│   │   └── order-controller.ts // file baru
+│   ├── docs 
+│   │   └── auth-docs.ts 
+│   │   └── order-docs.ts // file baru
+│   ├── data
+│   │   └── order.json // file baru untuk data
+│   └── index.ts
+├── bun.lock
+├── README.md
+├── .gitignore
+├── package.json
+└── tsconfig.json
+```
+
+`src/controllers/order-controller.ts`
+```js
+// src/controllers/order-controller.ts
+
+import { Hono } from 'hono'
+import { orders } from '../data/order.json'
+
+const orderController = new Hono()
+
+orderController.get('/data', (c) => {
+  const limit = Number(c.req.query('limit') || 10) 
+  const offset = Number(c.req.query('offset') || 0) 
+
+  const paginatedData = orders.slice(offset, offset + limit)
+
+  return c.json({
+    data: paginatedData
+  })
+})
+
+export default orderController
+```
+
+`src/docs/order-docs.ts`
+```js
+// src/docs/order-docs.ts
+
+export const orderDocs = {
+  "/api/order/data": {
+    get: {
+      tags: ["Order"],
+      summary: "Get list of orders",
+      description: "Retrieve list of orders with pagination support",
+      parameters: [
+        {
+          name: "limit",
+          in: "query",
+          required: true,
+          schema: {
+            type: "integer",
+          },
+        },
+        {
+          name: "offset",
+          in: "query",
+          required: true,
+          schema: {
+            type: "integer",
+          },
+        },
+      ],
+      responses: {
+        200: {
+          description: "Successful response",
+          content: {
+            "application/json": {
+              example: {
+                data: [
+                  { id: 1, name: "Order 1" },
+                  { id: 2, name: "Order 2" },
+                ],
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+};
+```
+
+`src/data/order.json`
+```json
+// src/data/order.json
+
+{
+    "orders": [
+        { "id": 1, "name": "Order 1" },
+        { "id": 2, "name": "Order 2" },
+        { "id": 3, "name": "Order 3" },
+        { "id": 4, "name": "Order 4" },
+        { "id": 5, "name": "Order 5" },
+        { "id": 6, "name": "Order 6" },
+        { "id": 7, "name": "Order 7" },
+        { "id": 8, "name": "Order 8" },
+        { "id": 9, "name": "Order 9" },
+        { "id": 10, "name": "Order 10" },
+        { "id": 11, "name": "Order 11" },
+        { "id": 12, "name": "Order 12" },
+        { "id": 13, "name": "Order 13" },
+        { "id": 14, "name": "Order 14" },
+        { "id": 15, "name": "Order 15" },
+        { "id": 16, "name": "Order 16" },
+        { "id": 17, "name": "Order 17" },
+        { "id": 18, "name": "Order 18" },
+        { "id": 19, "name": "Order 19" },
+        { "id": 20, "name": "Order 20" }
+    ]
+}
+```
+
+`src/index.ts`
+```js
+// src/index.ts
+
+import orderController from './controllers/order-controller'
+
+app.route('/api/order', orderController)
+```
+
+`tsconfig.json`
+```json
+// tsconfig.json
+
+{
+  "compilerOptions": {
+    "resolveJsonModule": true, // tambahkan ini untuk mengaktifkan resolveJsonModule
+    "strict": true,
+    "jsx": "react-jsx",
+    "jsxImportSource": "hono/jsx"
+  }
+}
+```
+
+Jika setup sudah benar, kemudian refresh url http://localhost:3000/docs, maka akan muncul tab baru `Order` di swagger kaya gini:
+<img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/swagger-hono-api/assets/parameter.png" alt="swagger-hono-api/assets/1.png" width="100%" />
