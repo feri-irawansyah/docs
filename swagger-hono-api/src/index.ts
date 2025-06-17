@@ -21,6 +21,16 @@ app.get('/openapi', (c) =>
       title: 'Hono API Documentation',
       version: '1.0.0',
     },
+    components: {
+      securitySchemes: {
+        bearerAuth: {               // <- nama bebas
+          type: "http",
+          scheme: "bearer",
+          bearerFormat: "JWT",     // cuma info, Swagger ignore ini
+        },
+      },
+    },
+    security: [{ bearerAuth: [] }],
     paths: {
       ...authDocs,
       ...orderDocs

@@ -17,6 +17,7 @@ authController.post('/login', async (c) => {
       return c.json({
         data: {
           message: 'Login successful',
+          token: 'token123'
         }
       })
     } else {
@@ -34,6 +35,34 @@ authController.post('/login', async (c) => {
         message: (error as Error).message
       }
     }, 500)
+  }
+})
+
+authController.get('/session', async (c) => {
+  const authHeader = c.req.header('Authorization')
+  
+  if (!authHeader) {
+    return c.json({
+      error: { message: 'Authorization header is required' }
+    }, 401)
+  }
+
+  const token = authHeader.replace('Bearer ', ''); // 🚀 ambil tokennya aja
+
+  if (token === 'token123') {
+    return c.json({
+      data: {
+        email: 'admin@example.com',
+        role: 'admin',
+        name: 'Satria Baja Ringan'
+      }
+    }, 200)
+  } else {
+    return c.json({
+      error: {
+        message: 'Invalid token',
+      }
+    }, 400)
   }
 })
 

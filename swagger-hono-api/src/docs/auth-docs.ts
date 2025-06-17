@@ -28,7 +28,7 @@ export const authDocs = {
           description: "Login Success",
           content: {
             "application/json": {
-              example: { data: { message: "Login Successfully" } },
+              example: { data: { message: "Login Successfully", token: "token123" } },
             },
           },
         },
@@ -48,6 +48,31 @@ export const authDocs = {
             },
           },
         },
+      },
+    },
+  },
+  "/api/auth/session": { // <- path parameter pake kurung kurawal {id}
+    get: {
+      tags: ["Authentication"],
+      summary: "Check User Session",
+      description: "Check user session",
+      security: [{ bearerAuth: [] }],
+      responses: {
+        200: {
+          description: "Successful response",
+          content: {
+            "application/json": {
+              example: {
+                data: {
+                  email: 'admin@example.com',
+                  role: 'admin',
+                  name: 'Satria Baja Ringan'
+                }
+              },
+            },
+          },
+        },
+        // Tambahkan response sesuai kebutuhan
       },
     },
   },

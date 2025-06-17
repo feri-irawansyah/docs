@@ -616,3 +616,128 @@ export const orderDocs = {
 
 Kemudian refresh url http://localhost:3000/docs, maka akan muncul tab baru `Order` di swagger kaya gini:
 <img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/swagger-hono-api/assets/path-parameter.png" alt="swagger-hono-api/assets/1.png" width="100%" />
+
+<hr/>
+
+### Header Parameter
+Terkadang suatu endpoint membutuhkan header dinamis, misalnya token. Untuk itu, kita bisa menggunakan header parameter misal `http://localhost:3000/api/auth/session`. Kita akan mengimplementasikan untuk Authorization pake Bareer Token, meskipun masih banyak cara lain seperti pake Cookies, OAuth, dan lain-lain.
+
+Untuk membuat header parameter pada swagger, kita akan menambahkan endpoint baru di file `src/controllers/auth-controller.ts` seperti berikut:
+
+```js
+// src/controllers/order-controller.ts
+
+authController.get('/session', async (c) => {
+  const authHeader = c.req.header('Authorization')
+  
+  if (!authHeader) {
+    return c.json({
+      error: { message: 'Authorization header is required' }
+    }, 401)
+  }
+
+  const token = authHeader.replace('Bearer ', ''); // 🚀 ambil tokennya aja
+
+  if (token === 'token123') {
+    return c.json({
+      data: {
+        email: 'admin@example.com',
+        role: 'admin',
+        name: 'Satria Baja Ringan'
+      }
+    }, 200)
+  } else {
+    return c.json({
+      error: {
+        message: 'Invalid token',
+      }
+    }, 400)
+  }
+})
+```
+
+Kemudian kita akan menambahkan endpoint baru di file `src/docs/auth-docs.ts` seperti berikut:
+
+```js
+export const authDocs = {
+  // "/api/auth/login": {
+    // post: {........
+  // },
+  "/api/auth/session": { // <- path parameter pake kurung kurawal {id}
+    get: {
+      tags: ["Authentication"],
+      summary: "Check User Session",
+      description: "Check user session",
+      security: [{ bearerAuth: [] }], // <- header param
+      responses: {
+        200: {
+          description: "Successful response",
+          content: {
+            "application/json": {
+              example: {
+                data: {
+                  email: 'admin@example.com',
+                  role: 'admin',
+                  name: 'Satria Baja Ringan'
+                }
+              },
+            },
+          },
+        },
+        // Tambahkan response sesuai kebutuhan
+      },
+    },
+  },
+};
+```
+
+Kemudian kita tambahkan header parameter di file `src/index.ts` seperti berikut:
+```js
+// src/index.ts
+
+app.get('/openapi', (c) => 
+  c.json({
+    openapi: '3.0.0',
+    info: {
+      title: 'Hono API Documentation',
+      version: '1.0.0',
+    },
+    components: { // <- tambahkan components
+      securitySchemes: {
+        bearerAuth: {               // <- nama bebas tapi harus sama dengan di docs
+          type: "http",
+          scheme: "bearer",
+          bearerFormat: "JWT",     // cuma info, Swagger ignore ini
+        },
+      },
+    },
+    paths: {
+      ...authDocs,
+      ...orderDocs
+    },
+  })
+)
+```
+
+Kemudian refresh url http://localhost:3000/docs, akan muncul tombol di pojok kanan swagger kaya gini:
+<img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/swagger-hono-api/assets/header-parameter.png" alt="swagger-hono-api/assets/1.png" width="100%" />
+
+Saat tombol di klik, nanti akan muncul pop up seperti berikut:
+<img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/swagger-hono-api/assets/header-parameter-1.png" alt="swagger-hono-api/assets/1.png" width="100%" />
+
+Kemudian isikan token response dari endpoint `/api/auth/login` kaya gini `token123`. Lalu klik execute pada endpoint `/api/auth/session`.
+
+<img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/swagger-hono-api/assets/header-parameter-2.png" alt="swagger-hono-api/assets/1.png" width="100%" />
+
+<hr/>
+
+### File Upload
+
+### File Download
+
+### Referensi
+- [Swagger](https://swagger.io/)
+- [Hono](https://hono.dev/)
+- [Hono Swagger](https://hono.dev/examples/swagger-ui)
+
+Mungkin segitu dulu catatan gue bang. Semoga bermanfaat. Nanti kalo misal gue ada temuan baru atau lu mau request bisa contact aja di halaman [Contact](https://snakesystem-library.vercel.app/#/contact).
