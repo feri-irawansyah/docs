@@ -4,6 +4,13 @@ Agenda pada catatan ini:
 - Membuat Aplikasi Hono
 - Install Swagger
 - Membuat Dokumentasi API
+- 1. Json Request Body
+- 2. Json Response Body
+- 3. Query Parameter
+- 4. Path Parameter
+- 5. Header Parameter
+- 6. File Upload
+- 7. File Download
 
 ## Membuat Aplikasi Hono
 Pertama-tama, kita harus membuat aplikasi Hono. Sebelum membuatnya coba cek dulu apakan udah install [Bun](https://bun.sh/). Jika belum, install dulu dengan cara seperti berikut:
@@ -379,6 +386,8 @@ Coba ganti username dan password yang salah `email: error@example.com`,  `passwo
 <img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/swagger-hono-api/assets/try-it-out-4.png" alt="Hono Swagger" />
 Response 500 karena terjadi error internal server.
 
+<hr/>
+
 ### Query Parameter
 Biasanya ketika membuat api untuk mengambil data, kita menggunakan query parameter pada url untuk menentukan data apa yang ingin kita ambil. Misalnya `http://localhost:3000/api/order/data?limit=10&offset=0`. Untuk membuat query parameter pada swagger, kita akan membuat file baru yaitu `src/docs/order-docs.ts` dan `src/controllers/order-controller.ts` seperti berikut:
 
@@ -466,6 +475,7 @@ export const orderDocs = {
             },
           },
         },
+        // Tambahkan response lainnya sesuai kebutuhan
       },
     },
   },
