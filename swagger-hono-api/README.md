@@ -445,11 +445,12 @@ export const orderDocs = {
       description: "Retrieve list of orders with pagination support",
       parameters: [
         {
-          name: "limit",
-          in: "query",
-          required: true,
+          name: "limit", // Tambahkan name: "limit" sesuai kebutuhan
+          in: "query", // Tambahkan in: "query"
+          required: true, // Tambahkan required: true agar field wajib diisi
           schema: {
-            type: "integer",
+            type: "integer", // Tambahkan type: "integer" agar field hanya bisa diisi dengan angka
+            default: 5, // Tambahkan default: 10 agar field memiliki nilai default
           },
         },
         {
@@ -537,3 +538,81 @@ app.route('/api/order', orderController)
 
 Jika setup sudah benar, kemudian refresh url http://localhost:3000/docs, maka akan muncul tab baru `Order` di swagger kaya gini:
 <img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/swagger-hono-api/assets/parameter.png" alt="swagger-hono-api/assets/1.png" width="100%" />
+
+<hr/>
+
+### Path Parameter
+Terkadang suatu endpoint membutuhkan parameter dinamis, misalnya id. Untuk itu, kita bisa menggunakan path parameter misal `http://localhost:3000/api/order/:id`. 
+
+Untuk membuat path parameter pada swagger, kita akan menambahkan endpoint baru di file `src/controllers/order-controller.ts` seperti berikut:
+
+```js
+// src/controllers/order-controller.ts
+
+orderController.get('/data/:id', (c) => {
+  const idParam = c.req.param('id')
+  const id = Number(idParam)
+
+  // Validasi ID harus angka
+  if (isNaN(id)) {
+    return c.json({
+      error: { message: 'Invalid ID parameter. Must be a number.' }
+    }, 400)
+  }
+
+  const order = orders.find(o => o.id === id)
+
+  if (!order) {
+    return c.json({
+      error: { message: 'Order not found' }
+    }, 404)
+  }
+
+  return c.json({
+    data: order
+  })
+})
+```
+
+Kemudian kita akan menambahkan endpoint baru di file `src/docs/order-docs.ts` seperti berikut:
+
+```js
+export const orderDocs = {
+  // "/api/order/data": {
+    // get: {........
+  // },
+  "/api/order/data/{id}": { // <- path parameter pake kurung kurawal {id}
+    get: {
+      tags: ["Order"],
+      summary: "Get order by ID",
+      description: "Retrieve a single order by its ID",
+      parameters: [
+        {
+          name: "id",
+          in: "path", // <- path param
+          required: true,
+          schema: {
+            type: "integer",
+          },
+        },
+      ],
+      responses: {
+        200: {
+          description: "Successful response",
+          content: {
+            "application/json": {
+              example: {
+                data: { id: 1, name: "Order 1" },
+              },
+            },
+          },
+        },
+        // Tambahkan response sesuai kebutuhan
+      },
+    },
+  },
+};
+```
+
+Kemudian refresh url http://localhost:3000/docs, maka akan muncul tab baru `Order` di swagger kaya gini:
+<img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/swagger-hono-api/assets/path-parameter.png" alt="swagger-hono-api/assets/1.png" width="100%" />

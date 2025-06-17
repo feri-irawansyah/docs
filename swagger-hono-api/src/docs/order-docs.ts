@@ -39,4 +39,34 @@ export const orderDocs = {
       },
     },
   },
+  "/api/order/data/{id}": { // <- path parameter pake kurung kurawal {id}
+    get: {
+      tags: ["Order"],
+      summary: "Get order by ID",
+      description: "Retrieve a single order by its ID",
+      parameters: [
+        {
+          name: "id",
+          in: "path", // <- path param
+          required: true,
+          schema: {
+            type: "integer",
+          },
+        },
+      ],
+      responses: {
+        200: {
+          description: "Successful response",
+          content: {
+            "application/json": {
+              example: {
+                data: { id: 1, name: "Order 1" },
+              },
+            },
+          },
+        },
+        // Tambahkan response sesuai kebutuhan
+      },
+    },
+  },
 };

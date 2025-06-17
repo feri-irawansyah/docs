@@ -14,4 +14,28 @@ orderController.get('/data', (c) => {
   })
 })
 
+orderController.get('/data/:id', (c) => {
+  const idParam = c.req.param('id')
+  const id = Number(idParam)
+
+  // Validasi ID harus angka
+  if (isNaN(id)) {
+    return c.json({
+      error: { message: 'Invalid ID parameter. Must be a number.' }
+    }, 400)
+  }
+
+  const order = orders.find(o => o.id === id)
+
+  if (!order) {
+    return c.json({
+      error: { message: 'Order not found' }
+    }, 404)
+  }
+
+  return c.json({
+    data: order
+  })
+})
+
 export default orderController
