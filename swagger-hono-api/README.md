@@ -732,8 +732,162 @@ Kemudian isikan token response dari endpoint `/api/auth/login` kaya gini `token1
 <hr/>
 
 ### File Upload
+Terkadang suatu aplikasi juga membutuhkan fitur untuk upload file seperti gambar, csv, dll. Untuk membuat dokumentasi api file upload di swagger kita bisa menggunakan [File Upload Object](https://swagger.io/docs/specification/v2_0/file-upload/?sbsearch=upload) seperti berikut:
+
+```js
+export const authDocs = {
+  // "/api/auth/login": {
+  //   // post: {...
+  // },
+    "/api/auth/upload": {
+      post: {
+        tags: ["Authentication"],
+        summary: "Upload a file",
+        description: "Upload a file (image, CSV, etc.)",
+        requestBody: {
+          required: true,
+          content: {
+            "multipart/form-data": {
+              schema: {
+                type: "object",
+                properties: {
+                  file: { // 'file' harus sama dengan field di form/body
+                    type: "string",
+                    format: "binary", // <-- wajib untuk file upload
+                  },
+                },
+                required: ["file"],
+              },
+            },
+          },
+        },
+        responses: {
+          200: {
+            description: "Successful upload",
+            content: {
+              "application/json": {
+                example: {
+                  data: {
+                    filename: "photo.png",
+                    type: "image/png",
+                    size: 123456,
+                  },
+                },
+              },
+            },
+          },
+          // Tambahkan response sesuai kebutuhan
+      },
+    },
+  },
+};
+```
+
+Kemudian buat endpoint baru di file `src/controllers/auth-controller.ts` seperti berikut:
+```js
+// src/controllers/auth-controller.ts
+authController.post('/upload', async (c) => {
+  const contentType = c.req.header('content-type')
+  
+  if (!contentType?.includes('multipart/form-data')) {
+    return c.json({ error: { message: 'Content-Type must be multipart/form-data' } }, 400)
+  }
+
+  const body = await c.req.parseBody() as { [key: string]: File }
+  const file = body['file'] // 'file' adalah nama field
+
+  if (!file) {
+    return c.json({ error: { message: 'File is required' } }, 400)
+  }
+
+  return c.json({
+    data: {
+      filename: file.name,
+      type: file.type,
+      size: file.size
+    }
+  })
+})
+```
+
+Kemudian refresh url http://localhost:3000/docs, kemudian akan muncul endpoint `/api/auth/upload` seperti berikut:
+<img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/swagger-hono-api/assets/file-upload.png" alt="swagger-hono-api/assets/1.png" width="100%" />
+Saat choice file di klik, nanti akan muncul pop up windows yang mengarahkan kita untuk mengambil file yang ada di komputer kita. Kemudian klik open lalu Execute.
+
+<img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/swagger-hono-api/assets/file-upload-1.png" alt="swagger-hono-api/assets/1.png" width="100%" />
+
+Lu juga bisa buat custom - custom bang, dokumentasi api file upload di swagger, bisa lihat di [link ini](https://swagger.io/docs/specification/v2_0/file-upload/?sbsearch=upload). Seperti file yang di upload harus berupa gambar, csv, dll.
 
 ### File Download
+Untuk membuat dokumentasi api file download di swagger kita bisa menggunakan [File Download Object](https://swagger.io/docs/open-source-tools/swagger-codegen/codegen-v2/prerequisites/?sbsearch=download) seperti berikut:
+
+Pertama buat file baru di folder `public` kaya gini:
+```bash
+swagger-hono-api
+├── public
+│   └── hono-swagger.png // file baru
+├── node_modules
+├── src
+│   ├── controllers 
+│   │   └── auth-controller.ts
+│   │   └── order-controller.ts // file baru
+│   ├── docs 
+│   │   └── auth-docs.ts 
+│   │   └── order-docs.ts // file baru
+│   ├── data
+│   │   └── order.json // file baru untuk data
+│   └── index.ts
+├── bun.lock
+├── README.md
+├── .gitignore
+├── package.json
+└── tsconfig.json
+```
+
+Kemudian buat file baru di folder `docs` dengan nama `auth-docs.ts` seperti berikut:
+
+```js
+export const authDocs = {
+  // "/api/auth/login": {
+  //   // post: {...
+  // },
+  "/api/auth/download": {
+    get: {
+      tags: ["Authentication"],
+      summary: "Download sample image",
+      description: "Download a PNG image file",
+      responses: {
+        200: {
+          description: "Image file",
+          content: {
+            "image/png": {
+              example: "(binary image data)"
+            }
+          }
+        }
+      }
+    }
+  },
+};
+```
+
+Kemudian buat endpoint baru di file `src/controllers/auth-controller.ts` seperti berikut:
+```js
+// src/controllers/auth-controller.ts
+
+import { serveStatic } from 'hono/bun' // Plugin static file serving dari Hono Bun
+
+authController.get('/download', serveStatic({ path: './public/hono-swagger.png' }))
+```
+
+Kemudian refresh url http://localhost:3000/docs, kemudian akan muncul endpoint `/api/auth/download` seperti berikut:
+<img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/swagger-hono-api/assets/file-download.png" alt="swagger-hono-api/assets/1.png" width="100%" />
+
+Response akan berupa file `image/png` seperti gambar di atas lalu klik execute.
+
+<img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/swagger-hono-api/assets/file-download-1.png" alt="swagger-hono-api/assets/1.png" width="100%" />
+
+Gambar akan tampil di swagger. Jika lu mau download filenya copy dan pastekan url `http://localhost:3000/api/auth/download` di browser, maka file akan otomatis ter download.
 
 ### Referensi
 - [Swagger](https://swagger.io/)

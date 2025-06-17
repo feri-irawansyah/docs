@@ -1,4 +1,5 @@
 import { Hono } from 'hono'
+import { serveStatic } from 'hono/bun' // Plugin static file serving dari Hono Bun
 
 const authController = new Hono()
 
@@ -65,5 +66,30 @@ authController.get('/session', async (c) => {
     }, 400)
   }
 })
+
+authController.post('/upload', async (c) => {
+  const contentType = c.req.header('content-type')
+  
+  if (!contentType?.includes('multipart/form-data')) {
+    return c.json({ error: { message: 'Content-Type must be multipart/form-data' } }, 400)
+  }
+
+  const body = await c.req.parseBody() as { [key: string]: File }
+  const file = body['file'] // 'file' adalah nama field
+
+  if (!file) {
+    return c.json({ error: { message: 'File is required' } }, 400)
+  }
+
+  return c.json({
+    data: {
+      filename: file.name,
+      type: file.type,
+      size: file.size
+    }
+  })
+})
+
+authController.get('/download', serveStatic({ path: './public/hono-swagger.png' }))
 
 export default authController
