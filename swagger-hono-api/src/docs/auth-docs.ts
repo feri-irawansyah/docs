@@ -32,6 +32,22 @@ export const authDocs = {
             },
           },
         },
+        401: {
+          description: "Unauthorized",
+          content: {
+            "application/json": {
+              example: { error: { message: "Invalid credentials" } },
+            },
+          },
+        },
+        500: {
+          description: "Internal Server Error",
+          content: {
+            "application/json": {
+              example: { error: { message: "Internal Server Error" } },
+            },
+          },
+        },
       },
     },
   },

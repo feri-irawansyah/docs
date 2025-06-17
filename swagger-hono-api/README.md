@@ -251,3 +251,128 @@ export const authDocs = {
 Setelah menambahkan coba refresh browser, kaya gini:
 
 <img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/swagger-hono-api/assets/response-200.png" alt="Hono Swagger" />
+
+Untuk menambahkan response lainnya, kaya gini:
+
+```js
+export const authDocs = {
+  "/api/auth/login": {
+    post: {
+      tags: ["Authentication"],
+      summary: "Login User",
+      // requestBody: {
+        // required: true
+      // }
+      responses: { // tambahkan responses 
+        200: { // status code 200
+          description: "Login Success", // deskripsi
+          content: {
+            "application/json": { // content type json
+              example: { data: { message: "Login Successfully" } }, // contoh response
+            },
+          },
+        },
+        400: { // status code 400
+          description: "Bad Request", // deskripsi
+          content: {
+            "application/json": { // content type json
+              example: { data: { message: "Invalid credentials" } }, // contoh response
+            },
+          },
+        },
+        500: { // status code 500
+          description: "Internal Server Error", // deskripsi
+          content: {
+            "application/json": { // content type json
+              example: { data: { message: "Internal Server Error" } }, // contoh response
+            },
+          }
+        },
+      },
+    },
+  }
+};
+```
+
+Setelah menambahkan coba refresh browser, kaya gini:
+
+<img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/swagger-hono-api/assets/response-400-500.png" alt="Hono Swagger" />
+
+Untuk response `500` lebih baik tampilkan message Internal Server Error aja, untuk detail error lebih baik gunakan logger karena error sensitif kurang bagus jika ditampilkan ke user.
+
+Untuk response lainnya bisa disesuaikan sesuai kebutuhan.
+
+### Try It Out
+Kita akan mencoba menjalankan swagger di browser. Namun sebelum itu, kita buat api login seperti berikut:
+
+```js
+
+// src/controllers/auth-controller.ts
+
+import { Hono } from 'hono'
+
+const authController = new Hono()
+
+authController.post('/login', async (c) => {
+  try {
+    // Ambil data dari body
+    const { email, password } = await c.req.json()
+
+    // Simulasi error internal server
+    if (email === 'error@example.com') {
+      throw new Error('Internal server error')
+    }
+
+    // Simulasi validasi login
+    if (email === 'admin@example.com' && password === 'password') {
+      return c.json({
+        data: {
+          message: 'Login successful',
+        }
+      })
+    } else {
+      return c.json({
+        error: {
+          message: 'Invalid credentials',
+        }
+      }, 400)
+    }
+
+  } catch (error) {
+    // Handling error 500
+    return c.json({
+      error: {
+        message: (error as Error).message
+      }
+    }, 500)
+  }
+})
+
+export default authController
+```
+
+```js
+// src/index.ts
+
+import authController from './controllers/auth-controller'
+
+app.route('/api/auth', authController)
+```
+
+Setelah menambahkan coba refresh browser dan lakukan steps seperti ini:
+
+1. Klik menu Try It Out
+<img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/swagger-hono-api/assets/try-it-out.png" alt="Hono Swagger" />
+
+2. Isikan email dan password (email: user@example.com, password: string) kita masukan email dan password salah dulu
+<img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/swagger-hono-api/assets/try-it-out-1.png" alt="Hono Swagger" />
+
+3. Execute
+<img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/swagger-hono-api/assets/try-it-out-2.png" alt="Hono Swagger" />
+Response 400 karena username dan password salah.
+Coba ganti username dan password yang benar `email: admin@example.com, password: password`.
+<img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/swagger-hono-api/assets/try-it-out-3.png" alt="Hono Swagger" />
+Response 200 karena username dan password benar.
+Coba ganti username dan password yang salah `email: error@example.com, password: password`.
+<img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/swagger-hono-api/assets/try-it-out-4.png" alt="Hono Swagger" />
+Response 500 karena terjadi error internal server.
