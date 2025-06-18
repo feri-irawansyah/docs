@@ -2,61 +2,64 @@ Biasanya gue kalo bikin api pake Actix Web itu response JSON nya segelondongan l
 
 Install `@apollo/client` dan `graphql` di frontend.
 
-Code dasar:
+app/index.js:
 ```js
-<script>
-  import { onMount } from "svelte";
+// src/lib/apolloClient.js
+import { ApolloClient, InMemoryCache, HttpLink, gql } from '@apollo/client/core';
 
-  let user = $state(null);
-  let loading = $state(true);
-  let error = $state(null);
+const client = new ApolloClient({
+  link: new HttpLink({ uri: 'http://localhost:8080/query' }),
+  cache: new InMemoryCache(),
+});
 
-  const fetchUser = async (id) => {
-    try {
-      const res = await fetch('http://localhost:8080/query', { 
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          query: `
-            query GetUser {
-              user(userId: ${id}) {
-                userId
-                email
-                handphone
-                registerDate
-              }
-            }
-          `
-        })
-      });
-
-      const data = await res.json();
-      user = data.data.user; // ambil user pertama dari list
-    } catch (err) {
-      error = err;
-    } finally {
-      loading = false;
+export const USER = gql`
+    query GetUser($id: Int!) {
+      user(userId: $id) {
+        userId
+        email
+        handphone
+        registerDate
+        disableLogin
+      }
     }
-  };
+  `;
 
-  onMount(() => {
-    fetchUser(1);
-  });
+export default client;
+```
 
+Code dasar:
+```ts
+<script>
+  import client, { USER } from '../app';
+
+  let userPromise = client.query({
+    query: USER,
+    variables: { id: 1 },
+    fetchPolicy: 'network-only'
+  }).then(res => res.data.user);
+
+  function refetch() {
+    userPromise = client.query({
+      query: USER,
+      variables: { id: 1 },
+      fetchPolicy: 'network-only'
+    }).then(res => res.data.user);
+  }
 </script>
 
-<div>
-  {#if loading}
-    <p>Loading...</p>
-  {:else if error}
-    <p>Error: {error}</p>
-  {:else}
-    <p>User ID: {user.userId}</p>
-    <p>Email: {user.email}</p>
-    <p>Handphone: {user.handphone}</p>
-    <p>Register Date: {user.registerDate}</p>
-  {/if}
-</div>
+<button on:click={refetch}>Refetch User (Fresh)</button>
+
+{#await userPromise}
+  <p>Loading...</p>
+{:then user}
+  <p>User ID: {user.userId}</p>
+  <p>Email: {user.email}</p>
+  <p>Handphone: {user.handphone}</p>
+  <p>Register Date: {user.registerDate}</p>
+  <p>Disable Login: {user.disableLogin ? 'Yes' : 'No'}</p>
+{:catch error}
+  <p>Error: {error.message}</p>
+{/await}
 ```
 
 ### GraphQL Query

@@ -1,15 +1,15 @@
 use actix_web::{http, web, App, HttpServer};
 use async_graphql_actix_web::{GraphQLRequest, GraphQLResponse};
-use async_graphql::http::GraphiQLSource;
+use async_graphql::{http::GraphiQLSource, MergedObject};
 use sqlx::PgPool;
+use async_graphql::{Schema, EmptyMutation, EmptySubscription};
 
-use crate::{connection::db, schema::schema::{create_schema, AppSchema}};
+use crate::{connection::db, handlers::{order_handler::OrderHandler, user_handler::UserHandler}};
 
 mod connection {
     pub mod db;
 }
 mod schema {
-    pub mod schema;
     pub mod datetime;
 }
 mod models {
@@ -18,6 +18,24 @@ mod models {
 
 mod services {
     pub mod user_service;
+}
+
+mod handlers {
+    pub mod user_handler;
+    pub mod order_handler;
+}
+
+#[derive(MergedObject, Default)]
+pub struct ApplicationRoot(
+    UserHandler, 
+    OrderHandler
+);
+
+pub type AppSchema = Schema<ApplicationRoot, EmptyMutation, EmptySubscription>;
+
+fn create_schema() -> AppSchema {
+    Schema::build(ApplicationRoot::default(), EmptyMutation, EmptySubscription)
+        .finish()
 }
 
 async fn graphql_handler(
@@ -54,7 +72,7 @@ async fn main() -> std::io::Result<()> {
         .app_data(web::Data::new(schema.clone()))
         .app_data(web::Data::new(pool.clone()))
         .route("/query", web::post().to(graphql_handler))
-        .route("/graphql", web::get().to(graphiql))
+        .route("/console/graphql", web::get().to(graphiql))
         .wrap(cors) // cors udah didefinisikan di sini langsung
     })
     .bind(("127.0.0.1", 8080))?
