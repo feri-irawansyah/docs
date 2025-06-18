@@ -1,0 +1,1 @@
+Biasanya gue kalo bikin api pake Actix Web itu response JSON nya segelondongan langsung di kirim, nah gue mau nyobaik pake GraphQL buat ngatur field nya
