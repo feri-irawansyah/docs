@@ -58,3 +58,54 @@ Code dasar:
   {/if}
 </div>
 ```
+
+### GraphQL Query
+
+Method `GET`:
+```js
+query GetUser {
+  user(userId: 1) {
+    userId
+    email
+    handphone
+    registerDate
+  }
+}
+```
+
+Method `POST`:
+```js
+mutation {
+  createUser(input: {
+    email: "abc@test.com"
+    handphone: "08123456789"
+    password: "rahasia"
+  }) {
+    userId
+    email
+  }
+}
+```
+
+Method `PUT`:
+```js
+mutation {
+  updateUser(id: 1, input: {
+    email: "newemail@test.com"
+    handphone: "08987654321"
+  }) {
+    userId
+    email
+  }
+}
+```
+
+Method `DELETE`:
+```js
+mutation {
+  deleteUser(id: 1) {
+    userId
+    email
+  }
+}
+```
