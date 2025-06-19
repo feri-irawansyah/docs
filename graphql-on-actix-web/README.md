@@ -100,6 +100,19 @@ Buat file baru di root project namanya `.env` lalu tambahkan:
 DATABASE_URL=postgres://postgres:postgres@localhost:5432/postgres?sslmode=disable
 ```
 Kemudian buat folder `connection` di src lalu buat file `db.rs` lalu tambahkan:
+
+```bash
+graphql-on-actix-web
+├── connection
+│   ├── db.rs // file baru
+├── src
+│   ├── main.rs
+└── Cargo.toml
+└── Cargo.lock
+└── .env
+└── .gitignore
+```
+
 ```rust
 use sqlx::PgPool;
 use dotenvy::dotenv;
@@ -204,9 +217,228 @@ Untik url endpointnya bebas apa aja biasanya `/graphiql`. Kalo udah coba buka ur
 Kalo tidak ada error harusnya akan muncul halaman GraphiQl seperti code editor. kita bisa menggunakan query GraphQl di GraphiQl ini. Udah bisa pake? Belum lah wkwkwk, kita harus buat dulu endpoint GraphQL nya.
 
 ## Setup Endpoint GraphQL
-Buka file `src/main.rs` lalu tambahkan:
 
+Biar project lebih reausable dan clean, kita buat folder baru di src namanya `graphql` lalu buat file `schema.rs` disini untuk menyimpan configurasi GraphQL.:
 
+```bash
+graphql-on-actix-web
+├── connection
+│   ├── db.rs
+├── graphql
+│   ├── schema.rs // file baru
+├── src
+│   ├── main.rs
+└── Cargo.toml
+└── Cargo.lock
+└── .env
+└── .gitignore
+```
+
+```rust
+use async_graphql::{http::GraphiQLSource, *};
+use actix_web::*;
+use async_graphql_actix_web::*;
+use sqlx::*;
+
+pub struct QueryRoot;
+
+#[Object]
+impl QueryRoot {
+    async fn hello(&self) -> &str { // buat function hello
+        "Hello from Actix + GraphQL!"
+    }
+}
+
+pub type AppSchema = Schema<QueryRoot, EmptyMutation, EmptySubscription>; // buat type AppSchema
+
+pub fn create_schema() -> AppSchema { // buat function create_schema
+    Schema::build(QueryRoot, EmptyMutation, EmptySubscription)
+        .finish()
+}
+
+pub async fn graphiql() -> actix_web::HttpResponse { // untuk graphiql ide kita pindahkan ke file schema
+    actix_web::HttpResponse::Ok()
+        .content_type("text/html; charset=utf-8")
+        .body(GraphiQLSource::build().endpoint("/query").finish())
+}
+
+pub async fn graphql_handler( // buat function graphql_handler untuk mengelola request GraphQL
+    schema: web::Data<AppSchema>, 
+    pool: web::Data<PgPool>, 
+    req: GraphQLRequest
+) -> GraphQLResponse {
+    schema
+        .execute(req.into_inner().data(pool.get_ref().clone())) // Inject disini bro!
+        .await
+        .into()
+}
+```
+
+Jika sudah selsai kita tambahkan module graphql dan file schema.rs ke main.rs
+```rust
+use actix_web::*;
+
+use crate::{connection::db, graphql::schema::graphiql};
+
+mod connection {
+    pub mod db;
+}
+
+mod graphql { // daftarkan folder graphql sebagai module
+    pub mod schema;
+}
+
+#[actix_web::main]
+async fn main() -> std::io::Result<()> {
+
+    let connection = db::get_pg_pool().await;
+
+    HttpServer::new(move || {
+
+    App::new()
+        .app_data(web::Data::new(connection.clone()))
+        .route("/console/graphql", web::get().to(graphiql))
+    })
+    .bind(("127.0.0.1", 8000))?
+    .run()
+    .await
+}
+```
+
+Ouh iya Untuk function `hello` di main.rs dihapus aja karena kita sudah berhasil melakukan setup connection ke database. Kemudian kita panggil function, type dan struct di file schema.rs.
+```rust
+use actix_web::*;
+
+use crate::{
+  connection::db, 
+  graphql::schema::{create_schema, graphiql, graphql_handler} // jangan lupa use dulu
+};
+
+mod connection {
+    pub mod db;
+}
+
+mod graphql {
+    pub mod schema;
+}
+
+#[actix_web::main]
+async fn main() -> std::io::Result<()> {
+
+    let connection = db::get_pg_pool().await;
+    let schema = create_schema(); // buat variable schema
+
+    HttpServer::new(move || {
+
+    App::new()
+        .app_data(web::Data::new(connection.clone()))
+        .app_data(web::Data::new(schema.clone())) // clone schema ke app data
+        .route("/query", web::post().to(graphql_handler)) // buat route /query karena kita membuat endpoint yang di panggil ke GraphIQL IDE adalah /query
+        .route("/console/graphql", web::get().to(graphiql))
+    })
+    .bind(("127.0.0.1", 8000))?
+    .run()
+    .await
+}
+```
+Kalo aman tidak ada error buka GraphiQl IDE di http://localhost:8000/console/graphql lalu buat query GraphQl seperti ini:
+
+```graphql
+query {
+    hello
+  }
+```
+<img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/graphql-on-actix-web/assets/query-hello.png" alt="Hello World" />
+Jika responsenya seperti ini berarti berhasil.
+
+# Create, Read, Update, Delete pakai GraphQL IDE
+Selanjutnya kita akan membuat CRUD menggunakan GraphQL IDE. Tapi sebelum itu kita perlu melakukan perubahan dulu di project kita biar lebih reausable dan clean. Arsitekturnya akan seperti ini:
+```bash
+graphql-on-actix-web
+├── connection // berisi konfigurasi connection ke database
+│   ├── db.rs
+├── handlers // untuk mengelola request GraphQL
+│   ├── order_handler.rs
+├── graphql // berisi konfigurasi GraphQL
+│   ├── schema.rs
+├── models // berisi object model
+│   ├── orders_model.rs
+├── services // berisi logic business
+│   ├── orders_service.rs
+├── src
+│   ├── main.rs
+└── Cargo.toml
+└── Cargo.lock
+└── .env
+└── .gitignore
+```
+Kalo usah kita buka folder `graphql` di file `schema.rs` kita akan ubah beberapa konfigurasi
+- Kita tau kalau request graphql dan function untuk handler query requestnya berupa object. Artinya pada file `order_handler.rs` nantinya adalah sebuah object dan misalnya kita buat handler lain maka juga akan berupa object. Jadi kita akan merge object tersebut dengan macro keyword `MergedObject` yang ada di `async_graphql` crate.
+- Hapus struct `QueryRoot` dan ganti dengan ini:
+```rust
+#[derive(MergedObject, Default)]
+pub struct ApplicationRoot(
+    // disini nanti untuk handler graphql lainnya
+);
+```
+- Kemudian perbaiki type `AppSchema` dan function `create_schema` seperti ini:
+```rust
+pub type AppSchema = Schema<ApplicationRoot, EmptyMutation, EmptySubscription>;
+
+pub fn create_schema() -> AppSchema {
+    Schema::build(ApplicationRoot::default(), EmptyMutation, EmptySubscription)
+        .finish()
+}
+```
+- Kemudian di file `order_handler.rs` tambahkan ini:
+```rust
+use async_graphql::*;
+
+#[derive(Default)]
+pub struct OrderHandler;
+
+#[Object]
+impl OrderHandler {
+    async fn orders(&self) -> Result<serde_json::Value> {
+        Ok(serde_json::json!({"orders": "orders"}))
+    }
+}
+```
+
+Tambahkan module `handlers`, `services` dan `models` di `src/main.rs`.:
+```rust
+mod handlers {
+    pub mod order_handler;
+}
+mod models {
+    pub mod user_model;
+}
+mod services {
+    pub mod order_service;
+}
+```
+
+Kalau udah tambahkan di `ApplicationRoot` seperti ini:
+```rust
+// src/graphql/schema.rs
+
+use crate::handlers::order_handler::OrderHandler;
+
+#[derive(MergedObject, Default)]
+pub struct ApplicationRoot(
+    OrderHandler,
+);
+```
+
+Kalau udah buka lagi url http://localhost:8000/console/graphql lalu buat query GraphQl seperti ini:
+
+```graphql
+query {
+  orders
+}
+```
+
+<img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/graphql-on-actix-web/assets/query-example-order.png" alt="Hello World" />
 
 
 

@@ -2,7 +2,7 @@ use async_graphql::SimpleObject;
 use serde::{Deserialize, Serialize};
 use sqlx::prelude::FromRow;
 
-use crate::schema::datetime::MyDateTime;
+use crate::graphql::datetime::MyDateTime;
 
 #[derive(FromRow, Deserialize, Debug, Serialize)]
 pub struct UserDB {
