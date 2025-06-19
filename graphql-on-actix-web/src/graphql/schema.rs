@@ -1,19 +1,26 @@
-use async_graphql::{http::GraphiQLSource, *};
+use async_graphql::{dataloader::DataLoader, http::GraphiQLSource, *};
 use actix_web::*;
 use async_graphql_actix_web::*;
 use sqlx::*;
 
-use crate::handlers::order_handler::OrderHandler;
+use crate::{handlers::{order_handler::{ OrderMutation, OrderQuery }, user_handler::{UserMutation, UserQuery}}, services::order_service::OrderLoader};
 
 #[derive(MergedObject, Default)]
-pub struct ApplicationRoot(
-    OrderHandler,
+pub struct QueryRoot(
+    OrderQuery,
+    UserQuery
 );
 
-pub type AppSchema = Schema<ApplicationRoot, EmptyMutation, EmptySubscription>;
+#[derive(MergedObject, Default)]
+pub struct MutationRoot(
+    UserMutation, // mutation object,
+    OrderMutation
+);
+
+pub type AppSchema = Schema<QueryRoot, MutationRoot, EmptySubscription>;
 
 pub fn create_schema() -> AppSchema {
-    Schema::build(ApplicationRoot::default(), EmptyMutation, EmptySubscription)
+    Schema::build(QueryRoot::default(), MutationRoot::default(), EmptySubscription)
         .finish()
 }
 
@@ -28,8 +35,8 @@ pub async fn graphql_handler(
     pool: web::Data<PgPool>, 
     req: GraphQLRequest
 ) -> GraphQLResponse {
-    schema
-        .execute(req.into_inner().data(pool.get_ref().clone())) // Inject disini bro!
+    let order_loader: DataLoader<OrderLoader> = DataLoader::new(OrderLoader { pool: pool.get_ref().clone() }, tokio::spawn);
+    schema.execute(req.into_inner().data(pool.get_ref().clone()).data(order_loader)) // Inject disini bro!
         .await
         .into()
 }

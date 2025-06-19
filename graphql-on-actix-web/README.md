@@ -377,16 +377,16 @@ Kalo usah kita buka folder `graphql` di file `schema.rs` kita akan ubah beberapa
 - Hapus struct `QueryRoot` dan ganti dengan ini:
 ```rust
 #[derive(MergedObject, Default)]
-pub struct ApplicationRoot(
+pub struct QueryRoot(
     // disini nanti untuk handler graphql lainnya
 );
 ```
 - Kemudian perbaiki type `AppSchema` dan function `create_schema` seperti ini:
 ```rust
-pub type AppSchema = Schema<ApplicationRoot, EmptyMutation, EmptySubscription>;
+pub type AppSchema = Schema<QueryRoot, EmptyMutation, EmptySubscription>;
 
 pub fn create_schema() -> AppSchema {
-    Schema::build(ApplicationRoot::default(), EmptyMutation, EmptySubscription)
+    Schema::build(QueryRoot::default(), EmptyMutation, EmptySubscription)
         .finish()
 }
 ```
@@ -395,10 +395,10 @@ pub fn create_schema() -> AppSchema {
 use async_graphql::*;
 
 #[derive(Default)]
-pub struct OrderHandler;
+pub struct OrderQuery;
 
 #[Object]
-impl OrderHandler {
+impl OrderQuery {
     async fn orders(&self) -> Result<serde_json::Value> {
         Ok(serde_json::json!({"orders": "orders"}))
     }
@@ -418,15 +418,15 @@ mod services {
 }
 ```
 
-Kalau udah tambahkan di `ApplicationRoot` seperti ini:
+Kalau udah tambahkan di `QueryRoot` seperti ini:
 ```rust
 // src/graphql/schema.rs
 
-use crate::handlers::order_handler::OrderHandler;
+use crate::handlers::order_handler::OrderQuery;
 
 #[derive(MergedObject, Default)]
-pub struct ApplicationRoot(
-    OrderHandler,
+pub struct QueryRoot(
+    OrderQuery,
 );
 ```
 
@@ -439,6 +439,531 @@ query {
 ```
 
 <img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/graphql-on-actix-web/assets/query-example-order.png" alt="Hello World" />
+
+Sip waktunya CRUD
+
+## Create Operation
+
+### User Models dan Order Models
+
+Buat file baru di folder `models` lalu buat file `user_model.rs` lalu tambahkan:
+```rust
+use async_graphql::SimpleObject;
+use serde::{Deserialize, Serialize};
+use sqlx::prelude::FromRow;
+
+#[derive(FromRow, Debug, Serialize)]
+pub struct UserDB { // struct untuk menampung data dari database
+    pub user_id: i32,
+    pub email: String,
+    pub full_name: String
+}
+
+#[derive(SimpleObject)]
+pub struct User { // struct untuk response graphql
+    pub user_id: i32,
+    pub email: String,
+    pub full_name: String
+}
+
+impl From<UserDB> for User {
+    fn from(user: UserDB) -> Self {
+        User {
+            user_id: user.user_id,
+            email: user.email,
+            full_name: user.full_name
+        }
+    }
+}
+```
+Alasan kenapa menggunakan 2 struct karena output dari database belum tentu suport dengan graphql. Misalnya output datetime yang di tangkan dengan crate `chrono`, graphql tidak tau apa itu chrono?, jadi kita harus membuat struct baru untuk ngasih tau ke graphql `eh ini datetime loh`.
+
+Kalo udah ketikkan perintah ini untuk menginstall sqlx-cli untuk melakukan migrations di terminal:
+
+```bash
+cargo install sqlx-cli --no-default-features --features postgres
+```
+
+Lalu ketik perintan ini:
+```bash
+sqlx migrate add create_users_table
+```
+Nanti akan terbentuk folder baru dengan nama `migrations` lalu ada file `random123_create_users_table.sql` di dalamnya. Masukan query ini dan ketikan ulang `sqlx migrate add create_users_table`:
+
+```sql
+CREATE TABLE users (
+    user_id SERIAL PRIMARY KEY, 
+    email VARCHAR(255) NOT NULL,
+    full_name VARCHAR(255) NOT NULL
+);
+```
+Buka database bebas dengan tools apa aja, bisa PgAdmin atau sejenisnya sekarang harusnya sudah terbuat table baru dengan nama `users`. Kalo ga berhasil buat manual aja pakai query di atas.
+
+Oke lanjut...
+
+### Create Service
+
+Sebelum membuat service tambahkan struct `Newuser` di `src/models/user_model.rs` dulu:
+```rust
+#[derive(Debug, Deserialize, InputObject)]
+pub struct NewUser {
+    pub email: String,
+    pub full_name: String
+}
+```
+
+Buat file baru di folder `services` lalu buat file `user_service.rs` lalu tambahkan:
+```rust
+use crate::models::user_model::{NewUser, User, UserDB};
+use sqlx::PgPool;
+
+pub struct UserService;
+
+impl UserService {
+    pub async fn create_user(pool: &PgPool, request: NewUser) -> Result<User, sqlx::Error> {
+        let user_db = sqlx::query_as::<_, UserDB>(
+            "INSERT INTO users (email, full_name) VALUES ($1, $2) RETURNING *"
+        )
+        .bind(request.email)
+        .bind(request.full_name)
+        .fetch_one(pool)
+        .await?;
+        
+        Ok(User::from(user_db))
+    }
+}
+```
+
+### Create Handler
+
+Buat file baru di folder `handlers` lalu buat file `user_handler.rs` lalu tambahkan: 
+```rust
+use async_graphql::*;
+
+use crate::models::user_model::{NewUser, User};
+use crate::services::user_service::UserService;
+
+#[derive(Default)]
+pub struct UserMutation;
+
+#[Object]
+impl UserMutation {
+    async fn create_user(&self, ctx: &Context<'_>, request: NewUser) -> Result<Option<User>> {
+        let pool = ctx.data::<sqlx::PgPool>()?;
+        let user = UserService::create_user(pool, request).await?;
+        Ok(Some(user))
+    }
+}
+```
+
+Ouh iya jangan lupa untuk menambahkan struct `UserMutation` di `src/graphql/schema.rs` lalu tambahkan:
+```rust
+use crate::handlers::user_handler::UserMutation;
+
+#[derive(MergedObject, Default)]
+pub struct MutationRoot(
+    UserMutation // mutation object
+);
+
+// pub type AppSchema = Schema<QueryRoot, EmptyMutation, EmptySubscription>; sebelumnya
+pub type AppSchema = Schema<QueryRoot, MutationRoot, EmptySubscription>;
+
+pub fn create_schema() -> AppSchema {
+    Schema::build(QueryRoot::default(), MutationRoot::default(), EmptySubscription)
+        .finish()
+}
+```
+
+Karena di GraphQL terdapat 2 operasi yaitu `query` dan `mutation` jadi Schema harus menerima 2 parameter yaitu `Object untuk Query` dan `Object untuk Mutation`.
+
+Dan juga mendaftarkan file `user_handler.rs` dan `user_service.rs` di main.rs. Kalo udah buka lagi url http://localhost:8080/console/graphql di browser lalu masukan query ini:
+
+#### Note: Default key Object Query di GraphQL adalah camelCase, artinya request dan response secara otomatis akan mengubahkan menjadi camelCase meskipun object yang kita buat adalah snake_case, PascalCase, kebab-case, dll.
+
+```graphql
+mutation {
+  createUser(request: {
+    email: "user1@example.com",
+    fullName: "User 1"
+  }) {
+    userId
+    email
+    fullName
+  }
+}
+```
+
+<img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/graphql-on-actix-web/assets/create-user.png" alt="Hello World" />
+
+Kalau tidak ada error dan response nya sesuai dengan data yang di inputkan berarti berhasil dan cek di database apakah datanya sudah masuk atau belum.
+
+Oke lanjut ke next step yaitu Read User.
+
+## Read User
+
+Tambahkan function untuk `get_users di file `src/services/user_service.rs` seperti ini:
+```rust
+pub async fn get_users(pool: &PgPool) -> Result<Vec<User>, sqlx::Error> {
+  let users_db = sqlx::query_as::<_, UserDB>("SELECT * FROM users")
+      .fetch_all(pool)
+      .await?;
+  
+  Ok(users_db.into_iter().map(User::from).collect())
+}
+```
+
+Tambahkan handler untuk `get_users di file `src/handlers/user_handler.rs` seperti ini:
+```rust
+#[derive(Default)]
+pub struct UserQuery;
+
+#[Object]
+impl UserQuery {
+    async fn users(&self, ctx: &Context<'_>) -> Result<Vec<User>> {
+        let pool = ctx.data::<PgPool>()?;
+        let users = UserService::get_users(pool).await?;
+        Ok(users)
+    }
+}
+```
+
+Tambahkan struct `UserQuery` di `src/graphql/schema.rs` seperti ini:
+```rust
+use crate::handlers::user_handler::UserQuery;
+
+#[derive(MergedObject, Default)]
+pub struct QueryRoot(
+    OrderHandler // ini nanti kita perbaiki 
+    UserQuery // query object
+)
+```
+Kalo udah buka lagi url http://localhost:8080/console/graphql lalu masukan query ini:
+
+```graphql
+query {
+  users {
+    userId
+    email
+    fullName
+  }
+}
+```
+
+<img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/graphql-on-actix-web/assets/select-all-user.png" alt="Hello World" />
+
+Jika berhasil maka akan menampilkan semua data user yang ada di database.
+
+### Nested Query
+Di GraphQL kita bisa mengambil data dengan nested query seperti ini:
+```graphql
+query {
+  users {
+    userId
+    email
+    fullName,
+    orders {
+      orderId
+      orderName,
+      orderPrice,
+      orderStatus,
+      orderDate,
+      lastUpdate
+    }
+  }
+}
+```
+
+Pertama kita buat table orders di database seperti ini:
+```sql
+-- Add migration script here
+CREATE TABLE orders (
+    id SERIAL PRIMARY KEY,
+    order_name TEXT NOT NULL,
+    user_id INTEGER NOT NULL,
+    order_date TIMESTAMPTZ NOT NULL,
+    order_price FLOAT NOT NULL,
+    order_status TEXT NOT NULL,
+    last_update TIMESTAMPTZ NOT NULL
+);
+```
+Karena kita akan mengubah objectnya, jadi kita apan mengubah struct  `User` dengan melakukan impl `Object` seperti ini:
+```rust
+#[ComplexObject]
+impl User {
+    async fn orders(&self, ctx: &Context<'_>) -> Result<Vec<Order>, async_graphql::Error> {
+        let pool = ctx.data::<sqlx::PgPool>()?;
+        let orders = OrderService::get_orders(pool, self.user_id).await?;
+        Ok(orders)
+    }
+}
+```
+Jangan lupa use `ComplexObject` dari `async_graphql`
+
+Lalu ubah struct `User` jadi seperti ini:
+```rust
+#[derive(SimpleObject)]
+#[graphql(complex)]
+pub struct User {
+    pub user_id: i32,
+    pub email: String,
+    pub full_name: String
+}
+```
+
+# Warning ! 🙀
+Namun kita harus hati-hati dalam hal ini, kondisi tersebut bisa menyebabkan N+1 Query. Apa tuh? N+1 Query artinya kita melakukan query terhadap database lebih dari satu kali untuk mengambil data yang sama. Query GraphQL diatas kita bisa liat, jadi kita mengambil data users terlebih dahulu, misalnya di database ada 1 users dan kita ingin mengambil data ordersnya. Maka yang terjadi:
+```sql
+SELECT * FROM users; // 1 query
+SELECT * FROM orders WHERE user_idd = 1; // 1 query
+```
+Nah bayangkan kalo ada 100 users, maka yang akan terjadi adalah:
+```sql
+SELECT * FROM users; // 1 query
+
+// dapet 100 users
+SELECT * FROM orders WHERE user_id = $1; -- query order untuk user 1
+SELECT * FROM orders WHERE user_id = $2; -- query order untuk user 2
+...
+SELECT * FROM orders WHERE user_id = $100; -- query order untuk user 100
+```
+Mantap ngga? mantap lah wkwkwk, 1 query bisa jadi 100 query. Masih mending kalo satu user ordernya 1 atau 3, kalau 1 user ordernya `1.000` atau `1.000.000` bahkan `1.000.000.000`. Bisa nunggu data muncul sampai hari kiamat kita bang😂. Lalu gimana ngatasinnya? Ada beberapa pendekatan yang bisa dilakukan untuk mengatasi problem N+1 Query ini gue kasih 2 cara aja ya yang gue sering pake dan tanpa menambah tools lain. Kita mulai dari yang paling ribet dulu.
+
+### Pakai DataLoader atau Batch Query bawaan async_graphql
+**Note: Tapi DataLoader ini bawaaan async_graphql dari rust ya, kalau di bahasa pemrograman lain mungkin berbeda seperti di Javascript/Typescript ada library seperti `dataloader`, Python ada library seperti `strawberry / graphene`. dll**.
+
+- Pertama buka file `src/services/order_service.rs` lalu buat struct baru seperti ini:
+```rust
+pub struct OrderLoader {
+    pub pool: sqlx::PgPool,
+}
+``` 
+Fungsinya cuma untuk mengambil connection dari database.
+
+- Kemudian impl `Loader` untuk struct `OrderLoader` seperti ini:
+```rust
+impl Loader<i32> for OrderLoader {
+    type Value = Vec<Order>;
+    type Error = Arc<sqlx::Error>;
+
+    async fn load(&self, keys: &[i32]) -> Result<HashMap<i32, Self::Value>, Self::Error> {
+        // Ambil semua order yang user_id ada di keys
+        let pool = &self.pool;
+        let orders_db = sqlx::query_as::<_, OrderDB>(
+            "SELECT * FROM orders WHERE user_id = ANY($1)"
+        )
+        .bind(keys)
+        .fetch_all(pool)
+        .await?;
+
+        // Build map: user_id => Vec<Order>
+        let mut order_map: HashMap<i32, Vec<Order>> = HashMap::new();
+        for order in orders_db {
+            order_map
+                .entry(order.user_id)
+                .or_insert_with(Vec::new)
+                .push(Order::from(order));
+        }
+
+        Ok(order_map)
+    }
+}
+```
+Query `SELECT * FROM orders WHERE user_id = ANY($1)` akan menghasilkan data seperti ini:
+```sql
+SELECT * FROM orders WHERE user_id = ANY(ARRAY[1,2,3]);
+```
+
+- Kemudian ubah struct `User` jadi seperti ini:
+```rust
+#[derive(SimpleObject)]
+#[graphql(complex)] // tambahkan ini
+pub struct User {
+    pub user_id: i32,
+    pub email: String,
+    pub full_name: String
+}
+```
+
+- Kemudian ubah impl struct `User` jadi seperti ini:
+```rust
+#[ComplexObject] // jangan lupa use dulu dari async_graphql
+impl User {
+    async fn orders(&self, ctx: &Context<'_>) -> Result<Vec<Order>, async_graphql::Error> {
+        let loader = ctx.data::<DataLoader<OrderLoader>>()?;
+        let orders = loader.load_one(self.user_id).await?;
+        Ok(orders.unwrap_or_default())
+    }
+}
+```
+
+- Tambahkan order_loader di function handler `graphql_handler` seperti ini:
+```rust
+pub async fn graphql_handler(
+    schema: web::Data<AppSchema>, 
+    pool: web::Data<PgPool>, 
+    req: GraphQLRequest
+) -> GraphQLResponse {
+    let order_loader: DataLoader<OrderLoader> = DataLoader::new(OrderLoader { pool: pool.get_ref().clone() }, tokio::spawn);
+    schema.execute(req.into_inner().data(pool.get_ref().clone())
+    .data(order_loader)) // Inject disini bang!
+    // .data(sales_loader) // misalnya nanti ada loader lagi
+    .await
+    .into()
+}
+```
+Sudah, dengan begini query yang akan dihasilkan adalah seperti ini:
+```sql
+SELECT * FROM users;
+SELECT * FROM orders WHERE user_id = ANY(ARRAY[user_id_1,user_id_2,user_id_3, user_id_dst]);
+```
+Artinya kita cukup melakukan 2 query aja. Setupnya emng lumayan ribet bang, Ya begitulah rust, bahasa pemrograman paling perfectionist wkwkwk.
+
+### Pakai JOIN Query
+Cara ini paling sederhana bang, karena kita cuma melakukan Query SQL JOIN aja kaya gini misal:
+```sql
+SELECT 
+    u.user_id AS user_user_id,
+    u.email AS user_email,
+    u.full_name AS user_full_name,
+    o.order_id AS order_order_id,
+    o.order_name AS order_order_name,
+    o.order_price AS order_order_price
+FROM users u
+LEFT JOIN orders o ON u.user_id = o.user_id
+WHERE u.user_id = $1
+```
+Untuk mengambil data dari query itu, kita perlu menangkapnya dengan struct seperti ini untuk di mapping ke `sqlx::query_as`:
+```rust
+#[derive(sqlx::FromRow, Serialize, Debug)]
+pub struct UserWithOrderRow {
+    pub user_id: i32,
+    pub user_email: String,
+    pub user_full_name: String,
+    pub order_id: Option<i32>,
+    pub order_name: Option<String>,
+    pub order_date: Option<chrono::DateTime<chrono::Utc>>,
+    pub order_price: Option<f64>,
+    pub order_status: Option<String>,
+    pub last_update: Option<chrono::DateTime<chrono::Utc>>,
+}
+
+#[derive(SimpleObject)]
+pub struct UserWithOrders {
+    pub user_id: i32,
+    pub email: String,
+    pub full_name: String,
+    pub orders: Vec<Order>,
+}
+```
+
+Kemudian tambahkan function baru di `src/services/order_service.rs` seperti ini:
+```rust
+pub async fn get_users_with_orders(pool: &PgPool) -> Result<Vec<UserWithOrders>, sqlx::Error> {
+    let rows = sqlx::query_as::<_, UserWithOrderRow>(
+        r#"
+        SELECT 
+            u.user_id AS user_id,
+            u.email AS user_email,
+            u.full_name AS user_full_name,
+            o.order_id AS order_id,
+            o.order_name AS order_name,
+            o.order_price AS order_price,
+            o.order_date AS order_date,
+            o.order_status AS order_status,
+            o.last_update AS last_update
+        FROM users u
+        LEFT JOIN orders o ON u.user_id = o.user_id
+        "#
+    )
+    .fetch_all(pool)
+    .await?;
+
+    let mut map: HashMap<i32, UserWithOrders> = HashMap::new();
+
+    for row in rows {
+        // entry per user
+        let user_entry = map.entry(row.user_id).or_insert_with(|| UserWithOrders {
+            orders: Vec::new(),
+            user_id: row.user_id,
+            email: row.user_email.clone(),
+            full_name: row.user_full_name.clone(),
+        });
+
+        // kalau order ada
+        if let Some(order_id) = row.order_id {
+            user_entry.orders.push(OrderDB {
+                order_id,
+                order_name: row.order_name.clone().unwrap(),
+                order_price: row.order_price.unwrap(),
+                order_date: row.order_date,
+                order_status: row.order_status.clone().unwrap(),
+                last_update: row.last_update,
+                user_id: row.user_id,
+            }.into());
+        }
+    }
+
+    Ok(map.into_values().collect())
+}
+```
+Terakhir pada handler `src/handlers/user_handler.rs` tambahkan ini:
+```rust
+    // Kita comment dulu untuk yang pake DataLoader
+    // async fn users(&self, ctx: &Context<'_>) -> Result<Vec<User>> {
+      //     let pool = ctx.data::<PgPool>()?;
+      //     let users = UserService::get_users(pool).await?;
+      //     Ok(users)
+      // }
+    async fn users(&self, ctx: &Context<'_>) -> Result<Vec<UserWithOrders>> {
+        let pool = ctx.data::<PgPool>()?;
+        let users = UserService::get_users_with_orders(pool).await?;
+        Ok(users)
+    }
+```
+<img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/graphql-on-actix-web/assets/query-users-with-orders.png" alt="Hello World" />
+
+Hasilnya sama aja namun ada kelebihan dan kekurangannya masing-masing.
+- Kelebihan DataLoader:
+  - Fleksible bisa lazy load fields, cocok buat GraphQL yang field-nya bisa request sebagian.
+  - Modular bisa reuse di resolvers lainnya tanpa duplikat SQL
+  - No redundant rows karena cuma ambil data yg dipakai, diolah di memory Rust, bukan di DB
+- Kekurangannya DataLoader:
+  - Minimal 2 query lebih (1 ambil Users + 1 ambil Orders)
+  - Butuh Loader setup dan kebayang ribetnya tadi, tapi mungkin jika selain rust bakal lebih mudah
+  - Kalau di tingkat relational sederhana loader mungkin lebih lambat dari JOIN
+
+- Kelebihan JOIN
+  - Cukup 1 query aja tidak ada N+1, full data di-fetch sekaligus.
+  - Efisien mungkin lebih cocok untuk relasi sederhana
+  - Minimal Latency karena hanya 1 round-trip ke database
+- Kekurangannya JOIN
+  - Kurang cocok untuk relasi kompleks kalau ada nested 3-4 table, JOIN bisa berat dan rawan Cartesian explosion (jumlah rows membengkak)
+  - Redundant data user info diulang di setiap row order (boros memori di sisi app).
+  - Kurang fleksibel GraphQL tidak bisa granular (misal hanya mau ambil field tertentu), harus disusun di query manual
+
+Kalo gue disini lebih milih pake `DataLoader` bang, karena bisa custom response juga jadi tidak kebanyakan field yang di ulang - ulang. Tapi balik lagi sesuai kebutuhan aja.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
