@@ -1124,15 +1124,34 @@ Kita akan menginstall beberapa package terlebih dahulu seperti ini:
 npm install @apollo/client graphql bootstrap
 ```
 
+Untuk struktur frontend projectnya akan seperti ini:
+```bash
+graphql-on-svelte
+├── .svelte-kit // default konfigurasi dari sveltekit
+├── node_modules // dependency dari npm
+├── src // berisi source code frontend kita
+│   ├── components // berisi file untuk component
+│   ├── lib // berisi file main function
+│   ├── routes // berisi file route
+│   ├── app.html
+└── .gitignore
+└── .npmrc
+└── jsconfig.json
+└── package-lock.json
+└── package.json
+└── svelte.config.js
+└── vite.config.js
+```
+
 Kalo udah buat file baru di `src/routes` dengan nama `+layout.svelte` lalu isi seperti ini:
 
-```svelte
-<script>
+```js
+<script lang="js">
     import 'bootstrap/dist/css/bootstrap.min.css';
     const { children } = $props();
 </script>
 
-<div class="container">
+<div class="container mt-5">
     {@render children()}
 </div>
 ```
