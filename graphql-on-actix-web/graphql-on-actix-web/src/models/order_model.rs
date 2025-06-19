@@ -11,6 +11,15 @@ pub struct NewOrder {
     pub order_price: f64,
 }
 
+#[derive(Debug, Deserialize, InputObject, Serialize)]
+pub struct UpdateOrder {
+    pub order_id: i32,
+    pub user_id: Option<i32>,
+    pub order_name: Option<String>,
+    pub order_price: Option<f64>,
+    pub order_status: Option<String>,
+}
+
 #[derive(FromRow, Deserialize, Debug, Serialize)]
 pub struct OrderDB {
     pub order_id: i32,

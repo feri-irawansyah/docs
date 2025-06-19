@@ -1,4 +1,4 @@
-use crate::models::{order_model::{NewOrder, Order, OrderDB}};
+use crate::models::order_model::{NewOrder, Order, OrderDB, UpdateOrder};
 use sqlx::PgPool;
 use async_graphql::dataloader::Loader;
 use std::{collections::HashMap, sync::Arc};
@@ -26,6 +26,39 @@ impl OrderService {
             .fetch_all(pool)
             .await?;
         Ok(orders_db.into_iter().map(Order::from).collect())
+    }
+
+    pub async fn update_order(pool: &PgPool, request: UpdateOrder) -> Result<Option<Order>, sqlx::Error> {
+        let result = sqlx::query_as::<_, OrderDB>(
+            r#"
+            UPDATE orders 
+            SET order_name = COALESCE($2, order_name), 
+                user_id = COALESCE($3, user_id),
+                order_price = COALESCE($4, order_price),
+                order_status = COALESCE($5, order_status)
+            WHERE order_id = $1
+            RETURNING *
+            "#
+        )
+        .bind(request.order_id)
+        .bind(request.order_name)
+        .bind(request.user_id)
+        .bind(request.order_price)
+        .bind(request.order_status)
+        .fetch_optional(pool)
+        .await?;
+        
+        Ok(result.map(Order::from))
+    }
+
+    pub async fn delete_order(pool: &PgPool, order_id: i32) -> Result<bool, sqlx::Error> {
+        let result = sqlx::query("DELETE FROM orders WHERE order_id = $1")
+            .bind(order_id)
+            .execute(pool)
+            .await?;
+
+        // Mengecek berapa row yang kena delete
+        Ok(result.rows_affected() > 0)
     }
 
 }

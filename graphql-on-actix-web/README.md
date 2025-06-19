@@ -601,6 +601,8 @@ Oke lanjut ke next step yaitu Read User.
 
 ## Read User
 
+### Simple Query
+
 Tambahkan function untuk `get_users di file `src/services/user_service.rs` seperti ini:
 ```rust
 pub async fn get_users(pool: &PgPool) -> Result<Vec<User>, sqlx::Error> {
@@ -943,18 +945,197 @@ Hasilnya sama aja namun ada kelebihan dan kekurangannya masing-masing.
 
 Kalo gue disini lebih milih pake `DataLoader` bang, karena bisa custom response juga jadi tidak kebanyakan field yang di ulang - ulang. Tapi balik lagi sesuai kebutuhan aja.
 
+## Update Operation
+Ternyata panjang juga membahas soal query di GraphQL😁. Yaudah lanjut ke update mutation. Kita akan lanjut di orders data. 
 
+Buuat struct baru di `src/models/order_model.rs`:
+```rust
+#[derive(Debug, Deserialize, InputObject, Serialize)]
+pub struct UpdateOrder {
+    pub order_id: i32,
+    pub user_id: Option<i32>,
+    pub order_name: Option<String>,
+    pub order_price: Option<f64>,
+    pub order_status: Option<String>,
+}
+```
+Kemudian buat logic querynya di `src/services/order_service.rs`:
+```rust
+pub async fn update_order(pool: &PgPool, request: UpdateOrder) -> Result<Option<Order>, sqlx::Error> {
+    let result = sqlx::query_as::<_, OrderDB>(
+        r#"
+        UPDATE orders 
+        SET order_name = COALESCE($2, order_name), 
+            user_id = COALESCE($3, user_id),
+            order_price = COALESCE($4, order_price),
+            order_status = COALESCE($5, order_status)
+        WHERE order_id = $1
+        RETURNING *
+        "#
+    )
+    .bind(request.order_id)
+    .bind(request.order_name)
+    .bind(request.user_id)
+    .bind(request.order_price)
+    .bind(request.order_status)
+    .fetch_optional(pool)
+    .await?;
+    
+    Ok(result.map(Order::from))
+}
+```
 
+Lalu buat handler di `src/handlers/order_handler.rs` masukan ke struct `OrderMutation`:
+```rust
+async fn update_order(&self, ctx: &Context<'_>, request: UpdateOrder) -> Result<Option<Order>> {
+    let pool = ctx.data::<sqlx::PgPool>()?;
+    let order = OrderService::update_order(pool, request).await?;
+    Ok(order)
+}
+```
 
+Kalau udah jalankan query GraphQL ini di GraphiQL IDE:
 
+```graphql
+mutation {
+  updateOrder(request: { 
+    orderId: 1
+    userId: 1,
+    orderStatus: "lunas"
+    orderName: "Beli Sabun" 
+    orderPrice: 7000
+  }) {
+    orderId
+    orderName
+    orderDate
+    orderPrice
+    orderStatus
+  }
+}
+```
 
+Selebelumnya datanya seperti ini:
+```json
+{
+  "orderId": 1,
+  "orderName": "Beli Sabun",
+  "orderPrice": 100,
+  "orderStatus": "pending",
+  "orderDate": "2025-06-19T07:47:27.315848+00:00",
+  "lastUpdate": "2025-06-19T07:47:27.315892+00:00"
+}
+```
+Setelah update datanya seperti ini:
+<img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/graphql-on-actix-web/assets/update-order.png" alt="Update Order" />
 
+## Delete Operation
+Untuk delete ini cukup mudah, karena kita tinggal delete data sesuai id mana. 
+Buat function baru di `src/services/order_service.rs`:
+```rust
+pub async fn delete_order(pool: &PgPool, order_id: i32) -> Result<bool, sqlx::Error> {
+    let result = sqlx::query("DELETE FROM orders WHERE order_id = $1")
+        .bind(order_id)
+        .execute(pool)
+        .await?;
 
+    // Mengecek berapa row yang kena delete
+    Ok(result.rows_affected() > 0)
+}
+```
 
+Lalu buat handler di `src/handlers/order_handler.rs` masukan ke struct `OrderMutation`:
+```rust
+async fn delete_order(&self, ctx: &Context<'_>, order_id: i32) -> Result<bool> {
+    let pool = ctx.data::<sqlx::PgPool>()?;
+    let result = OrderService::delete_order(pool, order_id).await?;
+    Ok(result)
+}
+```
 
+Kalau udah jalankan query GraphQL ini di GraphiQL IDE:
 
+```graphql
+mutation {
+  deleteOrder(orderId: 1) 
+}
+```
+</img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/graphql-on-actix-web/assets/delete-order.png" alt="Delete Order" />
 
+Kelar bang untuk CRUD nya. Selanjutnya coba kita implementasi ke frontend. Untuk frontend nya gue mau buat pake Sveltekit.
 
+Sebelum setup frontend projectnya, kita harus terlebih dahulu membuka `Cors` di `src/main.rs` ubah main function jadi seperti ini:
+```rust
+async fn main() -> std::io::Result<()> {
+
+    let connection = db::get_pg_pool().await;
+    let schema = create_schema();
+
+    HttpServer::new(move || {
+
+    let cors = actix_cors::Cors::default()
+    .allow_any_origin()
+    .allowed_methods(vec!["GET", "POST", "OPTIONS"])
+    .allowed_headers(vec![http::header::CONTENT_TYPE])
+    .max_age(3600)
+    .supports_credentials();
+
+    App::new()
+        .app_data(web::Data::new(connection.clone()))
+        .app_data(web::Data::new(schema.clone()))
+        .route("/query", web::post().to(graphql_handler))
+        .route("/console/graphql", web::get().to(graphiql))
+        .wrap(cors) // cors udah didefinisikan di sini langsung
+    })
+    .bind(("127.0.0.1", 8000))?
+    .run()
+    .await
+}
+```
+
+# Setup Svelte Project
+Untuk membuat svelte project kita memerlukan `Node Package Manager` yaitu `npm`. Untuk menginstallnya bisa lihat [di sini](https://nodejs.org/en/download/). Install aja tingal next next next dan next ya next aja pokoknya. Kalo udah terus cek `npm` nya udh ada atau belum.
+
+```bash
+npm --version
+```
+
+Okeh kita mulai membuat Sveltekit projectnya dengan mengetikkan perintah:
+
+```bash
+npx sv create graphql-on-svelte
+```
+Kalo udah ketikkan perintah `npm run dev` untuk menjalankan frontend projectnya.
+
+```bash
+npm run dev
+
+->   http://localhost:5173
+```
+
+<img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/graphql-on-actix-web/assets/sveltekit.png" alt="Sveltekit" />
+
+Kita akan menginstall beberapa package terlebih dahulu seperti ini:
+
+- `@apollo/client`
+- `graphql`
+- `bootstrap`
+
+```bash
+npm install @apollo/client graphql bootstrap
+```
+
+Kalo udah buat file baru di `src/routes` dengan nama `+layout.svelte` lalu isi seperti ini:
+
+```svelte
+<script>
+    import 'bootstrap/dist/css/bootstrap.min.css';
+    const { children } = $props();
+</script>
+
+<div class="container">
+    {@render children()}
+</div>
+```
 
 
 
