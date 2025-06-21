@@ -1,91 +1,47 @@
 <script>
-  // import client, { getUsersWithOrders } from "$lib";
+  import client from "$lib";
+  import { getUsersWithOrders } from "$lib/query";
   import { onMount } from "svelte";
-  import { slide } from "svelte/transition";
+  import Table from "../components/Table.svelte";
+  import ModalCreateEditUser from "../components/ModalCreateEditUser.svelte";
 
   let expandedRow = $state(null);
   let data = $state([]);
+  let error = $state(null);
 
   const toggleRow = (index) => {
     expandedRow = expandedRow === index ? null : index;
   };
 
-  // client.query({
-  //   query: getUsersWithOrders,
-  //   variables: { id: 1 },
-  //   fetchPolicy: 'network-only'
-  // }).then(res => res);
+  onMount(async () => {
+    const res = await client.query({
+      query: getUsersWithOrders,
+    });
+    data = await res.data.users;
+    error = await res.errors[0];
+  })
 </script>
 
 <div class="row gap-3">
   <div class="col-12">
     <div class="card">
       <div class="card-body">
-        <button class="btn btn-primary">Create User</button>
-        <button class="btn btn-success">Create Order</button>
+        <ModalCreateEditUser data={null} />
+        <button class="btn btn-success">
+          <i class="bi bi-cart-plus"></i> Tambah Order
+        </button>
       </div>
     </div>
   </div>
   <div class="col-12">
     <div class="card">
       <div class="card-body">
-        <table class="table table-bordered">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Email</th>
-              <th>Full Name</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {#each data as user, i}
-              <tr>
-                <td>{user.userId}</td>
-                <td>{user.email}</td>
-                <td>{user.fullName}</td>
-                <td>
-                  <button
-                    class="btn btn-sm btn-primary"
-                    onclick={() => toggleRow(i)}
-                  >
-                    {expandedRow === i ? "Collapse" : "Expand"}
-                  </button>
-                </td>
-              </tr>
-              {#if expandedRow === i}
-                <tr>
-                  <td colspan="4">
-                    <div transition:slide>
-                      <table class="table table-sm table-striped">
-                        <thead>
-                          <tr>
-                            <th>Order ID</th>
-                            <th>Name</th>
-                            <th>Price</th>
-                            <th>Status</th>
-                            <th>Date</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {#each user.orders as order}
-                            <tr>
-                              <td>{order.orderId}</td>
-                              <td>{order.orderName}</td>
-                              <td>{order.orderPrice}</td>
-                              <td>{order.orderStatus}</td>
-                              <td>{order.orderDate}</td>
-                            </tr>
-                          {/each}
-                        </tbody>
-                      </table>
-                    </div>
-                  </td>
-                </tr>
-              {/if}
-            {/each}
-          </tbody>
-        </table>
+        {#if error}
+          <div class="alert alert-danger" role="alert">
+            {error.message}
+          </div>
+        {/if}
+        <Table {data} {toggleRow} {expandedRow} />
       </div>
     </div>
   </div>

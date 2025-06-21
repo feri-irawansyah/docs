@@ -1134,6 +1134,7 @@ graphql-on-svelte
 │   ├── lib // berisi file main function
 │   ├── routes // berisi file route
 │   ├── app.html
+└── static // file - file public
 └── .gitignore
 └── .npmrc
 └── jsconfig.json
@@ -1150,6 +1151,7 @@ Kalo udah buat file baru di `src/routes` dengan nama `+layout.svelte` lalu isi s
 ```js
 <script lang="js">
     import 'bootstrap/dist/css/bootstrap.min.css';
+    import * as bootstrap from 'bootstrap';
     const { children } = $props();
 </script>
 
@@ -1244,7 +1246,7 @@ Kemudian di `src/routes/+page.svelte` tambahkan ini:
   </div>
 </div>
 ```
-Ouh iya optional buat file `+layout.js` di `src/routes` untuk untuk mendisabled `ssr` component, tambahkan ini:
+Ouh iya buat file `+layout.js` di `src/routes` untuk untuk mendisabled `ssr` component, tambahkan ini:
 ```js
 export const ssr = false;
 ```
@@ -1252,7 +1254,7 @@ export const ssr = false;
 ## Setup Apollo Client
 Untuk setup apollo client buka file `src/lib/index.js` lalu tambahkan code ini:
 ```js
-import { ApolloClient, InMemoryCache, HttpLink, gql } from '@apollo/client/core';
+import { ApolloClient, InMemoryCache, HttpLink } from '@apollo/client/core';
 
 const client = new ApolloClient({
   link: new HttpLink({ uri: 'http://localhost:8080/query' }),
@@ -1262,7 +1264,208 @@ const client = new ApolloClient({
 export default client;
 ```
 
+## Read Data Pakai Apollo Client
+Kita akan mulai dari Read Data dulu pakai apollo client. dan untuk mengetes apakah apollo client jalan atau tidak. 
 
+Buat file `query.js` di `src/lib` disini untuk menyimpan query-query graphql kita. Kemudian tambahkan code ini:
+```graphql
+import { gql } from "@apollo/client/core";
+
+export const getUsersWithOrders = gql`
+    query {
+        users {
+            userId
+            email
+            fullName,
+            orders {
+                orderId
+                orderName,
+                orderPrice,
+                orderStatus,
+                orderDate,
+                lastUpdate
+            }
+        }
+    }
+`;
+```
+Buka file `src/routes/+page.svelte` lalu tambahkan code ini:
+```js
+<script>
+  import client from "$lib";
+  import { getUsersWithOrders } from "$lib/query";
+  import { onMount } from "svelte";
+
+  onMount(() => {
+    const res = await client.query({
+      query: getUsersWithOrders,
+    });
+    data = await res.data.users;
+  });
+</script>
+```
+Kalau sudah buka browser di url `http://localhost:5173` atau url frontend lu bang, biasanya kalo vite urlnya `http://localhost:5173/`.
+
+<img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/graphql-on-actix-web/assets/read-data-svelte.png" alt="Hello World" />
+
+Kita bagusin dikit web kita pake icons dari bootstrap dan sweetalert2 agar pop up biar lebih enak dilihat. Tambahkan ini bang:
+```bash
+npm i bootstrap-icons sweetalert2
+```
+
+Kemudian tambahkan ini di `+layout.svelte`:
+```js
+<script lang="js">
+  import "bootstrap-icons/font/bootstrap-icons.css"; // tambahkan ini
+
+  //....
+</script>
+```
+
+Kemudian kita perbaiki sedikit project frontend kita biar lebih reusable. Buat file `Table.svelte` di `src/components` gue mau pindahin table nya ke file itu. isinya seperti ini:
+```js
+<script>
+    import { slide } from "svelte/transition";
+
+    const { data=[], expandedRow, toggleRow } = $props();
+</script>
+
+<table class="table table-bordered">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Email</th>
+      <th>Full Name</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    {#each data as user, i}
+      <tr>
+        <td>{user.userId}</td>
+        <td>{user.email}</td>
+        <td>{user.fullName}</td>
+        <td>
+          <button
+            class="btn btn-sm btn-primary"
+            aria-label="Toggle row"
+            onclick={() => toggleRow(i)}
+          >
+            {#if expandedRow === i}
+              <i class="bi bi-dash"></i>
+            {:else}
+              <i class="bi bi-plus"></i>
+            {/if}
+          </button>
+          <button class="btn btn-sm btn-success" aria-label="Edit">
+            <i class="bi bi-pencil"></i>
+          </button>
+          <button class="btn btn-sm btn-danger" aria-label="Delete">
+            <i class="bi bi-trash"></i>
+          </button>
+        </td>
+      </tr>
+      {#if expandedRow === i}
+        <tr>
+          <td colspan="4">
+            <div transition:slide>
+              <table class="table table-sm table-striped">
+                <thead>
+                  <tr>
+                    <th>Order ID</th>
+                    <th>Name</th>
+                    <th>Price</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {#each user.orders as order}
+                    <tr>
+                      <td>{order.orderId}</td>
+                      <td>{order.orderName}</td>
+                      <td>{order.orderPrice}</td>
+                      <td>{order.orderStatus}</td>
+                      <td>{order.orderDate}</td>
+                      <td>
+                        <button
+                          class="btn btn-sm btn-success"
+                          aria-label="Edit"
+                        >
+                          <i class="bi bi-pencil"></i>
+                        </button>
+                        <button
+                          class="btn btn-sm btn-danger"
+                          aria-label="Delete"
+                        >
+                          <i class="bi bi-trash"></i>
+                        </button>
+                      </td>
+                    </tr>
+                  {/each}
+                </tbody>
+              </table>
+            </div>
+          </td>
+        </tr>
+      {/if}
+    {/each}
+  </tbody>
+</table>
+```
+
+Untuk `+page.svelte` hanya seperti ini:
+```js
+<script>
+  import client from "$lib";
+  import { getUsersWithOrders } from "$lib/query";
+  import { onMount } from "svelte";
+  import Table from "../components/Table.svelte";
+
+  let expandedRow = $state(null);
+  let data = $state([]);
+
+  const toggleRow = (index) => {
+    expandedRow = expandedRow === index ? null : index;
+  };
+
+  onMount(async () => {
+    const res = await client.query({
+      query: getUsersWithOrders,
+    });
+    data = await res.data.users;
+  })
+</script>
+
+<div class="row gap-3">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-body">
+        <button class="btn btn-primary">
+          <i class="bi bi-cart-plus"></i> Tambah Userr
+        </button>
+        <button class="btn btn-success">
+          <i class="bi bi-cart-plus"></i> Tambah Order
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="col-12">
+    <div class="card">
+      <div class="card-body">
+        <Table {data} {toggleRow} {expandedRow} />
+      </div>
+    </div>
+  </div>
+</div>
+```
+
+Kemudian gue mau buat 2 file di `src/lib` yaitu `user.js` dan `order.js` disini untuk menyimpan function untuk create, edit dan delete untuk order dan user.
+
+## Create Operation
+### Tambah User
+Buka file `src/lib/user.js` lalu tambahkan code ini:
 
 
 
