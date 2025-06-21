@@ -1143,6 +1143,8 @@ graphql-on-svelte
 └── vite.config.js
 ```
 
+## Setup Layout dan Page
+
 Kalo udah buat file baru di `src/routes` dengan nama `+layout.svelte` lalu isi seperti ini:
 
 ```js
@@ -1156,6 +1158,109 @@ Kalo udah buat file baru di `src/routes` dengan nama `+layout.svelte` lalu isi s
 </div>
 ```
 
+Kemudian di `src/routes/+page.svelte` tambahkan ini:
+```js
+<script>
+  import { slide } from "svelte/transition";
+  let expandedRow = $state(null);
+  let data = $state([]);
+
+  const toggleRow = (index) => {
+    expandedRow = expandedRow === index ? null : index;
+  };
+</script>
+
+<div class="row gap-3">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-body">
+        <button class="btn btn-primary">Create User</button>
+        <button class="btn btn-success">Create Order</button>
+      </div>
+    </div>
+  </div>
+  <div class="col-12">
+    <div class="card">
+      <div class="card-body">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Email</th>
+              <th>Full Name</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {#each data as user, i}
+              <tr>
+                <td>{user.userId}</td>
+                <td>{user.email}</td>
+                <td>{user.fullName}</td>
+                <td>
+                  <button
+                    class="btn btn-sm btn-primary"
+                    onclick={() => toggleRow(i)}
+                  >
+                    {expandedRow === i ? "Collapse" : "Expand"}
+                  </button>
+                </td>
+              </tr>
+              {#if expandedRow === i}
+                <tr>
+                  <td colspan="4">
+                    <div transition:slide>
+                      <table class="table table-sm table-striped">
+                        <thead>
+                          <tr>
+                            <th>Order ID</th>
+                            <th>Name</th>
+                            <th>Price</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {#each user.orders as order}
+                            <tr>
+                              <td>{order.orderId}</td>
+                              <td>{order.orderName}</td>
+                              <td>{order.orderPrice}</td>
+                              <td>{order.orderStatus}</td>
+                              <td>{order.orderDate}</td>
+                            </tr>
+                          {/each}
+                        </tbody>
+                      </table>
+                    </div>
+                  </td>
+                </tr>
+              {/if}
+            {/each}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+```
+Ouh iya optional buat file `+layout.js` di `src/routes` untuk untuk mendisabled `ssr` component, tambahkan ini:
+```js
+export const ssr = false;
+```
+
+## Setup Apollo Client
+Untuk setup apollo client buka file `src/lib/index.js` lalu tambahkan code ini:
+```js
+import { ApolloClient, InMemoryCache, HttpLink, gql } from '@apollo/client/core';
+
+const client = new ApolloClient({
+  link: new HttpLink({ uri: 'http://localhost:8080/query' }),
+  cache: new InMemoryCache(),
+});
+
+export default client;
+```
 
 
 
@@ -1194,7 +1299,7 @@ import { ApolloClient, InMemoryCache, HttpLink, gql } from '@apollo/client/core'
 
 const client = new ApolloClient({
   link: new HttpLink({ uri: 'http://localhost:8080/query' }),
-  cache: new InMemoryCache(),
+  cache: new InMemoryCache(), // optional untuk menggunakan cache
 });
 
 export const USER = gql`
