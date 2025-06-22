@@ -1465,10 +1465,395 @@ Kemudian gue mau buat 2 file di `src/lib` yaitu `user.js` dan `order.js` disini 
 
 ## Create Operation
 ### Tambah User
+Pertama ambil query mutation yang sebelumnya kita lakukan di GraphIQL. Kemudian buat function `createUserMutation` seperti ini di file `src/lib/query.js`:
+```js
+export const createUserMutation = (email, fullName) => gql`
+    mutation {
+        createUser(request: {
+            email: "${email}",
+            fullName: "${fullName}"
+        }) {
+            userId
+            email
+            fullName
+        }
+    }
+`;
+```
+
 Buka file `src/lib/user.js` lalu tambahkan code ini:
+```js
+import Swal from "sweetalert2";
+import { createUserMutation, getUsersWithOrders } from "./query";
+import client from "$lib";
 
+export const createUser = (email, fullName) => {
 
+  return Swal.fire({
+    icon: 'question',
+    title: 'Kamu yakin?',
+    text: `Kamu akan membuat user ${fullName} dengan email ${email}`,
+    showCancelButton: true,
+    confirmButtonText: 'Yoi, Tambah Aja!',
+    cancelButtonText: 'Ga, Ga Jadi!',
+    preConfirm: async () => {
+      const query = createUserMutation(email, fullName);
+      const res = await client.mutate({
+        mutation: query,
+        refetchQueries: [{ query: getUsersWithOrders }]
+      });
 
+      if (res.data) {
+        return Swal.fire({
+          icon: 'success',
+          title: 'User berhasil dibuat',
+          text: `User ${res.data.createUser.fullName} berhasil dibuat`,
+          showConfirmButton: false,
+          timer: 1500
+        })
+      } else {
+        return Swal.fire({
+          icon: 'error',
+          title: `User ${fullName} gagal dibuat`,
+          text: `Error: ${res.errors[0].message}`,
+          showConfirmButton: false,
+          timer: 1500
+        })
+      }
+    }
+  })
+}
+```
+
+Lalu buat file dengan nama `ModalCreateEditUser.svelte` ini modal untuk create dan edit user dan isi begini:
+```js
+<script>
+  import { createUser } from "$lib/user";
+
+    const { data, icons="bi bi-cart-plus", color="primary", text="" } = $props();
+
+    let formData = $state({
+        email: "",
+        fullName: "",
+    })
+
+    const submit = async (e) => {
+        e.preventDefault();
+        await createUser(formData.email, formData.fullName);
+    }
+</script>
+
+<button type="button" class="btn btn-sm btn-{color}" data-bs-toggle="modal" data-bs-target="#exampleModal">
+    <i class={icons}></i> {text}
+</button>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">{text}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form onsubmit={(e) => submit(e)}>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" bind:value={formData.email} required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="fullName" class="form-label">Full Name</label>
+                        <input type="text" class="form-control" id="fullName" bind:value={formData.fullName} required>
+                    </div>
+                    <div class="d-flex justify-content-end gap-3">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Ga Jadi</button>
+                        <button type="submit" class="btn btn-primary">Gas</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+```
+Kemudian buka file `src/routes/+page.svelte` lalu ganti combol tambah user menjadi ini:
+```js
+<ModalCreateEditUser data={null} text="Tambah User" /> // ganti tombol tambah user
+<button class="btn btn-sm btn-success">
+  <i class="bi bi-cart-plus"></i> Tambah Order
+</button>
+```
+
+Terakhir kita coba di browser untuk menambahkan users baru
+
+<img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/graphql-on-actix-web/assets/unput-add-user.png" alt="graphql-on-actix-web/assets/1.png" width="100%" />
+<img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/graphql-on-actix-web/assets/add-user.png" alt="graphql-on-actix-web/assets/1.png" width="100%" />
+
+Jika sudah berhasil maka nanti akan langsung auto refresh data dan terdapat data user baru dengan orders nya yang kosong. 
+</img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/graphql-on-actix-web/assets/succes-add-user.png" alt="graphql-on-actix-web/assets/1.png" width="100%" />
+
+### Tambah Order
+Untuk menambah order mirip dengan tambah user, hanya saja kita perlu memilih user mana yang ingin menambah order.
+
+Pertama buat buat function baru untuk query create order di `src/lib/query.js`:
+```js
+export const createOrderMutation = (orderName, userId, orderPrice) => {
+
+  if (userId === 0 || !orderName || !orderPrice) {
+    return Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'Email dan Nama harus diisi',
+    });
+  }
+
+  return gql`
+    mutation {
+        createOrder(request: {
+            orderName: "${orderName}",
+            userId: ${userId},
+            orderPrice: ${orderPrice},
+        }) {
+            orderId
+            orderName
+            userId
+            orderPrice
+            orderStatus
+        }
+    }
+`;
+};
+```
+
+Lalu buat function bari di `src/lib/order.js` untuk menambah order:
+```js
+import Swal from "sweetalert2";
+import { createOrderMutation, getUsersWithOrders } from "./query";
+import client from "$lib";
+
+export const createOrder = (orderName, userId, orderPrice) => {
+
+  return Swal.fire({
+    icon: 'question',
+    title: 'Kamu yakin?',
+    text: `Kamu akan membuat order ${orderName} dengan harga ${orderPrice} untuk user ${userId}`,
+    showCancelButton: true,
+    confirmButtonText: 'Yoi, Tambah Aja!',
+    cancelButtonText: 'Ga, Ga Jadi!',
+    preConfirm: async () => {
+      const query = await createOrderMutation(orderName, userId, orderPrice);
+      const res = await client.mutate({
+        mutation: query,
+        refetchQueries: [{ query: getUsersWithOrders }]
+      });
+
+      if (res.data) {
+        return Swal.fire({
+          icon: 'success',
+          title: 'Order berhasil dibuat',
+          text: `Order ${res.data.createOrder.orderName} berhasil dibuat`,
+          showConfirmButton: false,
+          timer: 1500
+        })
+      } else {
+        return Swal.fire({
+          icon: 'error',
+          title: `Order ${orderName} gagal dibuat`,
+          text: `Error: ${res.errors[0].message}`,
+          showConfirmButton: false,
+          timer: 1500
+        })
+      }
+    }
+  })
+}
+```
+Kemudian buat component baru di `src/components/ModalCreateEditOrder.svelte` untuk fprm tambah order:
+```js
+<script>
+    import { createOrder } from "$lib/order";
+
+    const { data, icons="bi bi-cart-plus", color="primary", text="", modalId } = $props();
+
+    let formData = $state({
+        orderName: "",
+        userId: 0,
+        orderPrice: ""
+    })
+
+    const submit = async (e) => {
+        const price = parseInt(formData.orderPrice);
+        e.preventDefault();
+        await createOrder(formData.orderName, formData.userId, price);
+    }
+</script>
+
+<button type="button" class="btn btn-sm btn-{color}" data-bs-toggle="modal" data-bs-target="#{modalId}">
+    <i class={icons}></i> {text}
+</button>
+
+<div class="modal fade" id="{modalId}" tabindex="-1" aria-labelledby="{modalId}Label" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="{modalId}Label">{text}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form onsubmit={(e) => submit(e)}>
+                    <div class="mb-3">
+                        <label for="text" class="form-label">Order Name</label>
+                        <input type="text" class="form-control" id="text" bind:value={formData.orderName} required>
+                    </div>
+                   <div class="mb-3">
+                        <label for="userId" class="form-label">User</label>
+                        <select required id="userId" class="form-control" bind:value={formData.userId}>
+                            <option value="">Pilih User</option>
+                            {#each data as user}
+                                <option value={user.userId}>{user.fullName}</option>
+                            {/each}
+                        </select>
+                   </div>
+                    <div class="mb-3">
+                        <label for="orderPrice" class="form-label">Price</label>
+                        <input type="text" class="form-control" id="orderPrice" bind:value={formData.orderPrice} required>
+                    </div>
+                    <div class="d-flex justify-content-end gap-3">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Ga Jadi</button>
+                        <button type="submit" class="btn btn-primary">Gas</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+```
+Terakhir ganti comtol edit pada `src/routes/+page.svelte` jangan lupa untuk import:
+```js
+<ModalCreateEditOrder data={data} text="Tambah Order" color="success" modalId="order" />
+```
+Terakhri kita coba di browser untuk menambahkan order baru
+
+<img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/graphql-on-actix-web/assets/unput-add-order.png" alt="graphql-on-actix-web/assets/1.png" width="100%" />
+<img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/graphql-on-actix-web/assets/add-order.png" alt="graphql-on-actix-web/assets/1.png" width="100%" />
+
+Jika sudah berhasil maka nanti akan langsung auto refresh data dan terdapat data order untuk User 3. 
+</img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/graphql-on-actix-web/assets/success-add-order.png" alt="graphql-on-actix-web/assets/1.png" width="100%" />
+
+## Update Operations
+
+### Update User
+Untuk update user mirip dengan tambah user, kita juga akan menggunakan `ModalCreateEditUser`, hanya saja kita perlu memilih user mana yang ingin di update.
+
+Pertama buat function baru untuk query update user di `src/lib/query.js`:
+```js
+export const updateUserMutation = (userId, email, fullName) => {
+
+  if (!userId || !email || !fullName) {
+    return Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'UserId, Email dan Nama harus diisi',
+    });
+  }
+
+  return gql`
+    mutation {
+        updateUser(request: {
+            userId: ${userId}
+            email: "${email}"
+            fullName: "${fullName}"
+        }) {
+            userId
+            email
+            fullName
+        }
+    }
+`;
+};
+```
+
+Lalu buat function bari di `src/lib/user.js` untuk update user:
+```js
+export const updateUser = (userId, email, fullName) => {
+
+  return Swal.fire({
+    icon: 'question',
+    title: 'Kamu yakin?',
+    text: `Kamu akan mengupdate user ${fullName} dengan email ${email}`,
+    showCancelButton: true,
+    confirmButtonText: 'Yoi, Edit Aja!',
+    cancelButtonText: 'Ga, Ga Jadi!',
+    preConfirm: async () => {
+      const query = updateUserMutation(userId, email, fullName);
+      const res = await client.mutate({
+        mutation: query,
+        refetchQueries: [{ query: getUsersWithOrders }]
+      });
+
+      if (res.data) {
+        return Swal.fire({
+          icon: 'success',
+          title: 'User berhasil diupdate',
+          text: `User ${res.data.updateUser.fullName} berhasil diupdate`,
+          showConfirmButton: false,
+          timer: 1500
+        })
+      } else {
+        return Swal.fire({
+          icon: 'error',
+          title: `User ${fullName} gagal diupdate`,
+          text: `Error: ${res.errors[0].message}`,
+          showConfirmButton: false,
+          timer: 1500
+        })
+      }
+    }
+  })
+}
+```
+
+Buka file `src/components/Table.svelte` Ganti tombol edit dengan ini:
+```js
+<ModalCreateEditUser data={user} icons="bi bi-pencil" color="success" modalId={`edit-user-${user.userId}`} />
+```
+
+Terakhir buka component `src/components/ModalCreateEditUser.svelte` tambahkan kode ini:
+```js
+onMount(() => {
+    if(modalId?.includes("edit")) {
+        formData.email = data.email;
+        formData.fullName = data.fullName;
+    }
+});
+```
+
+Dan ubah function `submit` menjadi ini:
+```js
+const submit = async (e) => {
+  e.preventDefault();
+
+  if(modalId?.includes("edit")) {
+      await updateUser(data.userId, formData.email, formData.fullName); // jangan lupa import updateUser
+  } else {
+      await createUser(formData.email, formData.fullName);
+  }
+}
+```
+
+Lalu kita coba di browser untuk update user
+
+<img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/graphql-on-actix-web/assets/input-edit-user.png" alt="graphql-on-actix-web/assets/1.png" width="100%" />
+
+Ketika klik tombol edit maka form akan otomatis terisi dengan data user yang ingin di update. Kita akan mengubah domail email menjadi gmail.com.
+
+<img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/graphql-on-actix-web/assets/updated-edit-user.png" alt="graphql-on-actix-web/assets/1.png" width="100%" />
+
+<img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/graphql-on-actix-web/assets/edit-user.png" alt="graphql-on-actix-web/assets/1.png" width="100%" />
+
+<img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/graphql-on-actix-web/assets/success-edit-user.png" alt="graphql-on-actix-web/assets/1.png" width="100%" />
+Data berhasil di update, data berada di bawah karena kita tidak memberikan urutan pada query untuk get datanya.
+
+### Update Order
+Untuk update order kita perlu memilih order mana yang ingin di update, kemudian kita perlu memilih order mana yang ingin di update, kemudian kita perlu memilih order mana yang ingin di update.
 
 
 

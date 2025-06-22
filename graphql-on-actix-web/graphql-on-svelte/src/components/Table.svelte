@@ -1,7 +1,10 @@
 <script>
     import { slide } from "svelte/transition";
+    import ModalCreateEditUser from "./ModalCreateEditUser.svelte";
+    import { deleteUser } from "$lib/user";
 
     const { data=[], expandedRow, toggleRow } = $props();
+
 </script>
 
 <table class="table table-bordered">
@@ -31,8 +34,8 @@
               <i class="bi bi-plus"></i>
             {/if}
           </button>
-          <ModalCreateEditUser data={user} icons="bi bi-pencil" color="success" />
-          <button class="btn btn-sm btn-danger" aria-label="Delete">
+          <ModalCreateEditUser data={user} icons="bi bi-pencil" color="success" modalId={`edit-user-${user.userId}`} />
+          <button class="btn btn-sm btn-danger" aria-label="Delete" onclick={() => deleteUser(user)}>
             <i class="bi bi-trash"></i>
           </button>
         </td>

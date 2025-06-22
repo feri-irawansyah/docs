@@ -4,6 +4,7 @@
   import { onMount } from "svelte";
   import Table from "../components/Table.svelte";
   import ModalCreateEditUser from "../components/ModalCreateEditUser.svelte";
+  import ModalCreateEditOrder from "../components/ModalCreateEditOrder.svelte";
 
   let expandedRow = $state(null);
   let data = $state([]);
@@ -18,18 +19,17 @@
       query: getUsersWithOrders,
     });
     data = await res.data.users;
-    error = await res.errors[0];
-  })
+    error = await res.errors? res.errors[0] : null;
+  });
+
 </script>
 
 <div class="row gap-3">
   <div class="col-12">
     <div class="card">
       <div class="card-body">
-        <ModalCreateEditUser data={null} />
-        <button class="btn btn-success">
-          <i class="bi bi-cart-plus"></i> Tambah Order
-        </button>
+        <ModalCreateEditUser data={null} text="Tambah User" modalId="tambah-user" />
+        <ModalCreateEditOrder data={data} text="Tambah Order" color="success" modalId="tambah-order" />
       </div>
     </div>
   </div>

@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 
-use crate::models::{order_model::{OrderDB}, user_model::{NewUser, User, UserDB, UserWithOrderRow, UserWithOrders}};
-use sqlx::PgPool;
+use crate::models::{order_model::{OrderDB}, user_model::{NewUser, UpdateUser, User, UserDB, UserWithOrderRow, UserWithOrders}};
+use sqlx::{PgPool, Postgres, Transaction, Error};
 
 pub struct UserService;
 
@@ -35,6 +35,48 @@ impl UserService {
         .await?;
         
         Ok(User::from(user_db))
+    }
+
+    pub async fn update_user(pool: &PgPool, request: UpdateUser) -> Result<Option<User>, Error> {
+        let result = sqlx::query_as::<_, UserDB>(
+            r#"
+            UPDATE users 
+            SET email = COALESCE($2, email), 
+                full_name = COALESCE($3, full_name)
+            WHERE user_id = $1
+            RETURNING *
+            "#
+        )
+        .bind(request.user_id)
+        .bind(request.email)
+        .bind(request.full_name)
+        .fetch_optional(pool)
+        .await?;
+        
+        Ok(result.map(User::from))
+    }
+
+    pub async fn delete_user(pool: &PgPool, user_id: i32) -> Result<bool, Error> {
+        // Mulai transaksi
+        let mut tx: Transaction<'_, Postgres> = pool.begin().await?;
+
+        // Hapus dari tabel orders terlebih dahulu (jika ada foreign key constraint)
+        sqlx::query("DELETE FROM users WHERE user_id = $1")
+            .bind(user_id)
+            .execute(&mut *tx)
+            .await?;
+
+        // Hapus dari tabel users
+        let result =  sqlx::query("DELETE FROM orders WHERE user_id = $1")
+            .bind(user_id)
+            .execute(&mut *tx)
+            .await?;
+
+        // Commit transaksi jika semua sukses
+        tx.commit().await?;
+
+        // Cek apakah ada row dari users yang dihapus
+        Ok(result.rows_affected() > 0)
     }
 
     pub async fn get_users_with_orders(pool: &PgPool) -> Result<Vec<UserWithOrders>, sqlx::Error> {

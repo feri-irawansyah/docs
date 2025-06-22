@@ -1,7 +1,7 @@
 use async_graphql::{Context, Object, Result};
 use sqlx::PgPool;
 
-use crate::models::user_model::{NewUser, User, UserWithOrders};
+use crate::models::user_model::{NewUser, UpdateUser, User, UserWithOrders};
 use crate::services::user_service::UserService;
 
 #[derive(Default)]
@@ -36,5 +36,11 @@ impl UserMutation {
         let pool = ctx.data::<PgPool>()?;
         let user = UserService::create_user(pool, request).await?;
         Ok(Some(user))
+    }
+
+    async fn update_user(&self, ctx: &Context<'_>, request: UpdateUser) -> Result<Option<User>> {
+        let pool = ctx.data::<sqlx::PgPool>()?;
+        let order = UserService::update_user(pool, request).await?;
+        Ok(order)
     }
 }

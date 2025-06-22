@@ -10,6 +10,13 @@ pub struct NewUser {
     pub full_name: String
 }
 
+#[derive(Debug, Deserialize, Serialize, InputObject)]
+pub struct UpdateUser {
+    pub user_id: i32,
+    pub email: String,
+    pub full_name: String
+}
+
 #[derive(sqlx::FromRow, Serialize, Debug)]
 pub struct UserWithOrderRow {
     pub user_id: i32,
