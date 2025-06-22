@@ -1590,7 +1590,7 @@ Terakhir kita coba di browser untuk menambahkan users baru
 </div>
 
 Jika sudah berhasil maka nanti akan langsung auto refresh data dan terdapat data user baru dengan orders nya yang kosong. 
-</img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/graphql-on-actix-web/assets/succes-add-user.png" alt="graphql-on-actix-web/assets/1.png" width="100%" />
+</img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/graphql-on-actix-web/assets/success-add-user.png" alt="graphql-on-actix-web/assets/1.png" width="100%" />
 
 ### Tambah Order
 Untuk menambah order mirip dengan tambah user, hanya saja kita perlu memilih user mana yang ingin menambah order.
@@ -1734,8 +1734,10 @@ Terakhir ganti comtol edit pada `src/routes/+page.svelte` jangan lupa untuk impo
 ```
 Terakhri kita coba di browser untuk menambahkan order baru
 
+<div class="d-flex gap-3">
 <img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/graphql-on-actix-web/assets/unput-add-order.png" alt="graphql-on-actix-web/assets/1.png" width="100%" />
 <img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/graphql-on-actix-web/assets/add-order.png" alt="graphql-on-actix-web/assets/1.png" width="100%" />
+</div>
 
 Jika sudah berhasil maka nanti akan langsung auto refresh data dan terdapat data order untuk User 3. 
 </img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/graphql-on-actix-web/assets/success-add-order.png" alt="graphql-on-actix-web/assets/1.png" width="100%" />
@@ -1843,13 +1845,19 @@ const submit = async (e) => {
 
 Lalu kita coba di browser untuk update user
 
+<div class="row">
+<div class="col-md-6">
 <img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/graphql-on-actix-web/assets/input-edit-user.png" alt="graphql-on-actix-web/assets/1.png" width="100%" />
+</div>
+</div>
 
 Ketika klik tombol edit maka form akan otomatis terisi dengan data user yang ingin di update. Kita akan mengubah domail email menjadi gmail.com.
 
-<img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/graphql-on-actix-web/assets/updated-edit-user.png" alt="graphql-on-actix-web/assets/1.png" width="100%" />
+<div class="d-flex gap-3">
+<img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/graphql-on-actix-web/assets/update-edit-user.png" alt="graphql-on-actix-web/assets/1.png" width="100%" />
 
 <img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/graphql-on-actix-web/assets/edit-user.png" alt="graphql-on-actix-web/assets/1.png" width="100%" />
+</div>
 
 <img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/graphql-on-actix-web/assets/success-edit-user.png" alt="graphql-on-actix-web/assets/1.png" width="100%" />
 Data berhasil di update, data berada di bawah karena kita tidak memberikan urutan pada query untuk get datanya.
