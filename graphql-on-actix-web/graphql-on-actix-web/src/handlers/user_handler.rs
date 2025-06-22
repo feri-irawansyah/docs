@@ -43,4 +43,10 @@ impl UserMutation {
         let order = UserService::update_user(pool, request).await?;
         Ok(order)
     }
+
+    async fn delete_user(&self, ctx: &Context<'_>, user_id: i32) -> Result<bool> {
+        let pool = ctx.data::<sqlx::PgPool>()?;
+        let result = UserService::delete_user(pool, user_id).await?;
+        Ok(result)
+    }
 }

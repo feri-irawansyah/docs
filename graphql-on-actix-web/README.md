@@ -1059,6 +1059,7 @@ mutation {
   deleteOrder(orderId: 1) 
 }
 ```
+
 </img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/graphql-on-actix-web/assets/delete-order.png" alt="Delete Order" />
 
 Kelar bang untuk CRUD nya. Selanjutnya coba kita implementasi ke frontend. Untuk frontend nya gue mau buat pake Sveltekit.
@@ -1282,8 +1283,8 @@ export const getUsersWithOrders = gql`
                 orderName,
                 orderPrice,
                 orderStatus,
-                orderDate,
-                lastUpdate
+                userId,
+                orderDate
             }
         }
     }
@@ -1590,6 +1591,7 @@ Terakhir kita coba di browser untuk menambahkan users baru
 </div>
 
 Jika sudah berhasil maka nanti akan langsung auto refresh data dan terdapat data user baru dengan orders nya yang kosong. 
+
 </img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/graphql-on-actix-web/assets/success-add-user.png" alt="graphql-on-actix-web/assets/1.png" width="100%" />
 
 ### Tambah Order
@@ -1669,7 +1671,7 @@ export const createOrder = (orderName, userId, orderPrice) => {
 }
 ```
 Kemudian buat component baru di `src/components/ModalCreateEditOrder.svelte` untuk fprm tambah order:
-```ts
+```js
 <script>
     import { createOrder } from "$lib/order";
 
@@ -1728,7 +1730,7 @@ Kemudian buat component baru di `src/components/ModalCreateEditOrder.svelte` unt
     </div>
 </div>
 ```
-Terakhir ganti comtol edit pada `src/routes/+page.svelte` jangan lupa untuk import:
+Terakhir ganti tombol edit pada `src/routes/+page.svelte` jangan lupa untuk import:
 ```js
 <ModalCreateEditOrder data={data} text="Tambah Order" color="success" modalId="order" />
 ```
@@ -1740,6 +1742,7 @@ Terakhri kita coba di browser untuk menambahkan order baru
 </div>
 
 Jika sudah berhasil maka nanti akan langsung auto refresh data dan terdapat data order untuk User 3. 
+
 </img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/graphql-on-actix-web/assets/success-add-order.png" alt="graphql-on-actix-web/assets/1.png" width="100%" />
 
 ## Update Operations
@@ -1860,143 +1863,254 @@ Ketika klik tombol edit maka form akan otomatis terisi dengan data user yang ing
 </div>
 
 <img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/graphql-on-actix-web/assets/success-edit-user.png" alt="graphql-on-actix-web/assets/1.png" width="100%" />
+
 Data berhasil di update, data berada di bawah karena kita tidak memberikan urutan pada query untuk get datanya.
 
 ### Update Order
-Untuk update order kita perlu memilih order mana yang ingin di update, kemudian kita perlu memilih order mana yang ingin di update, kemudian kita perlu memilih order mana yang ingin di update.
+Untuk order harusnya ngga ada perbedaan jauh dengan update users, hanya saja kita perlu menambahkan field `orderStatus` pada form input. Karena sebelumnya kita set saat order di input statusnya `pending` jadi kita tidak perlu menambahkan field tersebut saat tambah order.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Install `@apollo/client` dan `graphql` di frontend.
-
-app/index.js:
+Pertama buat function baru untuk query update order di `src/lib/query.js`:
 ```js
-// src/lib/apolloClient.js
-import { ApolloClient, InMemoryCache, HttpLink, gql } from '@apollo/client/core';
+export const updateOrderMutation = (orderId, userId, orderName, orderStatus, orderPrice) => {
 
-const client = new ApolloClient({
-  link: new HttpLink({ uri: 'http://localhost:8080/query' }),
-  cache: new InMemoryCache(), // optional untuk menggunakan cache
-});
+  if (!orderId || !userId || !orderName || !orderStatus || !orderPrice) {
+    return Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'UserId, Email dan Nama harus diisi',
+    });
+  }
 
-export const USER = gql`
-    query GetUser($id: Int!) {
-      user(userId: $id) {
-        userId
-        email
-        handphone
-        registerDate
-        disableLogin
+  return gql`
+    mutation {
+        updateOrder(request: {
+            orderId: ${orderId}
+            userId: ${userId}
+            orderName: "${orderName}"
+            orderStatus: "${orderStatus}"
+            orderPrice: ${orderPrice}
+        }) {
+            userId
+            userId
+            orderName
+            orderStatus
+            orderPrice
+        }
+    }
+`;
+};
+```
+
+Lalu buka file `src/components/ModalCreateEditOrder.svelte` tambahkan kode ini:
+```js
+$effect(() => {
+    if(modalId.includes("edit")) {
+        formData.orderName = data.orderName;
+        formData.userId = data.userId;
+        formData.orderPrice = data.orderPrice;
+        formData.orderStatus = data.orderStatus;
+    }
+})
+```
+Dan ubah functiom `submit` menjadi ini:
+```js
+const submit = async (e) => {
+    e.preventDefault();
+    const price = parseInt(formData.orderPrice);
+
+    if(modalId?.includes("edit")) {
+        await updateOrder(data.orderId, formData.userId, formData.orderName, formData.orderStatus, price);
+    } else {
+        await createOrder(formData.orderName, formData.userId, price);
+    }
+
+}
+```
+Selain itu tambahkan props baru yaitu `users` untuk mengirim data list users yang akan digunakan di `select` user.
+
+Tambahkan element baru yang di beri kondisi `if(modalId?.includes("edit"))` yaitu:
+```js
+{#if modalId?.includes("edit")}
+<div class="mb-3">
+    <label for="orderStatus" class="form-label">Status</label>
+    <select required id="orderStatus" class="form-control" bind:value={formData.orderStatus}>
+        <option value="">Pilih Order Status</option>
+        <option value="pending">PENDING</option>
+        <option value="settlement">SETTLEMENT</option>
+        <option value="cancelled">CANCELLED</option>
+    </select>
+</div>
+{/if}
+```
+
+Terakhir ubah tombol edit pada row order di `src/components/Table.svelte` menjadi ini:
+```js
+<ModalCreateEditOrder data={order} icons="bi bi-pencil" color="success" modalId={`edit-order-${order.orderId}`} users={data} />
+```
+
+Okeh, kemudian kita coba di browser.
+
+<div class="d-flex gap-3">
+<img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/graphql-on-actix-web/assets/input-edit-order.png" alt="graphql-on-actix-web/assets/1.png" width="100%" />
+<img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/graphql-on-actix-web/assets/edit-order.png" alt="graphql-on-actix-web/assets/1.png" width="100%" />
+</div>
+
+Jika sudah berhasil maka nanti akan langsung auto refresh data dan terdapat data order Beli Bebek dengan harga 19.000 dengan status settlement.
+
+<img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/graphql-on-actix-web/assets/success-edit-order.png" alt="graphql-on-actix-web/assets/1.png" width="100%" />
+</div>
+
+## Delete Operations
+Untuk delete kita tidak memerlukan form input lagi karena kita hanya membutuhkan id untuk memberikan tanpa data mana yang akan di delete.
+
+### Delete User
+Untuk delete users, sebelumnya backend tidak gue contohkan kan? Yaiyalah buat experimen lo sendiri bang wkwkwk. Gue kasih info aja kalo delete user itu juga delete semua order yang terkait dengan user tersebut. Untuk di `real case` sebenernya menghapus data itu tidak dianjurkan, karena historynya akan hilang. Lebih baik memberikan flag aja dan jangan menghapus datanya.
+
+Pertama buat function baru untuk query delete user di `src/lib/query.js`:
+```js
+export const deleteUserMutation = (userId) => {
+
+  if (!userId) {
+    return Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'UserId tidak ditemukan',
+    });
+  }
+
+  return gql`
+    mutation {
+        deleteUser(userId: ${userId})
+    }
+`;
+};
+```
+
+Lalu buat function di `src/lib/user.js` untuk delete user:
+```js
+export const deleteUser = (user) => {
+
+  return Swal.fire({
+    icon: 'question',
+    title: 'Kamu yakin?',
+    text: `Kamu akan menghapus user ${user.fullName} dengan email ${user.email}`,
+    showCancelButton: true,
+    confirmButtonText: 'Yoi, Hapus Aja!',
+    cancelButtonText: 'Ga, Ga Jadi!',
+    preConfirm: async () => {
+      const query = deleteUserMutation(userId);
+      const res = await client.mutate({
+        mutation: query,
+        refetchQueries: [{ query: getUsersWithOrders }]
+      });
+
+      if (res.data) {
+        return Swal.fire({
+          icon: 'success',
+          title: 'User berhasil dihapus',
+          text: `User ${fullName} berhasil dihapus`,
+          showConfirmButton: false,
+          timer: 1500
+        })
+      } else {
+        return Swal.fire({
+          icon: 'error',
+          title: `User ${fullName} gagal dihapus`,
+          text: `Error: ${res.errors[0].message}`,
+          showConfirmButton: false,
+          timer: 1500
+        })
       }
     }
-  `;
-
-export default client;
-```
-
-Code dasar:
-```ts
-<script>
-  import client, { USER } from '../app';
-
-  let userPromise = client.query({
-    query: USER,
-    variables: { id: 1 },
-    fetchPolicy: 'network-only'
-  }).then(res => res.data.user);
-
-  function refetch() {
-    userPromise = client.query({
-      query: USER,
-      variables: { id: 1 },
-      fetchPolicy: 'network-only'
-    }).then(res => res.data.user);
-  }
-</script>
-
-<button on:click={refetch}>Refetch User (Fresh)</button>
-
-{#await userPromise}
-  <p>Loading...</p>
-{:then user}
-  <p>User ID: {user.userId}</p>
-  <p>Email: {user.email}</p>
-  <p>Handphone: {user.handphone}</p>
-  <p>Register Date: {user.registerDate}</p>
-  <p>Disable Login: {user.disableLogin ? 'Yes' : 'No'}</p>
-{:catch error}
-  <p>Error: {error.message}</p>
-{/await}
-```
-
-### GraphQL Query
-
-Method `GET`:
-```js
-query GetUser {
-  user(userId: 1) {
-    userId
-    email
-    handphone
-    registerDate
-  }
+  })
 }
 ```
-
-Method `POST`:
+Terakhir panggil function deleteUser di `src/components/Table.svelte`:
 ```js
-mutation {
-  createUser(input: {
-    email: "abc@test.com"
-    handphone: "08123456789"
-    password: "rahasia"
-  }) {
-    userId
-    email
-  }
-}
+<button class="btn btn-sm btn-danger" aria-label="Delete" onclick={() => deleteUser(user)}>
+  <i class="bi bi-trash"></i>
+</button>
 ```
 
-Method `PUT`:
+Kalau udah kita coba di browser.
+
+<img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/graphql-on-actix-web/assets/hapus-user.png" alt="graphql-on-actix-web/assets/1.png" width="100%" />
+
+<img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/graphql-on-actix-web/assets/success-hapus-user.png" alt="graphql-on-actix-web/assets/1.png" width="100%" />
+
+### Delete Order
+Untuk delete order cukup mudah, karena kita tinggal delete data sesuai id mana. Dan sebelumnya udah di coba di GraphIQL kan. 
+
+Pertama biasa kita buat function baru untuk query delete order di `src/lib/query.js`:
 ```js
-mutation {
-  updateUser(id: 1, input: {
-    email: "newemail@test.com"
-    handphone: "08987654321"
-  }) {
-    userId
-    email
+export const deleteOrderMutation = (orderId) => {
+
+  if (!orderId) {
+    return Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'OrderId tidak ditemukan',
+    });
   }
-}
+
+  return gql`
+    mutation {
+        deleteOrder(orderId: ${orderId})
+    }
+`;
+};
 ```
 
-Method `DELETE`:
+Lalu buat function di `src/lib/order.js` untuk delete order:
 ```js
-mutation {
-  deleteUser(id: 1) {
-    userId
-    email
-  }
+export const deleteOrder = (order) => {
+
+  return Swal.fire({
+    icon: 'question',
+    title: 'Kamu yakin?',
+    text: `Kamu akan menghapus order ${order.orderName} dengan harga ${order.orderPrice} untuk user ${order.userId}`,
+    showCancelButton: true,
+    confirmButtonText: 'Yoi, Hapus Aja!',
+    cancelButtonText: 'Ga, Ga Jadi!',
+    preConfirm: async () => {
+      const query = deleteOrderMutation(order.orderId);
+      const res = await client.mutate({
+        mutation: query,
+        refetchQueries: [{ query: getUsersWithOrders }]
+      });
+
+      if (res.errors) {
+        return Swal.fire({
+          icon: 'success',
+          title: 'Order berhasil dihapus',
+          text: `Order ${order.orderName} berhasil dihapus`,
+          showConfirmButton: false,
+          timer: 1500
+        })
+      } else {
+        return Swal.fire({
+          icon: 'error',
+          title: `Order ${order.orderName} gagal dihapus`,
+          text: `Error: ${res.errors[0].message}`,
+          showConfirmButton: false,
+          timer: 1500
+        })
+      }
+    }
+  })
 }
 ```
+Terakhir panggil function deleteOrder di `src/components/Table.svelte`:
+```js
+<button class="btn btn-sm btn-danger" aria-label="Delete" onclick={() => deleteOrder(order)}>
+  <i class="bi bi-trash"></i>
+</button>
+```
+
+Kalau udah kita coba di browser.
+
+<img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/graphql-on-actix-web/assets/hapus-order.png" alt="graphql-on-actix-web/assets/1.png" width="100%" />
+
+<img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/graphql-on-actix-web/assets/success-hapus-order.png" alt="graphql-on-actix-web/assets/1.png" width="100%" />
+
+Okeh selesai, sampe sini dulu bang. Ntar kalo ada ide atau otak gue nyangkut apa gue update lagi.

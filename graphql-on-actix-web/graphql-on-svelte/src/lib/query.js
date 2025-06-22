@@ -12,8 +12,8 @@ export const getUsersWithOrders = gql`
                 orderName,
                 orderPrice,
                 orderStatus,
-                orderDate,
-                lastUpdate
+                userId,
+                orderDate
             }
         }
     }
@@ -91,6 +91,69 @@ export const updateUserMutation = (userId, email, fullName) => {
             email
             fullName
         }
+    }
+`;
+};
+
+export const updateOrderMutation = (orderId, userId, orderName, orderStatus, orderPrice) => {
+
+  if (!orderId || !userId || !orderName || !orderStatus || !orderPrice) {
+    return Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'UserId, Email dan Nama harus diisi',
+    });
+  }
+
+  return gql`
+    mutation {
+        updateOrder(request: {
+            orderId: ${orderId}
+            userId: ${userId}
+            orderName: "${orderName}"
+            orderStatus: "${orderStatus}"
+            orderPrice: ${orderPrice}
+        }) {
+            userId
+            userId
+            orderName
+            orderStatus
+            orderPrice
+        }
+    }
+`;
+};
+
+export const deleteUserMutation = (userId) => {
+
+  if (!userId) {
+    return Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'UserId tidak ditemukan',
+    });
+  }
+
+  return gql`
+    mutation {
+        deleteUser(userId: ${userId})
+    }
+`;
+};
+
+export const deleteOrderMutation = (orderId) => {
+
+  if (!orderId) {
+    return Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'orderId tidak ditemukan',
+    });
+  }
+
+  return gql`
+    mutation {
+        deleteOrder(orderId: ${orderId})
     }
 `;
 };

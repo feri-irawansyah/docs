@@ -2,6 +2,8 @@
     import { slide } from "svelte/transition";
     import ModalCreateEditUser from "./ModalCreateEditUser.svelte";
     import { deleteUser } from "$lib/user";
+    import ModalCreateEditOrder from "./ModalCreateEditOrder.svelte";
+  import { deleteOrder } from "$lib/order";
 
     const { data=[], expandedRow, toggleRow } = $props();
 
@@ -64,16 +66,8 @@
                       <td>{order.orderStatus}</td>
                       <td>{order.orderDate}</td>
                       <td>
-                        <button
-                          class="btn btn-sm btn-success"
-                          aria-label="Edit"
-                        >
-                          <i class="bi bi-pencil"></i>
-                        </button>
-                        <button
-                          class="btn btn-sm btn-danger"
-                          aria-label="Delete"
-                        >
+                        <ModalCreateEditOrder data={order} icons="bi bi-pencil" color="success" modalId={`edit-order-${order.orderId}`} users={data} />
+                        <button class="btn btn-sm btn-danger" aria-label="Delete" onclick={() => deleteOrder(order)}>
                           <i class="bi bi-trash"></i>
                         </button>
                       </td>

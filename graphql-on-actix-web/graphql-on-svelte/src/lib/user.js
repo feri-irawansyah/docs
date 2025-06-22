@@ -1,5 +1,5 @@
 import Swal from "sweetalert2";
-import { createUserMutation, getUsersWithOrders, updateUserMutation } from "./query";
+import { createUserMutation, deleteUserMutation, getUsersWithOrders, updateUserMutation } from "./query";
 import client from "$lib";
 
 export const createUser = (email, fullName) => {
@@ -86,29 +86,24 @@ export const deleteUser = (user) => {
     confirmButtonText: 'Yoi, Hapus Aja!',
     cancelButtonText: 'Ga, Ga Jadi!',
     preConfirm: async () => {
-      const res = await client.query({
-        query: gql`
-                mutation {
-                  deleteUser(id: ${user.userId}) {
-                    userId
-                    email
-                  }
-                }
-              `,
+      const query = deleteUserMutation(user.userId);
+      const res = await client.mutate({
+        mutation: query,
+        refetchQueries: [{ query: getUsersWithOrders }]
       });
 
-      if (res.data) {
+      if (res.errors) {
         return Swal.fire({
           icon: 'success',
           title: 'User berhasil dihapus',
-          text: `User ${res.data.createUser.fullName} berhasil dihapus`,
+          text: `User ${user.fullName} berhasil dihapus`,
           showConfirmButton: false,
           timer: 1500
         })
       } else {
         return Swal.fire({
           icon: 'error',
-          title: `User ${fullName} gagal dihapus`,
+          title: `User ${user.fullName} gagal dihapus`,
           text: `Error: ${res.errors[0].message}`,
           showConfirmButton: false,
           timer: 1500
