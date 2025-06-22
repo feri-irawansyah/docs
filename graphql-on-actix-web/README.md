@@ -1669,7 +1669,7 @@ export const createOrder = (orderName, userId, orderPrice) => {
 }
 ```
 Kemudian buat component baru di `src/components/ModalCreateEditOrder.svelte` untuk fprm tambah order:
-```svelte
+```ts
 <script>
     import { createOrder } from "$lib/order";
 
