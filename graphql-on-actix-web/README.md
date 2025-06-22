@@ -1584,8 +1584,10 @@ Kemudian buka file `src/routes/+page.svelte` lalu ganti combol tambah user menja
 
 Terakhir kita coba di browser untuk menambahkan users baru
 
-<img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/graphql-on-actix-web/assets/unput-add-user.png" alt="graphql-on-actix-web/assets/1.png" width="100%" />
+<div class="d-flex gap-3">
+<img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/graphql-on-actix-web/assets/input-add-user.png" alt="graphql-on-actix-web/assets/1.png" width="100%" />
 <img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/graphql-on-actix-web/assets/add-user.png" alt="graphql-on-actix-web/assets/1.png" width="100%" />
+</div>
 
 Jika sudah berhasil maka nanti akan langsung auto refresh data dan terdapat data user baru dengan orders nya yang kosong. 
 </img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/graphql-on-actix-web/assets/succes-add-user.png" alt="graphql-on-actix-web/assets/1.png" width="100%" />
@@ -1667,7 +1669,7 @@ export const createOrder = (orderName, userId, orderPrice) => {
 }
 ```
 Kemudian buat component baru di `src/components/ModalCreateEditOrder.svelte` untuk fprm tambah order:
-```js
+```svelte
 <script>
     import { createOrder } from "$lib/order";
 
