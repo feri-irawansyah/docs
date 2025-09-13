@@ -15,7 +15,7 @@ Pertama lo coba ketikan di mesin pencarian lo `Svelte` atau pergi aja ke alamat 
 
 Nah setalah masuk ke webnya dan lo pencet yang Svelte bukan Sveltekit ya, nanti gue bakal buatin terpisah untuk Sveltekit. Pas lu masuk langsung di sugihkan dengan code
 
-```ts
+```html
 <script>
 	function greet() {
 		alert('Welcome to Svelte!');
@@ -30,7 +30,11 @@ Nah setalah masuk ke webnya dan lo pencet yang Svelte bukan Sveltekit ya, nanti 
 	}
 </style>
 ```
-Nah apa itu, baru masuk langsung dapet bahasa Alien👽. Tenang bro, itu cuma overview doang kurang lebih codenya seperti itu, script, style, dan html di oplos jadi satu kaya Vue? Iyes bro betul svelte ini arsitekturnya mirip Vue JS ga perlu class component, functional component, atau ya semacam itulah. Jadi semua file dengan extention gampangnya format lah nyebutnya `.svelte` itu adalah component
+Nah apa itu, baru masuk langsung dapet bahasa Alien👽. Tenang bro, itu cuma overview doang kurang lebih codenya seperti itu, script, style, dan html di oplos jadi satu kaya Vue? Iyes bro betul svelte ini arsitekturnya mirip Vue JS ga perlu class component, functional component, atau ya semacam itulah. Jadi semua file dengan extention gampangnya format lah nyebutnya `.svelte` itu adalah component.
+
+Nimbang penasarin, langsung kita bikin aja proyek nya. Nah sebelum bikin lo wajib punya nodejs buat cara installnya lo bisa liat catatan gue yang <a href="/">ini</a> biar lo enak setup nya ala - ala gue.
+
+Gue anggep lo udah install nodejs, yarn, bun, pnpm atau package manager lain untuk jvascript jadi kita langsung coba mulai bikin proyek svelte nya.
 
 </details>
 
