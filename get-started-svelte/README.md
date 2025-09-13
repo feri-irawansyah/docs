@@ -13,6 +13,23 @@ Pertama lo coba ketikan di mesin pencarian lo `Svelte` atau pergi aja ke alamat 
 
 <img class="img-fluid" alt="image" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/get-started-svelte/public/docs-svelte.png" />
 
+Nah setalah masuk ke webnya dan lo pencet yang Svelte bukan Sveltekit ya, nanti gue bakal buatin terpisah untuk Sveltekit. Pas lu masuk langsung di sugihkan dengan code
 
+```ts
+<script>
+	function greet() {
+		alert('Welcome to Svelte!');
+	}
+</script>
+
+<button onclick={greet}>click me</button>
+
+<style>
+	button {
+		font-size: 2em;
+	}
+</style>
+```
+Nah apa itu, baru masuk langsung dapet bahasa Alien👽. Tenang bro, itu cuma overview doang kurang lebih codenya seperti itu, script, style, dn html di oplos jadi satu.
 </details>
 
