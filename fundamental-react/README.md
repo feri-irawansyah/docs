@@ -5,7 +5,7 @@ Gue ada 12 Agenda nih. Banyak? Iya lah lu kira cuma tinggal minta chat GPT terus
 <details>
 <summary><h2>📌 Apa itu React?</h2></summary>
 
-<h4>React itu Library atau Framework?</h4>
+<h4>🪡 React itu Library atau Framework?</h4>
 
 <img class="img-fluid" alt="image" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/fundamental-react/assets/react-docs.png" />
 
@@ -25,7 +25,7 @@ Itulah framework suatu kerangka yang udah dibuatin orang atau organisasi biar Lo
 
 Jadi kalo misal Lo ulek bumbu sendiri artinya Lo buat UI pake React Lo jahit sendiri, kalo Lo beli bumbu Racik, Sasa, Sajiku dkk Lo artinya pake third party library buatan orang kaya Ant Design, Chakra UI, MUI, Bootstrap dll.
 
-<h4>Bedanya React dan Vanila JS</h4>
+<h4>🪡 Bedanya React dan Vanila JS</h4>
 
 Javascript DOM Lo mesti pernah pake pas kuliah atau pas liat tutorial javascript. Nah sekarang mesti Lo nanya apa bedanya React sama Valina JavaScript? Gue bikin pake Javascript juga bisa kali?.
 
@@ -122,7 +122,7 @@ Kebayang ya React mempermudah hidup Lo yang udah awal bulan tapi gajian belom ca
 <details>
 <summary><h2>📌 Dasar-Dasar React</h2></summary>
 
-<h4>JSX (JavaScript XML)</h4>
+<h4>🪡 JSX (JavaScript XML)</h4>
 
 Sebelumnya React udah mempermudah Lo bikin elemnt HTML di Javascript kan bro? Nah tapi kalo Lo nulis begitu dan code Lo banyak sampe ada banyak file itu bakal susah dibaca dan ketika Lo selsai ngoding, Lo mesti bakal jijik liatnya. 
 
@@ -214,7 +214,7 @@ Simple kan? Okeh sekarang misal gue pingin pisahin `<h1>` di function terpisah, 
 ```
 Lo bisa isi element HTML langsung di function dan bisa lo rangkai sendiri. Lebih mempermudah hidup Lo kan bro?. Udah ngga perlu createElemnt, getElement, bikin atribut di elemnt html, cari - cari elemnt, cari atribut, dan sebagainya. Jadi udah kebayang kan Lo ngoding tapi serasa lagi main Lego kaya pas waktu Lo masih kecil.
 
-<h4>Aturan Component & JSX</h4>
+<h4>🪡 Aturan Component & JSX</h4>
 Nah Component dan JSX di React juga punya aturan pake bro kaya obat dokter kalo Lo minum kebanyakan Lo bisa Overdosis dan Kalo kurang sakit Lo ga sembuh - sembuh.
 
 1. Component harus di pake pake function.
@@ -340,9 +340,24 @@ function PanggilNama() {
 
 Okeh jadi itu aturan dalam Component dan JSX di React. Ibarat Lo mau mau kerja lewat Ordal (Orang Dalam) Lo harus baik ke orangnya, jaga nama baiknya, dan Lo siap ga enakan orangnya. Tapi masuknya mudah dibandingkan Lo lamar sendiri Lo harus Lulusan Kampus Terbaik, Portfolio Keren, Skill Dewa, dan Punya Psikolog normal dan itu belum tentu keterima kaya Lo pake Vanila JS yang ujung - ujungnya banyak error <span class="text-danger fw-bold">Undefined is not a function<span>
 
-<h4>Props</h4>
+<h4>🪡 Props</h4>
 
 Sekarang udah paham lah ha soal Component dan JSX, di Component juga dia bisa melakukan render data, conditional render dan looping data yang ada di function component nya sendiri. Sekarang Lo ngeh ngga bro React bisa render data yang ada di function component nya, gimana kalo data yang di render itu dari component lain jadi join data antar component. Bisa bro di React ada yang namanya `props`. `Props` adalah argument yang ada di function component jadi misal:
+```jsx
+function PanggilNama(props) {
+
+    return <h1>Hello {props.name}</h1>
+}
+
+// Atau seperti ini
+function PanggilNama({name}) {
+
+    return <h1>Hello {name}</h1>
+}
+
+<PanggilNama name="Satria Baja Ringan"/>
+```
+Di React `props` itu bentuknya Object `{}`. Dan `props` itu bisa di akses di dalam function component nya.
 
 </details>
 
