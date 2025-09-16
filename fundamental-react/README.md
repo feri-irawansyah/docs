@@ -5,6 +5,8 @@ Gue ada 12 Agenda nih. Banyak? Iya lah lu kira cuma tinggal minta chat GPT terus
 <details>
 <summary><h2>📌 Apa itu React?</h2></summary>
 
+<h4>React itu Library atau Framework?</h4>
+
 <img class="img-fluid" alt="image" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/fundamental-react/assets/react-docs.png" />
 Kalo lu nyasar atau cari *`React`* di google search. Nah mesti bakal muncul web `https://react.dev`. Nah terus lu masuk di halaman pertama langsung muncul tulisan yang harusnya lo bisa baca atau kalo lo translate ke bahasa indonesia jadi 
 
@@ -22,6 +24,7 @@ Itulah framework suatu kerangka yang udah dibuatin orang atau organisasi biar lo
 
 Jadi kalo misal lo ulek bumbu sendiri artinya lo buat UI pake React lo jahit sendiri, kalo lo beli bumbu Racik, Sasa, Sajiku dkk lo artinya pake third party library buatan orang kaya Ant Design, Chakra UI, MUI, Bootstrap dll.
 
+<h4>Bedanya React, Vanilajs, dan Jquery (The legend off Javascript Library)</h4>
 
 </details>
 
