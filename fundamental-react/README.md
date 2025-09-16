@@ -13,7 +13,9 @@ Kalo lu nyasar atau cari *`React`* di google search. Nah mesti bakal muncul web 
 React itu library, dependencies, package, atau benda" semacam itu bukan `framework`. Framework itu kerangka kerja bro kaya lo misal mau masak di resto itu udh ada tata caranya, alat" nya lengkap dan ada aturan nya harus steril, bersih, rapi, harus ikutin sop nya.
 
 Beda kaya lo masak di dapur orang jawa:
+
 <img class="img-fluid" alt="image" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/fundamental-react/assets/orang-jawa.jpg" />
+
 Lo ngga perlu rapi, ngga perlu pake seragam, steril, ngga ada sop yang penting masakan halal dan ngga membunuh asal lo jangan sampe bakar rumah aja.
 
 Itulah framework suatu kerangka yang udah dibuatin orang atau organisasi biar lo kaga sembarangan ngoplos source code lo. React beda bro dia bukan framework, tapi dia library yang isinya itu fitur - fitur mempermudah hidup lo, bukan mempersulit hidup lo dan lo terserah mau lakuin apa aja pake react. Misalnya gini bro, lo mau masak nasgor di dapur orang jawa nih tanpa framework lo nyalain api, panasin minyak, siapin bumbu, tumis, masukin nasi, aduk - aduk, angkat, lalu jadi. Nah fitur - fitur dan bahan nya itulah React bro.
