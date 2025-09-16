@@ -5,8 +5,21 @@ Gue ada 11 Agenda nih. Banyak? Iya lah lu kira cuma tinggal minta chat GPT terus
 <details>
 <summary><h2>📌 Apa itu React?</h2></summary>
 
-Kalo lu nyasar atau cari *`React`* di google search. Nah mesti bakal muncul web `https://react.dev`. Nah terus lu masuk di halaman pertama langsung muncul tulisan yang harusnya lo bisa baca.
+<img class="img-fluid" alt="image" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/fundamental-react/assets/react-docs.png" />
+Kalo lu nyasar atau cari *`React`* di google search. Nah mesti bakal muncul web `https://react.dev`. Nah terus lu masuk di halaman pertama langsung muncul tulisan yang harusnya lo bisa baca atau kalo lo translate ke bahasa indonesia jadi 
 
-<img class="img-fluid" alt="image" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/get-started-svelte/public/docs-svelte.png" />
+<h3 class="text-danger text-underlined text-uppercase">Perpustakaan untuk antarmuka pengguna web dan asli</h3>
+
+React itu library, dependencies, package, atau benda" semacam itu bukan `framework`. Framework itu kerangka kerja bro kaya lo misal mau masak di resto itu udh ada tata caranya, alat" nya lengkap dan ada aturan nya harus steril, bersih, rapi, harus ikutin sop nya.
+
+Beda kaya lo masak di dapur orang jawa:
+<img class="img-fluid" alt="image" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/fundamental-react/assets/orang-jawa.jpg" />
+Lo ngga perlu rapi, ngga perlu pake seragam, steril, ngga ada sop yang penting masakan halal dan ngga membunuh asal lo jangan sampe bakar rumah aja.
+
+Itulah framework suatu kerangka yang udah dibuatin orang atau organisasi biar lo kaga sembarangan ngoplos source code lo. React beda bro dia bukan framework, tapi dia library yang isinya itu fitur - fitur mempermudah hidup lo, bukan mempersulit hidup lo dan lo terserah mau lakuin apa aja pake react. Misalnya gini bro, lo mau masak nasgor di dapur orang jawa nih tanpa framework lo nyalain api, panasin minyak, siapin bumbu, tumis, masukin nasi, aduk - aduk, angkat, lalu jadi. Nah fitur - fitur dan bahan nya itulah React bro.
+
+Jadi kalo misal lo ulek bumbu sendiri artinya lo buat UI pake React lo jahit sendiri, kalo lo beli bumbu Racik, Sasa, Sajiku dkk lo artinya pake third party library buatan orang kaya Ant Design, Chakra UI, MUI, Bootstrap dll.
+
+
 
 </details>
