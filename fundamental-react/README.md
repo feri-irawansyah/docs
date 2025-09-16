@@ -8,11 +8,12 @@ Gue ada 12 Agenda nih. Banyak? Iya lah lu kira cuma tinggal minta chat GPT terus
 <h4>React itu Library atau Framework?</h4>
 
 <img class="img-fluid" alt="image" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/fundamental-react/assets/react-docs.png" />
+
 Kalo lu nyasar atau cari *`React`* di google search. Nah mesti bakal muncul web `https://react.dev`. Nah terus lu masuk di halaman pertama langsung muncul tulisan yang harusnya Lo bisa baca atau kalo Lo translate ke bahasa indonesia jadi 
 
 <h3 class="text-danger text-underlined text-uppercase">Perpustakaan untuk antarmuka pengguna web dan asli</h3>
 
-React itu library, dependencies, package, atau benda" semacam itu bukan `framework`. Framework itu kerangka kerja bro kaya Lo misal mau masak di resto itu udh ada tata caranya, alat" nya lengkap dan ada aturan nya harus steril, bersih, rapi, harus ikutin sop nya.
+React itu library, dependencies, package, atau benda - benda semacam itu bukan `framework`. Framework itu kerangka kerja bro kaya Lo misal mau masak di resto itu udh ada tata caranya, alat - alat nya lengkap dan ada aturan nya harus steril, bersih, rapi, harus ikutin sop nya.
 
 Beda kaya Lo masak di dapur orang jawa
 
