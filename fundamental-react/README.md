@@ -216,13 +216,130 @@ Lo bisa isi element HTML langsung di function dan bisa lo rangkai sendiri. Lebih
 <h4>Aturan Component & JSX</h4>
 Nah Component dan JSX di React juga punya aturan pake bro kaya obat dokter kalo Lo minum kebanyakan Lo bisa Overdosis dan Kalo kurang sakit Lo ga sembuh - sembuh.
 
-- Component harus di pake pake function
-Nah aturan ini hanya berlaku di React V18 keatas di versi sebelumnya Lo bisa pake class atau function dan return harus element HTML bisa `return <div></div>` atau `return (<div></div>)` biar lebih rapi.
+1. Component harus di pake pake function.
+Nah aturan ini hanya berlaku di React V18 keatas di versi sebelumnya Lo bisa pake class atau function dan return harus element HTML bisa `return <div></div>` atau `return (<div></div>)` biar lebih rapi. Dan lo ngga bisa mentah - mentah langsung nulis element HTML di file Javascript. atau di tag JavaScript.
+```html
+<script>
+ < div><h1>Hello World</h1></div> // kaya gini ngga boleh
+</script>
+```
 
+2. Component hanya boleh return/render 1 element HTML.
+Tadi kok bisa return 2 sampe 5 elemnt HTML, tapi sekarang hanya bisa return 1 elemnt HTML? Beda bro, maksudnya return 1 element HTML itu `return <div><element atau jsx lain/></div>` yang ngga boleh itu:
+```jsx
+// Ga boleh return banyak element HTML
+return (
+    <h1>Hello World</h1>
+    <h2>React</h2>
+    <div>
+    </div>
+);
+// Yang diperbolehkan
+return (
+    <> 
+        <h1>Hello World</h1>
+        <h2>React</h2>
+        <div>
+        </div>
+    </>
+);
+```
+Atau kalo Lo ga butuh tag HTML Lo bisa pake `<></>` atau `<>` untuk membungkus elemnt HTML.
 
-- Component harus di pake pake class (udah jarang dipake sejak Recat V18)
+3. Component ga boleh return kurung kurawal `{}` atau kurung kotak `[]`.
+Kalo Lo render `{}` React bakal mengira kalo function yang Lo bikin itu return Object atau Array, bukan JSX atau Element HTML. Jadi ga boleh return `{}`.
 
-- Component harus di pake pake JSX
+4. Format functional Component harus `PascalCase` (ga boleh `camelCase`, `kebab-case`, `snake_case`).
+```jsx
+function PascalCase() {
+  return <h1>Hello World</h1>
+}
+
+// ga boleh
+function camelCase() {
+  return <h1>Hello World</h1>
+}
+function kebab-case() {
+  return <h1>Hello World</h1>
+}
+function snake_case() {
+  return <h1>Hello World</h1>
+}
+```
+
+5. Element HTML harus punya tutup (close tag).
+```jsx
+<img/> 
+<br/>
+<input/>
+
+// ga boleh (wajib ada />)
+<img>
+<br>
+<input>
+```
+
+6. Atribut HTML harus dengan format `camelCase`.
+```jsx
+// ga boleh pake onclick
+<button onClick={() => console.log("Hello World")}>Submit</button>
+```
+Ada beberapa pengecualian untuk atribut `for` dan `class`. Di React ini di pake `htmlFor` dan `className` untuk atribut `for` dan `class` HTML. Kenapa? Karena React menggunakan file .js, .ts, .jsx, .tsx jadi `for` dan `class` akan dianggap keyword `for` untuk looping dan `class` untuk object class.
+```jsx
+<label htmlFor="submit">Submit</label>
+<button className="submit">Submit</button>
+```
+
+7. Untuk menampilkan value harus menggunakan kurung kurawal `{}`.
+```jsx
+function PanggilNama() {
+
+    const name = "Satria Baja Ringan";
+  return <h1>Hello {name}</h1>
+}
+```
+
+8. Jika terdapat kondisi maka harus menggunakan operator ternary.
+```jsx
+function PanggilNama() {
+
+    const name = "Satria Baja Ringan";
+  return name ? <h1>Hello {name}</h1> : <h1>Hello World</h1>
+}
+```
+
+9. Gunakan `key` pada looping di HTML.
+```jsx
+function PanggilNama() {
+
+    const name = ["Satria", "Baja", "Ringan"];
+  return (
+    <>
+        {name.map((item, index) => {
+            return <h1 key={index}>{item}</h1>
+        })}
+    </>
+  )
+}
+```
+10. Jika ingin menambahkan inline style di elemnt HTML, maka harus menggunakan `camelCase` untuk nama style nya dan di pake kurung kurawal `{}` berupa objek.
+```jsx
+function PanggilNama() {
+
+    const name = ["Satria", "Baja", "Ringan"];
+  return (
+    <>
+        {name.map((item, index) => {
+            return <h1 key={index} style={{color: "red", fontSize: "20px"}}>{item}</h1>
+        })}
+    </>
+  )
+}
+```
+
+Okeh jadi itu aturan dalam Component dan JSX di React. Ibarat Lo mau mau kerja lewat Ordal (Orang Dalam) Lo harus baik ke orangnya, jaga nama baiknya, dan Lo siap ga enakan orangnya. Tapi masuknya mudah dibandingkan Lo lamar sendiri Lo harus Lulusan Kampus Terbaik, Portfolio Keren, Skill Dewa, dan Punya Psikolog normal dan itu belum tentu keterima kaya Lo pake Vanila JS yang ujung - ujungnya banyak error <span class="text-danger fw-bold">Undefined is not a function<span>
+
+<h4>Aturan Component & JSX</h4>
 
 </details>
 
