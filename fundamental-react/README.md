@@ -340,7 +340,9 @@ function PanggilNama() {
 
 Okeh jadi itu aturan dalam Component dan JSX di React. Ibarat Lo mau mau kerja lewat Ordal (Orang Dalam) Lo harus baik ke orangnya, jaga nama baiknya, dan Lo siap ga enakan orangnya. Tapi masuknya mudah dibandingkan Lo lamar sendiri Lo harus Lulusan Kampus Terbaik, Portfolio Keren, Skill Dewa, dan Punya Psikolog normal dan itu belum tentu keterima kaya Lo pake Vanila JS yang ujung - ujungnya banyak error <span class="text-danger fw-bold">Undefined is not a function<span>
 
-<h4>Aturan Component & JSX</h4>
+<h4>Props</h4>
+
+Sekarang udah paham lah ha soal Component dan JSX, di Component juga dia bisa melakukan render data, conditional render dan looping data yang ada di function component nya sendiri. Sekarang Lo ngeh ngga bro React bisa render data yang ada di function component nya, gimana kalo data yang di render itu dari component lain jadi join data antar component. Bisa bro di React ada yang namanya `props`. `Props` adalah argument yang ada di function component jadi misal:
 
 </details>
 
