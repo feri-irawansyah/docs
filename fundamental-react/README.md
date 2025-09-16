@@ -23,3 +23,81 @@ Jadi kalo misal lo ulek bumbu sendiri artinya lo buat UI pake React lo jahit sen
 
 
 </details>
+
+<details>
+<summary><h2>📌 Dasar-Dasar React</h2></summary>
+
+Lagi ditulis...
+
+</details>
+
+<details>
+<summary><h2>📌 React Hooks (Core)</h2></summary>
+
+Lagi ditulis...
+
+</details>
+
+<details>
+<summary><h2>📌 React Hooks (Core)</h2></summary>
+
+Lagi ditulis...
+
+</details>
+
+<details>
+<summary><h2>📌 Data Flow dan Thinking in React</h2></summary>
+
+Lagi ditulis...
+
+</details>
+
+<details>
+<summary><h2>📌 Styling di React</h2></summary>
+
+Lagi ditulis...
+
+</details>
+
+<details>
+<summary><h2>📌 Routing</h2></summary>
+
+Lagi ditulis...
+
+</details>
+
+<details>
+<summary><h2>📌 Data Fetching</h2></summary>
+
+Lagi ditulis...
+
+</details>
+
+<details>
+<summary><h2>📌 Form Handling & Validation</h2></summary>
+
+Lagi ditulis...
+
+</details>
+
+<details>
+<summary><h2>📌 State Management Lanjutan</h2></summary>
+
+Lagi ditulis...
+
+</details>
+
+<details>
+<summary><h2>📌 Ecosystem & Best Practices</h2></summary>
+
+Lagi ditulis...
+
+</details>
+
+<details>
+<summary><h2>📌 Unitest & Deployment</h2></summary>
+
+Lagi ditulis...
+
+</details>
+
