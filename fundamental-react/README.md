@@ -26,6 +26,8 @@ Jadi kalo misal lo ulek bumbu sendiri artinya lo buat UI pake React lo jahit sen
 
 <h4>Bedanya React, Vanilajs, dan Jquery (The legend off Javascript Library)</h4>
 
+Lo mesti pernah pake atau pas kuliah dan di tutorial
+
 </details>
 
 <details>
