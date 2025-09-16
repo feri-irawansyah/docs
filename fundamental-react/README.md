@@ -26,7 +26,11 @@ Jadi kalo misal lo ulek bumbu sendiri artinya lo buat UI pake React lo jahit sen
 
 <h4>Bedanya React, Vanilajs, dan Jquery (The legend off Javascript Library)</h4>
 
-Lo mesti pernah pake atau pas kuliah dan di tutorial
+Lo mesti pernah pake atau pas kuliah dan di tutorial javascript. Nah sekarang mesti lo nanya apa bedanya react sama Valina JavaScript? Gue bikin pake Javascript juga bisa kali?.
+
+Analoginya gini Lo misal mau bikin patung, nah Lo di kasih tanah liat segelondongan Lo mesti harus punya skill dewa dulu tuh buat bikin idup,muka,kuping dll, iya kalo bagus? kalo lebih mirip kaya alien? kan kocak.
+
+Bedain kalo Lo misal di kasih Lego nah Lo tinggal susun tuh kepingan - kepingannya.  Bahkan bukan cuma patungnya Lo bisa bikin istananya sekalian sama politiknya 😎
 
 </details>
 
