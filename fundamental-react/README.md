@@ -14,7 +14,7 @@ Kalo lu nyasar atau cari *`React`* di google search. Nah mesti bakal muncul web 
 
 React itu library, dependencies, package, atau benda" semacam itu bukan `framework`. Framework itu kerangka kerja bro kaya lo misal mau masak di resto itu udh ada tata caranya, alat" nya lengkap dan ada aturan nya harus steril, bersih, rapi, harus ikutin sop nya.
 
-Beda kaya lo masak di dapur orang jawa:
+Beda kaya lo masak di dapur orang jawa
 
 <img class="img-fluid" alt="image" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/fundamental-react/assets/orang-jawa.jpg" />
 
