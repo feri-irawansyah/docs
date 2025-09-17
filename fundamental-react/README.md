@@ -141,7 +141,7 @@ Nah di React kita bisa pake JSX & Component untuk mempermudah hidup Lo bro.
 1. JSX (JavaScript XML) itu Lo bisa nulis element HTML di Javascript (tanpa "", tanpa '' atau mantra - mantra lain. Lo tinggal tulis langsung element HTML nya). Contoh `<div></div> atau <div></div>`.
 2. Component itu kaya kepingan - kepingan yang isinya itu JSX pake function atau class (udah jarang dipake sejak Recat V18) Javascript.
 
-```jsx
+```js
 const App = () => {
   return <div><h1>Hello World</h1></div>
 };
@@ -244,7 +244,7 @@ Nah aturan ini hanya berlaku di React V18 keatas di versi sebelumnya Lo bisa pak
 
 2. Component hanya boleh return/render 1 element HTML.
 Tadi kok bisa return 2 sampe 5 elemnt HTML, tapi sekarang hanya bisa return 1 elemnt HTML? Beda bro, maksudnya return 1 element HTML itu `return <div><element atau jsx lain/></div>` yang ngga boleh itu:
-```jsx
+```js
 // Ga boleh return banyak element HTML
 return (
     <h1>Hello World</h1>
@@ -268,7 +268,7 @@ Atau kalo Lo ga butuh tag HTML Lo bisa pake `<></>` atau `<>` untuk membungkus e
 Kalo Lo render `{}` React bakal mengira kalo function yang Lo bikin itu return Object atau Array, bukan JSX atau Element HTML. Jadi ga boleh return `{}`.
 
 4. Format functional Component harus `PascalCase` (ga boleh `camelCase`, `kebab-case`, `snake_case`).
-```jsx
+```js
 function PascalCase() {
   return <h1>Hello World</h1>
 }
@@ -286,7 +286,7 @@ function snake_case() {
 ```
 
 5. Element HTML harus punya tutup (close tag).
-```jsx
+```js
 <img/> 
 <br/>
 <input/>
@@ -298,18 +298,18 @@ function snake_case() {
 ```
 
 6. Atribut HTML harus dengan format `camelCase`.
-```jsx
+```js
 // ga boleh pake onclick
 <button onClick={() => console.log("Hello World")}>Submit</button>
 ```
 Ada beberapa pengecualian untuk atribut `for` dan `class`. Di React ini di pake `htmlFor` dan `className` untuk atribut `for` dan `class` HTML. Kenapa? Karena React menggunakan file .js, .ts, .jsx, .tsx jadi `for` dan `class` akan dianggap keyword `for` untuk looping dan `class` untuk object class.
-```jsx
+```js
 <label htmlFor="submit">Submit</label>
 <button className="submit">Submit</button>
 ```
 
 7. Untuk menampilkan value harus menggunakan kurung kurawal `{}`.
-```jsx
+```js
 function PanggilNama() {
 
     const name = "Satria Baja Ringan";
@@ -318,7 +318,7 @@ function PanggilNama() {
 ```
 
 8. Jika terdapat kondisi maka harus menggunakan operator ternary.
-```jsx
+```js
 function PanggilNama() {
 
     const name = "Satria Baja Ringan";
@@ -327,7 +327,7 @@ function PanggilNama() {
 ```
 
 9. Gunakan `key` pada looping di HTML.
-```jsx
+```js
 function PanggilNama() {
 
     const name = ["Satria", "Baja", "Ringan"];
@@ -341,7 +341,7 @@ function PanggilNama() {
 }
 ```
 10. Jika ingin menambahkan inline style di elemnt HTML, maka harus menggunakan `camelCase` untuk nama style nya dan di pake kurung kurawal `{}` berupa objek.
-```jsx
+```js
 function PanggilNama() {
 
     const name = ["Satria", "Baja", "Ringan"];
@@ -360,7 +360,7 @@ Okeh jadi itu aturan dalam Component dan JSX di React. Ibarat Lo mau mau kerja l
 <h4>🪡 Props</h4>
 
 Sekarang udah paham lah ha soal Component dan JSX, di Component juga dia bisa melakukan render data, conditional render dan looping data yang ada di function component nya sendiri. Sekarang Lo ngeh ngga bro React bisa render data yang ada di function component nya, gimana kalo data yang di render itu dari component lain jadi join data antar component. Bisa bro di React ada yang namanya `props`. `Props` adalah argument yang ada di function component jadi misal:
-```jsx
+```js
 function PanggilNama(props) {
 
     return <h1>Hello {props.name}</h1>
@@ -376,12 +376,12 @@ function PanggilNama({name}) {
 ```
 Di React `props` itu bentuknya Object `{}`. Dan `props` itu bisa di akses di dalam function component nya. `Props` ini datanya statis, artinya tidak bisa di ubah baik di ubah dari Parent Component ataupun di ubah dari Child Component. Selain data, Lo juga bisa join atau memberikan function dan elemnt HTML bahkan JSX juga bisa diberikan ke `props`.
 1. String, Number, Boolean, Array, Object dan null.
-```jsx
+```js
 <PanggilNama nama="Satria Baja Ringan" umur={20} jomblo={true} temenLuckNut={["Satria", "Baja", "Ringan"]} alamat={{kota: "Jakarta", provinsi: "DKI Jakarta"}}/>
 ```
 
 2. Function dan Callback.
-```jsx
+```js
 <PanggilNama nama="Satria Baja Ringan" onClick={() => console.log("Hello World")}/>
 
 // Atau seperti ini
@@ -392,12 +392,12 @@ function handleClick() {
 ```
 
 3. React Elemnt dan JSX.
-```jsx
+```js
 <TombolKehidupan tombol={<button>Pencet</button>}>
 ```
 
 4. Children (Special Props).
-```jsx
+```js
 <PanggilNama>
     <h1>Hello World</h1>
 </PanggilNama>
@@ -408,7 +408,7 @@ function PanggilNama({children}) {
 }
 ```
 5. Default Props.
-```jsx
+```js
 <PanggilNama nama="Satria Baja Ringan" umur={20} jomblo={true} temenLuckNut={["Satria", "Baja", "Ringan"]} alamat={{kota: "Jakarta", provinsi: "DKI Jakarta"}}/>
 
 // Atau seperti ini
@@ -461,7 +461,7 @@ function PanggilNama({nama = "Satria Baja Ringan", umur = 20, jomblo = true, tem
 
 <img class="img-fluid" alt="image" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/fundamental-react/assets/props.png" />
 Okeh sekarang Lo harusnya udah ada gambaran gimana cara pharse data di react misalnya Lo call dari api, atau simpen data di file json bisa bro.
-```jsx
+```js
 masih gue pikir
 
 ```
