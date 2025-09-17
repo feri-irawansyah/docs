@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>React Example</title>
+    <!-- Babel -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- React dan ReactDOM dari CDN -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+
+  </head>
+  <body>
+    <div id="app"></div>
+
+    <script type="text/babel">
+        // Atau seperti ini
+        function PanggilNama({nama = "Satria Baja Ringan", umur = 20, jomblo = true, temenLuckNut = ["Satria", "Baja", "Ringan"], alamat = {kota: "Jakarta", provinsi: "DKI Jakarta"}}) {
+            return (
+                <div>
+                    <h1>Hello {nama}</h1>
+                    <h2>Umur: {umur}</h2>
+                    <h2>Jomblo: {jomblo ? "Ya" : "Tidak"}</h2>
+                    <h2>Teman Luck Nut: {temenLuckNut.join(", ")}</h2>
+                    <h2>Alamat: {alamat.kota}, {alamat.provinsi}</h2>
+                </div>
+            )
+        }
+
+        function App() {
+            return <PanggilNama nama="Satria Baja Ringan" umur={20} jomblo={true} temenLuckNut={["Satria", "Baja", "Ringan"]} alamat={{kota: "Jakarta", provinsi: "DKI Jakarta"}}/>
+        }
+
+         ReactDOM.createRoot(document.getElementById("app")).render(<App />);
+
+        //   <App /> JSX bikin function jadi element HTML
+    </script>
+  </body>
+</html>

@@ -68,6 +68,8 @@ Bedain kalo Lo misal di kasih Lego nah Lo tinggal susun tuh kepingan - kepingann
   <head>
     <meta charset="UTF-8" />
     <title>React Example</title>
+    <!-- Babel -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <!-- React dan ReactDOM dari CDN -->
     <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
@@ -103,6 +105,15 @@ Bedain kalo Lo misal di kasih Lego nah Lo tinggal susun tuh kepingan - kepingann
   </body>
 </html>
 ```
+
+```html
+<!-- Babel -->
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<!-- React dan ReactDOM dari CDN -->
+<script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+```
+Cdn harus ada React, ReactDOM dan Babel, karena browser tidak bisa langsung membaca JSX. Jadi Lo harus pake Babel.
 
 `React.createElement("element HTML", atribut, "Content"),`
 
@@ -149,14 +160,17 @@ function `App` ini adalah Component bro dimana isinya itu HTML tanpa '', "", cre
   <head>
     <meta charset="UTF-8" />
     <title>React Example</title>
+    <!-- Babel -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <!-- React dan ReactDOM dari CDN -->
     <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+
   </head>
   <body>
     <div id="app"></div>
 
-    <script>
+    <script type="text/babel">
       function App() {
         return <div><h1>Hello World</h1></div>
       }
@@ -168,6 +182,7 @@ function `App` ini adalah Component bro dimana isinya itu HTML tanpa '', "", cre
   </body>
 </html>
 ```
+<img class="img-fluid" alt="image" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/fundamental-react/assets/hello-world.png" />
 
 Simple kan? Okeh sekarang misal gue pingin pisahin `<h1>` di function terpisah, atau bikin element yang lebih banyak.
 
@@ -177,6 +192,8 @@ Simple kan? Okeh sekarang misal gue pingin pisahin `<h1>` di function terpisah, 
   <head>
     <meta charset="UTF-8" />
     <title>React Example</title>
+    <!-- Babel -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <!-- React dan ReactDOM dari CDN -->
     <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
@@ -185,7 +202,7 @@ Simple kan? Okeh sekarang misal gue pingin pisahin `<h1>` di function terpisah, 
     <div id="app"></div>
 
     <script>
-      function App() {
+      function App() { // parent
         return (
           <div>
             <Header /> // element Header di panggil di function App
@@ -197,11 +214,11 @@ Simple kan? Okeh sekarang misal gue pingin pisahin `<h1>` di function terpisah, 
         );
       }
 
-      function Header() {
+      function Header() { // child
         return <h1>Hello World</h1>
       }
 
-      function Footer() {
+      function Footer() { // child
         return <p>Footer</p>
       }
 
@@ -349,7 +366,7 @@ function PanggilNama(props) {
     return <h1>Hello {props.name}</h1>
 }
 
-// Atau seperti ini
+// Atau seperti ini pake destructure
 function PanggilNama({name}) {
 
     return <h1>Hello {name}</h1>
@@ -357,14 +374,95 @@ function PanggilNama({name}) {
 
 <PanggilNama name="Satria Baja Ringan"/>
 ```
-Di React `props` itu bentuknya Object `{}`. Dan `props` itu bisa di akses di dalam function component nya.
+Di React `props` itu bentuknya Object `{}`. Dan `props` itu bisa di akses di dalam function component nya. `Props` ini datanya statis, artinya tidak bisa di ubah baik di ubah dari Parent Component ataupun di ubah dari Child Component. Selain data, Lo juga bisa join atau memberikan function dan elemnt HTML bahkan JSX juga bisa diberikan ke `props`.
+1. String, Number, Boolean, Array, Object dan null.
+```jsx
+<PanggilNama nama="Satria Baja Ringan" umur={20} jomblo={true} temenLuckNut={["Satria", "Baja", "Ringan"]} alamat={{kota: "Jakarta", provinsi: "DKI Jakarta"}}/>
+```
 
-</details>
+2. Function dan Callback.
+```jsx
+<PanggilNama nama="Satria Baja Ringan" onClick={() => console.log("Hello World")}/>
 
-<details>
-<summary><h2>📌 React Hooks (Core)</h2></summary>
+// Atau seperti ini
+function handleClick() {
+  console.log("Hello World")
+}
+<PanggilNama nama="Satria Baja Ringan" onClick={handleClick}/>
+```
 
-Lagi ditulis...
+3. React Elemnt dan JSX.
+```jsx
+<TombolKehidupan tombol={<button>Pencet</button>}>
+```
+
+4. Children (Special Props).
+```jsx
+<PanggilNama>
+    <h1>Hello World</h1>
+</PanggilNama>
+
+// function paggil nama
+function PanggilNama({children}) {
+    return <div>{children}</div>
+}
+```
+5. Default Props.
+```jsx
+<PanggilNama nama="Satria Baja Ringan" umur={20} jomblo={true} temenLuckNut={["Satria", "Baja", "Ringan"]} alamat={{kota: "Jakarta", provinsi: "DKI Jakarta"}}/>
+
+// Atau seperti ini
+function PanggilNama({nama = "Satria Baja Ringan", umur = 20, jomblo = true, temenLuckNut = ["Satria", "Baja", "Ringan"], alamat = {kota: "Jakarta", provinsi: "DKI Jakarta"}}) {
+    return <h1>Hello {nama}</h1>
+}
+```
+
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>React Example</title>
+    <!-- Babel -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- React dan ReactDOM dari CDN -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+
+  </head>
+  <body>
+    <div id="app"></div>
+
+    <script type="text/babel">
+        // Atau seperti ini
+        function PanggilNama({nama = "Satria Baja Ringan", umur = 20, jomblo = true, temenLuckNut = ["Satria", "Baja", "Ringan"], alamat = {kota: "Jakarta", provinsi: "DKI Jakarta"}}) {
+            return (
+                <div>
+                    <h1>Hello {nama}</h1>
+                    <h2>Umur: {umur}</h2>
+                    <h2>Jomblo: {jomblo ? "Ya" : "Tidak"}</h2>
+                    <h2>Teman Luck Nut: {temenLuckNut.join(", ")}</h2>
+                    <h2>Alamat: {alamat.kota}, {alamat.provinsi}</h2>
+                </div>
+            )
+        }
+
+        function App() {
+            return <PanggilNama nama="Satria Baja Ringan" umur={20} jomblo={true} temenLuckNut={["Satria", "Baja", "Ringan"]} alamat={{kota: "Jakarta", provinsi: "DKI Jakarta"}}/>
+        }
+
+         ReactDOM.createRoot(document.getElementById("app")).render(<App />);
+
+        //   <App /> JSX bikin function jadi element HTML
+    </script>
+  </body>
+</html>
+```
+
+<img class="img-fluid" alt="image" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/fundamental-react/assets/props.png" />
+
+<h4>🪡 State</h4>
+
 
 </details>
 
