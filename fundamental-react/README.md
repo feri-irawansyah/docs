@@ -460,6 +460,7 @@ function PanggilNama({nama = "Satria Baja Ringan", umur = 20, jomblo = true, tem
 ```
 
 <img class="img-fluid" alt="image" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/fundamental-react/assets/props.png" />
+
 Okeh sekarang Lo harusnya udah ada gambaran gimana cara pharse data di react misalnya Lo call dari api, atau simpen data di file json bisa bro.
 ```js
 masih gue pikir
