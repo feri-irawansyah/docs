@@ -470,7 +470,7 @@ Okeh tapi Lo harusnya mikir, gmna kalo datanya berubah? Misalnya Lo click terus 
 
 <h4>🪡 State</h4>
 
-Okeh bro, sebelum nya Lo udah pake `props` nah terus Lo kepikiran gimana kalo datanya bisa Lo ubah - ubah. Untuk melakukan itu Lo perlu yang namanya `state` atau keadaan.
+Okeh bro, sebelum nya Lo udah pake `props` nah terus Lo kepikiran gimana kalo datanya bisa Lo ubah - ubah. Untuk melakukan itu Lo perlu yang namanya `state` atau keadaan. Jadi misal Lo punya tombol jika di click maka akan mengubah warna background atau input untuk mengisikan data.
 
 </details>
 
