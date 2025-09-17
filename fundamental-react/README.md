@@ -29,7 +29,7 @@ Jadi kalo misal Lo ulek bumbu sendiri artinya Lo buat UI pake React Lo jahit sen
 
 Javascript DOM Lo mesti pernah pake pas kuliah atau pas liat tutorial javascript. Nah sekarang mesti Lo nanya apa bedanya React sama Valina JavaScript? Gue bikin pake Javascript juga bisa kali?.
 
-Analoginya gini Lo misal mau bikin patung, nah Lo di kasih tanah liat segelondongan Lo mesti harus punya skill dewa dulu tuh buat bikin idup,muka,kuping dll, iya kalo bagus? kalo lebih mirip kaya alien? kan kocak.
+Analoginya gini Lo misal mau bikin patung, nah Lo di kasih tanah liat segelondongan Lo mesti harus punya skill dewa dulu tuh buat bikin idung,muka,kuping dll, iya kalo bagus? kalo lebih mirip kaya alien? kan kocak.
 
 Bedain kalo Lo misal di kasih Lego nah Lo tinggal susun tuh kepingan - kepingannya.  Bahkan bukan cuma patungnya Lo bisa bikin istananya sekalian sama politiknya 😎. React itu kaya Lego jadi kalo lo mau buat patung Lo tinggal rakit kepingan/component nya, ngga perlu jadi Dewa Javascript dulu dan manual pake DOM. Gue kasih contoh
 
@@ -460,9 +460,16 @@ function PanggilNama({nama = "Satria Baja Ringan", umur = 20, jomblo = true, tem
 ```
 
 <img class="img-fluid" alt="image" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/fundamental-react/assets/props.png" />
+Okeh sekarang Lo harusnya udah ada gambaran gimana cara pharse data di react misalnya Lo call dari api, atau simpen data di file json bisa bro.
+```jsx
+masih gue pikir
+
+```
+Okeh tapi Lo harusnya mikir, gmna kalo datanya berubah? Misalnya Lo click terus bisa edit data kayak di DOM?
 
 <h4>🪡 State</h4>
 
+Okeh bro, sebelum nya Lo udah pake `props` nah terus Lo kepikiran gimana kalo datanya bisa Lo ubah - ubah. Untuk melakukan itu Lo perlu yang namanya `state` atau keadaan.
 
 </details>
 
