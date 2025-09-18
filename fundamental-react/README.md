@@ -143,7 +143,9 @@ Nah di React kita bisa pake JSX & Component untuk mempermudah hidup Lo bro.
 
 ```js
 const App = () => {
-  return <div><h1>Hello World</h1></div>
+  return (
+    <div><h1>Hello World</h1></div>
+  )
 };
 
 // Atau pake ini sama aja
