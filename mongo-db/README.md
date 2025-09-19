@@ -1,0 +1,1 @@
+Kalo Lo anak kos yang males bersih - bersih, tampil seadanya, ga mau rapiin lemari sama kamar Lo mirip kaya Database NOSQL bro. Apa aja bisa Lo simpan dan kaga ada aturan terstruktur yang penting Lo tau dimana Lo nyimpen barang.
