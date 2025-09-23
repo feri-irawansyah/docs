@@ -67,8 +67,7 @@ Nah Lo klick aja yang Windows x86-64 kalo windows Lo 86/64 bit. Kalo windows 11 
 
 <img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/postgres-sql/assets/file-postgres.png" alt="postgres-sql/assets/file-postgres.png"/>
 
-
 <h4>🪡 Setup Installasi PostgreSQL</h4>
-
+Untuk instalasinya Lo bisa klick di notifikasi browser atau double klik file .exe nya
 
 </details>
