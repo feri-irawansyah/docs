@@ -53,7 +53,7 @@ Agenda di catatan kecil gue ini ga banyak kok paling 12😁
 
 Syarat yang harus dipenuhi buat install PostgreSQL itu OS dan Device bro. Lo coba buka link ini <a href="https://www.postgresql.org/download" target="_blank">https://www.postgresql.org/download/</a>
 
-<img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/postgres-sql/assets/1.png" alt="postgres-sql/assets/os.png"/>
+<img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/postgres-sql/assets/os.png" alt="postgres-sql/assets/os.png"/>
 
 Ada Linux, MacOS, Windows, BSD, Solaris bebas Lo mau pake yang mana. Yang gue pake di catatan ini Windows 11. Untuk device ga usah gede - gede pake Laptop ram 4GB juga udah bisa bro.
 
@@ -61,11 +61,11 @@ Ada Linux, MacOS, Windows, BSD, Solaris bebas Lo mau pake yang mana. Yang gue pa
 
 Untuk link download Lo bisa ke link ini <a href="https://www.enterprisedb.com/downloads/postgres-postgresql-downloads" target="_blank">https://www.enterprisedb.com/downloads/postgres-postgresql-downloads</a> Atau dari halaman sebelumnya Lo klik icon Windows nanti bakal pergi ke halaman ini juga.
 
-<img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/postgres-sql/assets/2.png" alt="postgres-sql/assets/download.png"/>
+<img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/postgres-sql/assets/download.png" alt="postgres-sql/assets/download.png"/>
 
 Nah Lo klick aja yang Windows x86-64 kalo windows Lo 86/64 bit. Kalo windows 11 kaya punya gue bisanya 64 jadi tinggal klik nanti terdownload yang penting pastikan ada koneksi internet buat downloadnya. Kalo ga ada bisa numpang Wifi tetangga. Kalo udah terdownload nanti ada muncul notifikasi dan di folder download Lo harusnya juga udah ada file installer PostgreSQLnya.
 
-<img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/postgres-sql/assets/3.png" alt="postgres-sql/assets/file-postgres.png"/>
+<img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/postgres-sql/assets/file-postgres.png" alt="postgres-sql/assets/file-postgres.png"/>
 
 
 <h4>🪡 Setup Installasi PostgreSQL</h4>
