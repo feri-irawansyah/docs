@@ -20,10 +20,10 @@ Lo pernah ga bro naik kereta terus Lo teriak - teriak, terus Lo duduk se enaknya
 Kebayanyakan DBMS itu menyimpan datanya menggunakan file atau DISK fisik, meskipun ada beberapa yang datanya itu disimpen di memory (RAM). Nah tapi meski disimpen di file, tapi filenya ngga bisa Lo buka terus dibaca kaya Lo baca chat gebetan yang harus Lo jawab cepet - cepet. File database itu kompleks bro, ga kaya CSV atau Excel yang bisa Lo baca sambil rebahan santuy. Dan biasanya DBMS itu punya cara masing - masing buat ngelola file - file nya.
 
 <div class="row justify-content-start">
-    <div class="col-md-2 col-12">
+    <div class="col-lg-2 col-12">
         <img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/postgres-sql/assets/postgresql.png" alt="postgres-sql/assets/1.png"/>
     </div>
-    <div class="col-md-10 col-12">
+    <div class="col-lg-10 col-12">
        <p>Lanjut ke PostgreSQL karena judulnya udah PostgreSQL kan kocak kalo jadinya bahas king PHP atau Javascript. PostgreSQL berakar dari proyek Ingres (Interactive Graphics and Retrieval System) yang dibuat di University of California, Berkeley (UCB) tahun 1970-an. Tahun 1982, Michael Stonebraker (profesor di UCB) merasa Ingres sudah mulai terbatas, lalu dia memulai proyek baru bernama POSTGRES dari kata `post-ingres` (Penerus Ingres). Dan akhirnya ditahun 1996-1997 Versi PostgreSQL 6.0 menjadi rilis komunitas pertama. Untuk lebih lengkapnya Lo bisa baca langsung di <a href="https://www.postgresql.org/docs/current/history.html">https://www.postgresql.org/docs/current/history.html</a>. </p>
        <p>Kenapa PostgreSQL? `Karena gue biasa pake PostgreSQL, kalo biasa pake MySQL paling juga MySQL`. Ga gitu juga bro. Untuk database yang sering gue pake itu Microsoft SQL Server. Karena kebeulan dikantor gue pake MSSQL. Tapi untuk database favorit gue itu PostgreSQL karena fiturnya banyak meskipun kaga dipake semua.</p>
     </div>
