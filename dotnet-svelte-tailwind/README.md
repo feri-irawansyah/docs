@@ -64,7 +64,7 @@ Tambahkan ini di appsettings.json
 ```json
 {
     "ConnectionStrings": {
-    "DefaultConnection": "Server=localhost; Database=DatabaseSampah; User Id=sa; Password=123456; Encrypt=True; TrustServerCertificate=True; MultipleActiveResultSets=True;"
+    "DefaultConnection": "Server=localhost; Database=DatabaseSampah; User Id=sa; Password=123456; Encrypt=True; TcsharpServerCertificate=True; MultipleActiveResultSets=True;"
   }
 }
 ```
@@ -103,7 +103,7 @@ AplikasiSampah/
 └─ Program.cs
 ```
 
-```rust
+```csharp
 // Context/DataContext.cs
 using Microsoft.EntityFrameworkCore;
 using Services.Models;
@@ -125,7 +125,7 @@ public class DataContext : DbContext
 }
 ```
 
-```rust
+```csharp
 // models/Sampah.cs
 namespace AplikasiSampah.Models;
 public class Trash
@@ -139,7 +139,7 @@ public class Trash
 }
 ```
 
-```rust
+```csharp
 // repositories/SampahRepository.cs
 using Microsoft.EntityFrameworkCore;
 using AplikasiSampah.Context;
@@ -196,7 +196,7 @@ namespace AplikasiSampah.Repositories
 }
 ```
 
-```rust
+```csharp
 // services/TrashService.cs
 using Services.Models;
 using Services.Repositories;
@@ -214,7 +214,7 @@ public class TrashService
 }
 ```
 
-```rust
+```csharp
 // controllers/TrashController.cs
 using Microsoft.AspNetCore.Mvc;
 using Services.Models;
@@ -261,7 +261,7 @@ public class TrashController : ControllerBase
 }
 ```
 
-```rust
+```csharp
 // Program.cs
 using Microsoft.EntityFrameworkCore;
 using Services.Context;
