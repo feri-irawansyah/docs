@@ -103,7 +103,7 @@ AplikasiSampah/
 └─ Program.cs
 ```
 
-```csharp
+```rust
 // Context/DataContext.cs
 using Microsoft.EntityFrameworkCore;
 using Services.Models;
@@ -125,7 +125,7 @@ public class DataContext : DbContext
 }
 ```
 
-```csharp
+```rust
 // models/Sampah.cs
 namespace AplikasiSampah.Models;
 public class Trash
@@ -139,7 +139,7 @@ public class Trash
 }
 ```
 
-```csharp
+```rust
 // repositories/SampahRepository.cs
 using Microsoft.EntityFrameworkCore;
 using AplikasiSampah.Context;
@@ -196,7 +196,7 @@ namespace AplikasiSampah.Repositories
 }
 ```
 
-```csharp
+```rust
 // services/TrashService.cs
 using Services.Models;
 using Services.Repositories;
@@ -214,7 +214,7 @@ public class TrashService
 }
 ```
 
-```csharp
+```rust
 // controllers/TrashController.cs
 using Microsoft.AspNetCore.Mvc;
 using Services.Models;
@@ -261,7 +261,7 @@ public class TrashController : ControllerBase
 }
 ```
 
-```csharp
+```rust
 // Program.cs
 using Microsoft.EntityFrameworkCore;
 using Services.Context;
@@ -313,6 +313,10 @@ public class Program
 ```
 
 ```bash
+dotnet ef migrations add InitialCreate
+
+dotnet ef database update
+
 dotnet run
 
 http://localhost:5000/api/trash
@@ -386,4 +390,32 @@ Tambah sampah swagger
         {/each}
     </tbody>
 </table>
+```
+<img src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/dotnet-svelte-tailwind/assets/frontend.png" class="img-fluid">
+
+Sebelum mulai CRUD nya buat auth dulu
+
+Install lib
+
+```bash
+dotnet add package Microsoft.AspNetCore.Authentication.JwtBearer
+dotnet add package Microsoft.IdentityModel.Tokens
+dotnet add package Microsoft.AspNetCore.Identity
+dotnet add package Swashbuckle.AspNetCore
+```
+
+Tambah di bawah connection string
+
+```json
+{
+    "ConnectionStrings": {
+      // ...
+    },
+    "Jwt": {
+        "Key": "masukin-secret-key-panjang-dan-aman-disini-ubah-di-prod",
+        "Issuer": "my-app",
+        "Audience": "my-app-audience",
+        "ExpiresMinutes": 60
+    },
+}
 ```
