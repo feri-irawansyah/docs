@@ -103,7 +103,7 @@ AplikasiSampah/
 └─ Program.cs
 ```
 
-```csharp
+```cs
 // Context/DataContext.cs
 using Microsoft.EntityFrameworkCore;
 using Services.Models;
@@ -125,7 +125,7 @@ public class DataContext : DbContext
 }
 ```
 
-```csharp
+```cs
 // models/Sampah.cs
 namespace AplikasiSampah.Models;
 public class Trash
