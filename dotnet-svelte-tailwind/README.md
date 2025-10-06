@@ -1,3 +1,5 @@
+Dotnet atau ASP .Net adalah Framework All In buatan Microsoft yang menggunakan C# sebagai bahasa utamanya. Dotnet ini merupakan kesayangan Corporate kenapa? Karena dia Ramah, Tools banyak, di suport sama perusahaan gede (Microsoft) dan Lo pake dotnet Lo bakal di manjain sama Microsoft pokoknya.
+
 requirement:
 - Visual Studio Code
 - NodeJS v22
@@ -139,7 +141,7 @@ public class Trash
 }
 ```
 
-```csharp
+```cs
 // repositories/SampahRepository.cs
 using Microsoft.EntityFrameworkCore;
 using AplikasiSampah.Context;
@@ -196,7 +198,7 @@ namespace AplikasiSampah.Repositories
 }
 ```
 
-```csharp
+```cs
 // services/TrashService.cs
 using Services.Models;
 using Services.Repositories;
@@ -214,7 +216,7 @@ public class TrashService
 }
 ```
 
-```csharp
+```cs
 // controllers/TrashController.cs
 using Microsoft.AspNetCore.Mvc;
 using Services.Models;
@@ -261,7 +263,7 @@ public class TrashController : ControllerBase
 }
 ```
 
-```csharp
+```cs
 // Program.cs
 using Microsoft.EntityFrameworkCore;
 using Services.Context;
@@ -398,7 +400,7 @@ Sebelum mulai CRUD nya buat auth dulu
 Install lib
 
 ```bash
-dotnet add package Microsoft.AspNetCore.Authentication.JwtBearer
+dotnet add package JWT // lo bisa pake apa aja
 dotnet add package Microsoft.IdentityModel.Tokens
 dotnet add package Microsoft.AspNetCore.Identity
 dotnet add package Swashbuckle.AspNetCore
