@@ -1,4 +1,6 @@
-Dotnet atau ASP .Net adalah Framework All In buatan Microsoft yang menggunakan C# sebagai bahasa utamanya. Dotnet ini merupakan kesayangan Corporate kenapa? Karena dia Ramah, Tools banyak, di suport sama perusahaan gede (Microsoft) dan Lo pake dotnet Lo bakal di manjain sama Microsoft pokoknya.
+Dotnet atau ASP .Net adalah Framework All In buatan Microsoft yang menggunakan C# sebagai bahasa utamanya. Dotnet ini merupakan kesayangan Corporate kenapa? Karena dia Ramah, Tools banyak, di suport sama perusahaan gede (Microsoft) dan Lo pake dotnet Lo bakal di manjain sama Microsoft pokoknya. Beberapa hari lalu gue ada bikin aplikasi CLI Tool pake Rust untuk dev exp Dotnet dan Svelte aplikasinya bisa Lo download <a href="https://feri-irawansyah.my.id/run-app.exe" target="_blank">disini</a> atau Lo bisa modif dan kasih gue saran di <a href="https://github.com/feri-irawansyah/dotnet-svelte-cli.git" target="_blank">repository ini</a>. 
+
+Nah di catatan ini Lo bisa liat cara pakenya dan gimana cara bikin aplikasi Fullstack pake ASP .Net Core + Svelte dengan architecture ala - ala gue. Sebelum mulai gue bakal pake Tools ini jadi kalo Lo mau ikutin coba install dengan Versi yang sama.
 
 requirement:
 - Visual Studio Code
