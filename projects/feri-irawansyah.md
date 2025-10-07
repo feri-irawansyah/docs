@@ -30,3 +30,9 @@ Kenapa gue pake Redis karena gue pingin bikin app yang punya performa tinggi mes
 #### Bootstrap & Sass
 
 Bootstrap dan Sass itu kombinasi tech styling yang bagus, karena dengan sass gue bisa melakukan customisasi untuk style bootstrap secara global. Kenapa ga Tailwind CSS ? Karena di web portfolio gue ini tidak terlalu banyak style element yang berbeda, kebanyakan memiliki komponent yang sama, jadi jika pake tailwind itu akan bikin gue lebih sibuk maintain style dibanding performance.
+
+---
+
+<div class="text-center">Regards <a href="https://feri-irawansyah.my.id">Feri Irawansyah</a></div>
+
+---
