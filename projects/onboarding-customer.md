@@ -1,3 +1,5 @@
+---
+
 Aplikasi ini adalah cloning dari aplikasi yang gue buat di kantor dengan design, tech, logic, bisnis, dan arsitecture yang berbeda jauh termasuk dengan database dan dummy data karena jika mengcopy langsung project existing merupakan pelanggaran dan plagiarisme bro.
 
 ### Tech Stack Reason
@@ -20,3 +22,4 @@ Karena ini aplikasi internal, jadi gue ga bisa mentah - mentah nyamain bisnisnya
 #### Database Yang Berbeda
 
 Aplikasi ini menggunakan DBMS PostgreSQL sedangkan dikantor tidak menggunakan Postgre tapi menggunakan Database lain. Untuk membuat tabel dan dummy data sangat memakan banyak waktu selain harus berimajinasi gue juga harus meenyesuaikan relasi antar data dan bisnisnya.
+
