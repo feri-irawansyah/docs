@@ -6,7 +6,7 @@ Kenapa Leptos karena Rust itu bahasa pemrograman favorit gue dari awal masuk dun
 
 ### Tools Combination
 
-Web Portfolio ini gue buat dengan kombinasi beberapa Teknologi sesuai dengan kebutuhan, favorit pribadi dan yang gue bisa aja😁.
+Web Portfolio ini gue buat dengan kombinasi beberapa Teknologi sesuai dengan kebutuhan, favorit dan yang gue bisa aja😁.
 
 #### Actix Web
 
