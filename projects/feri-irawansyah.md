@@ -9,15 +9,8 @@ Kenapa Leptos karena Rust itu bahasa pemrograman favorit gue dari awal masuk dun
 
 #### Actix Web
 
-Backend di website gue ini sebenarnya ada 2 tyaitu REST Full API pake actix web dan Server Function pake Actix juga. Kenapa gue pisah? Okeh jadi REST API gue gunakan untuk Dynamic Data, jadi ada satu endpoint api yang bisa menerima parameter dan functional seperti
-- Dynamic table
-- Pagination
-- Filter
-- Sorting
-
-Selain itu hanya data - data dari REST API dan response data juga sudah berubah nama - nama fieldnya tidak sama dengan design database. Kemudian Server Function di leptos itu gue gunakan untuk SSR + Hidration sehingga website tetap Interactive + SEO Frendly meskipun dirender dari server. Kenapa Actix Web?
-
-Sebenarnya framework web pertama yang gue pake itu `Rocket` tapi setelah tahun 2022 gue pindah ke Actix Web karena gue rasa lebih ringan dan untuk async nya lebih modern. Selain itu diwebsite ini ada fitur <a href="https://feri-irawansyah.my.id/coffee-room">Chating<a/> disini gue pake `Actor Model` dari Actix yang bisa menghandle setiap pengunjung yang sedang online jadi pengunjung akan memiliki asistem virtual pribadi jika actif dalam chat.
+Di dunia Rust dev untuk Http sebenarnya ada banyak Framework. Terutama Axum yang sangat populer akhir - akhir ini di tahun 2025 karena dengan async modern dan disuport langsung sama tim tokio.
+Sebenarnya framework web di Rust pertama yang gue pake itu `Rocket` tapi setelah tahun 2022 gue pindah ke Actix Web karena gue rasa lebih ringan dan untuk async nya lebih modern. Selain itu diwebsite ini ada fitur <a href="https://feri-irawansyah.my.id/coffee-room">Chating<a/> disini gue pake `Actor Model` dari Actix yang bisa menghandle setiap pengunjung yang sedang online jadi pengunjung akan memiliki asistem virtual pribadi jika actif dalam chat.
 
 #### Database PostgreSQL
 
