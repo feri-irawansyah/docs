@@ -33,6 +33,6 @@ Bootstrap dan Sass itu kombinasi tech styling yang bagus, karena dengan sass gue
 
 ---
 
-<div class="text-center">Regards <img width="10" href="https://feri-irawansyah.my.id/favicon.ico" alt="Feri Irawansyah"/> <a href="https://feri-irawansyah.my.id">Feri Irawansyah</a></div>
+<div class="d-flex flex-row justify-content-center align-items-center">Regards <a href="https://feri-irawansyah.my.id"><img witdh="1rem" src="https://feri-irawansyah.my.id/favicon.ico" alt="Feri Irawansyah"> Feri Irawansyah</a></div>
 
 ---
