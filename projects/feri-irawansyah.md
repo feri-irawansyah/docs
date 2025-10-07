@@ -1,6 +1,6 @@
 ### Why Leptos ?
 
-Kenapa Leptos karena Rust itu bahasa pemrograman favorit gue dari awal masuk dunia teknologi dan Rust itu selalu mengingatkan gue tentang kesalahan - kesalahan dan bug yang lebih kompleks jadi gue ga bisa sembarangan nulis code. Selain itu gue deploy Website ini di VPS dengan ram dan cpu 1GB kurang malah. Jadi gue perlu tools yang bisa jalan di kondisi server yang kentang.
+Kenapa Leptos karena Rust itu bahasa pemrograman favorit gue dari awal masuk dunia teknologi dan Rust itu selalu mengingatkan gue tentang kesalahan - kesalahan dan bug yang lebih kompleks jadi gue ga bisa sembarangan nulis code. Selain itu gue deploy Website ini di VPS dengan ram dan cpu 1GB kurang malah. Jadi gue perlu tools yang bisa jalan di kondisi server yang kentang dengan singgle source & bahasa pemrograman yang sama untuk Frontend dan Backend nya.
 
 ### Tools Combination
 
