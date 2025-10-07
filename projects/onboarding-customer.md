@@ -1,0 +1,1 @@
+Aplikasi ini adalah cloning dari aplikasi yang gue buat di kantor dengan tech, logic, bisnis, dan arsitecture yang berbeda jauh termasuk dengan database dan dummy data karena jika mengcopy langsung project existing merupakan pelanggaran dan plagiarisme.
