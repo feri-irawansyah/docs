@@ -1963,7 +1963,6 @@ Okeh, kemudian kita coba di browser.
 Jika sudah berhasil maka nanti akan langsung auto refresh data dan terdapat data order Beli Bebek dengan harga 19.000 dengan status settlement.
 
 <img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/graphql-on-actix-web/assets/success-edit-order.png" alt="graphql-on-actix-web/assets/1.png" width="100%" />
-</div>
 
 ## Delete Operations
 Untuk delete kita tidak memerlukan form input lagi karena kita hanya membutuhkan id untuk memberikan tanpa data mana yang akan di delete.
