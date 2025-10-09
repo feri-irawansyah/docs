@@ -14,6 +14,7 @@ Selain itu kadang beberapa field kaga dibutuhin suka kebawa dan adalagi misal bu
 <hr>
 
 # Create Rust Project
+
 Untuk membuat project rust, pertama harus install `rust` dan `cargo` dulu. Untuk menginstallnya bisa lihat [di sini](https://www.rust-lang.org/tools/install). Install aja tingal next next next dan next ya next aja pokoknya.
 
 Abis itu buka terminal lalu ketik:
@@ -176,7 +177,7 @@ Kalo udah matikan terminal lalu jalankan kembali lalu request lagi ke url http:/
 Ouh iya biar ngga mati dan hidupin ulang servernya. tambahkan di `Cargo.toml`:
 ```toml
 [dependencies]
-......
+# ......
 cargo-watch = "8.5.3"
 ```
 Kemudian jalankan perintah:
@@ -193,6 +194,7 @@ Sip, kalo usah kita mulai setup untuk GraphQl nya.
 Untuk menggunakan GraphQL kita butuh `async-graphql` dan `async-graphql-actix-web`. sebelumnya kita udah menambahkannya di `Cargo.toml` jadi selanjutnya kita akan setup GraphQl IDE dan Endpoint GraphQL.
 
 ## Setup GraphQl IDE
+
 Buka file `src/main.rs` lalu tambahkan function baru:
 ```rust
 async fn graphiql() -> actix_web::HttpResponse {
@@ -373,6 +375,7 @@ graphql-on-actix-web
 └── .gitignore
 ```
 Kalo usah kita buka folder `graphql` di file `schema.rs` kita akan ubah beberapa konfigurasi
+
 - Kita tau kalau request graphql dan function untuk handler query requestnya berupa object. Artinya pada file `order_handler.rs` nantinya adalah sebuah object dan misalnya kita buat handler lain maka juga akan berupa object. Jadi kita akan merge object tersebut dengan macro keyword `MergedObject` yang ada di `async_graphql` crate.
 - Hapus struct `QueryRoot` dan ganti dengan ini:
 ```rust
@@ -1060,7 +1063,7 @@ mutation {
 }
 ```
 
-</img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/graphql-on-actix-web/assets/delete-order.png" alt="Delete Order" />
+<img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/graphql-on-actix-web/assets/delete-order.png" alt="Delete Order" />
 
 Kelar bro untuk CRUD nya. Selanjutnya coba kita implementasi ke frontend. Untuk frontend nya gue mau buat pake Sveltekit.
 
