@@ -40,7 +40,7 @@ graphql-on-actix-web
 └── .gitignore
 ```
 
-Kalo udah buka di code editor yang lu pake bang, kalo gue bisanya pake code editor 1 miliar umat (VS Code).
+Kalo udah buka di code editor yang lu pake bro, kalo gue bisanya pake code editor 1 miliar umat (VS Code).
 
 <hr>
 
@@ -60,7 +60,7 @@ sqlx = { version = "0.8.6", features = ["runtime-tokio-native-tls", "postgres", 
 tokio = { version = "1.45.1", features = ["full"] }
 ```
 
-Kalo versi rustnya sama kaya gue di 1.87.0, harusnya aman tidak terjadi error. Kalo misal ada paling harus install sesuai versi rust yang lu pake bang.
+Kalo versi rustnya sama kaya gue di 1.87.0, harusnya aman tidak terjadi error. Kalo misal ada paling harus install sesuai versi rust yang lu pake bro.
 
 Kalo udah buka file `src/main.rs` lalu tambahkan:
 ```rust
@@ -728,7 +728,7 @@ SELECT * FROM orders WHERE user_id = $2; -- query order untuk user 2
 ...
 SELECT * FROM orders WHERE user_id = $100; -- query order untuk user 100
 ```
-Mantap ngga? mantap lah wkwkwk, 1 query bisa jadi 100 query. Masih mending kalo satu user ordernya 1 atau 3, kalau 1 user ordernya `1.000` atau `1.000.000` bahkan `1.000.000.000`. Bisa nunggu data muncul sampai hari kiamat kita bang😂. Lalu gimana ngatasinnya? Ada beberapa pendekatan yang bisa dilakukan untuk mengatasi problem N+1 Query ini gue kasih 2 cara aja ya yang gue sering pake dan tanpa menambah tools lain. Kita mulai dari yang paling ribet dulu.
+Mantap ngga? mantap lah wkwkwk, 1 query bisa jadi 100 query. Masih mending kalo satu user ordernya 1 atau 3, kalau 1 user ordernya `1.000` atau `1.000.000` bahkan `1.000.000.000`. Bisa nunggu data muncul sampai hari kiamat kita bro😂. Lalu gimana ngatasinnya? Ada beberapa pendekatan yang bisa dilakukan untuk mengatasi problem N+1 Query ini gue kasih 2 cara aja ya yang gue sering pake dan tanpa menambah tools lain. Kita mulai dari yang paling ribet dulu.
 
 ### Pakai DataLoader atau Batch Query bawaan async_graphql
 **Note: Tapi DataLoader ini bawaaan async_graphql dari rust ya, kalau di bahasa pemrograman lain mungkin berbeda seperti di Javascript/Typescript ada library seperti `dataloader`, Python ada library seperti `strawberry / graphene`. dll**.
@@ -807,7 +807,7 @@ pub async fn graphql_handler(
 ) -> GraphQLResponse {
     let order_loader: DataLoader<OrderLoader> = DataLoader::new(OrderLoader { pool: pool.get_ref().clone() }, tokio::spawn);
     schema.execute(req.into_inner().data(pool.get_ref().clone())
-    .data(order_loader)) // Inject disini bang!
+    .data(order_loader)) // Inject disini bro!
     // .data(sales_loader) // misalnya nanti ada loader lagi
     .await
     .into()
@@ -818,10 +818,10 @@ Sudah, dengan begini query yang akan dihasilkan adalah seperti ini:
 SELECT * FROM users;
 SELECT * FROM orders WHERE user_id = ANY(ARRAY[user_id_1,user_id_2,user_id_3, user_id_dst]);
 ```
-Artinya kita cukup melakukan 2 query aja. Setupnya emng lumayan ribet bang, Ya begitulah rust, bahasa pemrograman paling perfectionist wkwkwk.
+Artinya kita cukup melakukan 2 query aja. Setupnya emng lumayan ribet bro, Ya begitulah rust, bahasa pemrograman paling perfectionist wkwkwk.
 
 ### Pakai JOIN Query
-Cara ini paling sederhana bang, karena kita cuma melakukan Query SQL JOIN aja kaya gini misal:
+Cara ini paling sederhana bro, karena kita cuma melakukan Query SQL JOIN aja kaya gini misal:
 ```sql
 SELECT 
     u.user_id AS user_user_id,
@@ -943,7 +943,7 @@ Hasilnya sama aja namun ada kelebihan dan kekurangannya masing-masing.
   - Redundant data user info diulang di setiap row order (boros memori di sisi app).
   - Kurang fleksibel GraphQL tidak bisa granular (misal hanya mau ambil field tertentu), harus disusun di query manual
 
-Kalo gue disini lebih milih pake `DataLoader` bang, karena bisa custom response juga jadi tidak kebanyakan field yang di ulang - ulang. Tapi balik lagi sesuai kebutuhan aja.
+Kalo gue disini lebih milih pake `DataLoader` bro, karena bisa custom response juga jadi tidak kebanyakan field yang di ulang - ulang. Tapi balik lagi sesuai kebutuhan aja.
 
 ## Update Operation
 Ternyata panjang juga membahas soal query di GraphQL😁. Yaudah lanjut ke update mutation. Kita akan lanjut di orders data. 
@@ -1062,7 +1062,7 @@ mutation {
 
 </img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/graphql-on-actix-web/assets/delete-order.png" alt="Delete Order" />
 
-Kelar bang untuk CRUD nya. Selanjutnya coba kita implementasi ke frontend. Untuk frontend nya gue mau buat pake Sveltekit.
+Kelar bro untuk CRUD nya. Selanjutnya coba kita implementasi ke frontend. Untuk frontend nya gue mau buat pake Sveltekit.
 
 Sebelum setup frontend projectnya, kita harus terlebih dahulu membuka `Cors` di `src/main.rs` ubah main function jadi seperti ini:
 ```rust
@@ -1305,11 +1305,11 @@ Buka file `src/routes/+page.svelte` lalu tambahkan code ini:
   });
 </script>
 ```
-Kalau sudah buka browser di url `http://localhost:5173` atau url frontend lu bang, biasanya kalo vite urlnya `http://localhost:5173/`.
+Kalau sudah buka browser di url `http://localhost:5173` atau url frontend lu bro, biasanya kalo vite urlnya `http://localhost:5173/`.
 
 <img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/graphql-on-actix-web/assets/read-data-svelte.png" alt="Hello World" />
 
-Kita bagusin dikit web kita pake icons dari bootstrap dan sweetalert2 agar pop up biar lebih enak dilihat. Tambahkan ini bang:
+Kita bagusin dikit web kita pake icons dari bootstrap dan sweetalert2 agar pop up biar lebih enak dilihat. Tambahkan ini bro:
 ```bash
 npm i bootstrap-icons sweetalert2
 ```
@@ -1964,7 +1964,7 @@ Jika sudah berhasil maka nanti akan langsung auto refresh data dan terdapat data
 Untuk delete kita tidak memerlukan form input lagi karena kita hanya membutuhkan id untuk memberikan tanpa data mana yang akan di delete.
 
 ### Delete User
-Untuk delete users, sebelumnya backend tidak gue contohkan kan? Yaiyalah buat experimen lo sendiri bang wkwkwk. Gue kasih info aja kalo delete user itu juga delete semua order yang terkait dengan user tersebut. Untuk di `real case` sebenernya menghapus data itu tidak dianjurkan, karena historynya akan hilang. Lebih baik memberikan flag aja dan jangan menghapus datanya.
+Untuk delete users, sebelumnya backend tidak gue contohkan kan? Yaiyalah buat experimen lo sendiri bro wkwkwk. Gue kasih info aja kalo delete user itu juga delete semua order yang terkait dengan user tersebut. Untuk di `real case` sebenernya menghapus data itu tidak dianjurkan, karena historynya akan hilang. Lebih baik memberikan flag aja dan jangan menghapus datanya.
 
 Pertama buat function baru untuk query delete user di `src/lib/query.js`:
 ```js
@@ -2113,4 +2113,10 @@ Kalau udah kita coba di browser.
 
 <img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/graphql-on-actix-web/assets/success-hapus-order.png" alt="graphql-on-actix-web/assets/1.png" width="100%" />
 
-Okeh selesai, sampe sini dulu bang. Ntar kalo ada ide atau otak gue nyangkut apa gue update lagi.
+Udah catatan nya sampe sini dulu yak bro biar kaga kepanjangan. Thank you bro udah baca👍
+
+---
+
+<div class="d-flex flex-row justify-content-center align-items-center">Regards <a href="https://feri-irawansyah.my.id"><img witdh="1rem" src="https://feri-irawansyah.my.id/favicon.ico" alt="Feri Irawansyah"> Feri Irawansyah</a></div>
+
+---
