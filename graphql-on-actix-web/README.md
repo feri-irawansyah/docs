@@ -1,6 +1,8 @@
 Biasanya gue kalo bikin api pake Actix Web itu response JSON nya segelondongan langsung di kirim, dan biasanya perlu beberapa endpoint untuk mengambil data berbeda.
 Selain itu kadang beberapa field kaga dibutuhin suka kebawa dan adalagi misal butuh data dari sumber lain harus request lagi juga. Jadi gue mau nyobain GraphQL yang lebih ringkas, bisa mangkas data, dan hemat bandwidth katanya.
 
+Ouh iya gue ga akan bahas sejarah dan kenapa GraphQL ini bisa ada di alam semesta kalo Lo pingin tau lebih detail Lo bisa pergi ke website nya <a href="https://graphql.org">GraphQL</a> atau bisa baca di mbah <a href="https://en-wikipedia-org.translate.goog/wiki/GraphQL?_x_tr_sl=en&_x_tr_tl=id&_x_tr_hl=id&_x_tr_pto=tc">Wiki Pedia</a>
+
 # Agenda
 - Create Rust Project
 - Setup Actix Web
