@@ -7,7 +7,9 @@ requirement:
 - NodeJS v22
 - .NET core 9
 
-dotnet hosting untuk iis https://builds.dotnet.microsoft.com/dotnet/aspnetcore/Runtime/9.0.9/dotnet-hosting-9.0.9-win.exe
+dotnet hosting untuk iis
+
+<a href="https://builds.dotnet.microsoft.com/dotnet/aspnetcore/Runtime/9.0.9/dotnet-hosting-9.0.9-win.exe">Dotnet Hosting<a/>
 
 1. Buat project sveltekit
 
