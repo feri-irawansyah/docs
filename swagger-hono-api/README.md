@@ -78,7 +78,7 @@ app.get('/openapi', (c) => {
 })
 ```
 
-Setup dasarnya kira kira seperti itu bang. Setelah selsai coba jalankan hono app nya, kaya gini:
+Setup dasarnya kira kira seperti itu bro. Setelah selsai coba jalankan hono app nya, kaya gini:
 ```bash
 bun run dev
 
@@ -816,7 +816,7 @@ Saat choice file di klik, nanti akan muncul pop up windows yang mengarahkan kita
 
 <img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/swagger-hono-api/assets/file-upload-1.png" alt="swagger-hono-api/assets/1.png" width="100%" />
 
-Lu juga bisa buat custom - custom bang, dokumentasi api file upload di swagger, bisa lihat di [link ini](https://swagger.io/docs/specification/v2_0/file-upload/?sbsearch=upload). Seperti file yang di upload harus berupa gambar, csv, dll.
+Lu juga bisa buat custom - custom bro, dokumentasi api file upload di swagger, bisa lihat di [link ini](https://swagger.io/docs/specification/v2_0/file-upload/?sbsearch=upload). Seperti file yang di upload harus berupa gambar, csv, dll.
 
 ### File Download
 Untuk membuat dokumentasi api file download di swagger kita bisa menggunakan [File Download Object](https://swagger.io/docs/open-source-tools/swagger-codegen/codegen-v2/prerequisites/?sbsearch=download) seperti berikut:
@@ -894,4 +894,10 @@ Gambar akan tampil di swagger. Jika lu mau download filenya copy dan pastekan ur
 - [Hono](https://hono.dev/)
 - [Hono Swagger](https://hono.dev/examples/swagger-ui)
 
-Mungkin segitu dulu catatan gue bang. Semoga bermanfaat. Nanti kalo misal gue ada temuan baru atau lu mau request bisa contact aja di halaman [Contact](https://snakesystem-library.vercel.app/#/contact).
+Segitu dulu bro semoga bermanfaat.
+
+---
+
+<div class="d-flex flex-row justify-content-center align-items-center">Regards <a href="https://feri-irawansyah.my.id"><img witdh="1rem" src="https://feri-irawansyah.my.id/favicon.ico" alt="Feri Irawansyah"> Feri Irawansyah</a></div>
+
+---
