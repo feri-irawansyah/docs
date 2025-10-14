@@ -35,9 +35,42 @@ Banyakan SSR ya sesajen-nya? Iya bro krna Leptos SSR perlu http server dan di ca
 
 </details>
 
-<details>
+<details open>
 <summary><h2>📌 Leptos CSR (Client Side Rendering)</h2></summary>
 
-Sebenarnya ada banyak cara untuk membuat CSR Leptos, namun cara paling mudah, simple dan rapi kita bisa buat pake <a href="https://trunkrs.dev/" target="_blank" rel="noopener noreferrer">Trunk</a> ini mirip <a href="https://vitejs.dev/" target="_blank" rel="noopener noreferrer">Vite</a>
+Sebenarnya ada banyak cara untuk membuat CSR Leptos, namun cara paling mudah, simple dan rapi kita bisa buat pake <a href="https://trunkrs.dev/" target="_blank" rel="noopener noreferrer">Trunk</a> ini mirip <a href="https://vitejs.dev/" target="_blank" rel="noopener noreferrer">Vite</a> kalau di Javascript tapi Rust punya.
 
+### Installation Setup
+
+Okeh gue anggep Lo udah punya Rust di komputer lu, jadi yang Lo kakuin jalankan perintah ini di cmd/terminal lu:
+```bash
+$ rustup target add wasm32-unknown-unknown
+```
+
+Ini untuk memasang target Wasm di komputer Lu. jadi nanti Rust bakal compile code Lo ke wasm.
+
+Kalo udah sekarang Lo perlu install Trunk pake perintah ini:
+```bash
+$ cargo install trunk
+```
+
+Tunggu dulu karena Rust harus compile terlebih dahulu dan memerlukan waktu yang lama untuk di compile.
+
+### Membuat Aplikasi Leptos CSR
+
+Kita ikutin aja langkah - langkah yang ada di dokumentasi Leptos cpba Lo pergi ke halaman ini <a href="https://book.leptos.dev/getting_started/index.html" target="_blank" rel="noopener noreferrer">https://book.leptos.dev/getting_started/index.html</a>
+
+```bash
+$ cargo init leptos-csr
+
+    Creating binary (application) package
+note: see more `Cargo.toml` keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+$ cd leptos-csr
+
+$ ls
+Cargo.toml  src/ .gitignore
+```
+
+Jika success nanti Cargo akan membuatkan kita project baru di folder `leptos-csr` dimana ada File src/main.rs dan Cargo.toml. Coba Lo buka projectnya di code editor favorit Lo gue pake VS Code. Tetap di posisi terminal sebelumnya lalu ketik perintah `code .` nanti akan terbuka projectnya di VS Code.
 </details>
