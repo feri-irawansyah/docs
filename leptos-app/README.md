@@ -134,5 +134,29 @@ fn main() {
 }
 ```
 
-Maksudnya apa?
+Maksudnya apa? `mount_to_body` itu sama aja kaya di react kaya gini:
+
+```jsx
+    ReactDOM.createRoot(document.getElementById('root')).render(
+      <p>Hello, world!</p>
+    );
+```
+
+Jadi Trunk akan membuat sebuah element di body html yang mana element tersebut adalah tag `<p><\p>`.
+
+```rust
+view! {
+   // Element 
+}
+```
+
+View ini adalah `macro` atau syntax magic di rust leptos yang untuk melakukan render berupa `element html` atau tipe data tertentu seperti `String`.
+
+```rust
+view! {
+   "Hello, world!" 
+}
+```
+
+
 </details>
