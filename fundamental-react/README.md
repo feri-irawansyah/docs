@@ -463,16 +463,13 @@ function PanggilNama({nama = "Satria Baja Ringan", umur = 20, jomblo = true, tem
 
 <img class="img-fluid" alt="image" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/fundamental-react/assets/props.png" />
 
-Okeh sekarang Lo harusnya udah ada gambaran gimana cara pharse data di react misalnya Lo call dari api, atau simpen data di file json bisa bro.
-```js
-masih gue pikir
-
-```
-Okeh tapi Lo harusnya mikir, gmna kalo datanya berubah? Misalnya Lo click terus bisa edit data kayak di DOM?
+Tapi Lo mikir ga bro, gimna kalo datanya berubah? Misalnya Lo click terus bisa edit data kayak di DOM?
 
 <h4>🪡 State</h4>
 
-Okeh bro, sebelum nya Lo udah pake `props` nah terus Lo kepikiran gimana kalo datanya bisa Lo ubah - ubah. Untuk melakukan itu Lo perlu yang namanya `state` atau keadaan. Jadi misal Lo punya tombol jika di click maka akan mengubah warna background atau input untuk mengisikan data.
+Sebelumnya Lo udah pake `props` buat join data antar component sekarang gimana kalo datanya bisa Lo ubah - ubah. Di React ada yang namanya `state` atau keadaan. Jadi misal Lo punya tombol jika di click maka akan mengubah warna background atau input untuk mengisikan data.
+
+Di React V18 ke atas untuk membuat state kita bisa gunakan `hooks` yang namanya `useState`. Hooks ini semacam syntax magic di React dan ada banyak macamnya nanti kita bongkar satu-satu.
 
 </details>
 
