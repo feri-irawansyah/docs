@@ -72,5 +72,67 @@ $ ls
 Cargo.toml  src/ .gitignore
 ```
 
+Kemudian ketikkan perintah ini di folder `leptos-csr` untuk menginstal package Leptos:
+```bash
+$ cargo add leptos --features=csr
+```
+
 Jika success nanti Cargo akan membuatkan kita project baru di folder `leptos-csr` dimana ada File src/main.rs dan Cargo.toml. Coba Lo buka projectnya di code editor favorit Lo gue pake VS Code. Tetap di posisi terminal sebelumnya lalu ketik perintah `code .` nanti akan terbuka projectnya di VS Code.
+
+Langkah selanjutnya buat file index.html root project kalo Lo pake VS Code ketik tanda seru `(!) + enter/tab` nanti akan di buatkan strucktur html sama VS Code. 
+
+<img src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/leptos-app/assets/index-html.png" class="img-fluid" alt="Leptos CSR"/>
+
+Lalu buka `main.rs` di folder `src` lalu isikan code ini:
+
+```rust
+use leptos::prelude::*;
+
+fn main() {
+    leptos::mount::mount_to_body(|| view! { <p>"Hello, world!"</p> })
+}
+```
+
+Kemudian ketik perintah ini di terminal:
+```bash
+$ trunk serve
+```
+
+Tunggu sampai code `rust` di kompilasi dulu kalo sudah nanti akan terbentuk folder baru dengan nama `dist` didalamnya ada:
+
+```bash
+dist
+├── index.html
+├── leptos-csr-12f7940d90c3b1ac_bg.wasm # nama file bisa beda
+└── leptos-csr-12f7940d90c3b1ac.js # nama file bisa beda
+```
+
+Dan di terminal Lo akan ada info seperti ini:
+
+<img src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/leptos-app/assets/hello-leptos.png" class="img-fluid" alt="Hello Leptos"/>
+
+Coba lo pergi ke alamat ini <a href="http://localhost:8080/" target="_blank" rel="noopener noreferrer">http://localhost:8080</a> atau Lo tahan tombol Shift + Arahkan cursor ke alamat ini <a href="http://localhost:8080/" target="_blank" rel="noopener noreferrer">http://localhost:8080</a> di terminal dan click nanti akan langsung dibuka di browser default Lo.
+
+<img src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/leptos-app/assets/hello-leptos-2.png" class="img-fluid" alt="Hello Leptos 2"/>
+
+#### Summary
+
+Nah mungkin sampe sini banyak muncul pertanyaan dihati Lo kalo misalnya Lo itu anak Javascript.
+1. Tadi buat index html kok kita ga bikin element yang ada id `root`/`app`?
+2. Kalo ga ada id `root`/`app` terus kenapa ga ada juga tag `<script></script>` di index html?
+3. Kok bisa langsung ada port 8080 dan bisa buka file `index.html` di browser apa pake live server?
+
+Tapi sayangnya kita ga pake Javascript bro kita pake wasm. Jadi konsepnya ga kaya gitu kita ga pake tag `script lalu src="index.js"` atau pake element yang ada `id="root"`. Tapi untuk menghubungkan html dengan wasm itu udah dilakukan sama `Trunk`. Kalo Lo kepo sama Trunk Lo bisa baca artikel gue yang ini <a href="https://feri-irawansyah.my.id/catatan/frontend/bekerja-dengan-trunk-buat-frontend-web-application" target="_blank" rel="noopener noreferrer">Bekerja Dengan Trunk Buat Frontend Web Application</a>. 
+
+Kita balik lagi ke `main.rs` lalu isikan code ini:
+
+```rust
+use leptos::prelude::*;
+
+fn main() {
+    leptos::mount::mount_to_body(|| view! { <p>"Hello, world!"</p> })
+}
+```
+
+Maksudnya apa?
 </details>
