@@ -359,7 +359,7 @@ fn main() {
 
 ```
 
-Kalo Lo tadi jalanin `trunk server` harusnya leptos akan auto reload jadi kalo Lo buka url `http://localhost:8080` harusnya tampilan nya sudah berubah seperti ini:
+Kalo Lo tadi jalanin `trunk serve` harusnya leptos akan auto reload jadi kalo Lo buka url `http://localhost:8080` harusnya tampilan nya sudah berubah seperti ini:
 
 
 </details>
