@@ -314,8 +314,15 @@ Nah ini penting bro, Lo bikin UI pake rust dimana Lo ga bisa sembarang nulis cod
 Hampir semua frontend Library dan Framework modern sekarang semuanya menggunakan arsitektur component based dimana semua UI adalah kepingan - kepingan Leptos juga termasuk salah satunya. Untuk component di Leptos sama seperti Component di React, Solid dan Qwik artinya component berupa function. Bedanya di Rust perlu beberapa type dan macro:
 
 ```rust
+use leptos::prelude::*;
+
 #[component]
-fn MyComponent
+fn MyComponent() -> impl IntoView {
+    view! {
+      <p>Hello world</>
+    }
+}
 ```
 
+`#[component]` ini adalah macro dari Leptos untuk menandai kalo function rust itu adalah component
 </details>
