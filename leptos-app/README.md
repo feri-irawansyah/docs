@@ -315,5 +315,7 @@ Hampir semua frontend Library dan Framework modern sekarang semuanya menggunakan
 
 ```rust
 #[component]
+fn MyComponent
 ```
+
 </details>
