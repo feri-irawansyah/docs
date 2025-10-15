@@ -1,4 +1,7 @@
-Kalo Lo ga sengaja nemu catatan ini lebih baik Lo jangan terlalu dalam atau terlalu dihayati. Catatan ini khusus gue buat untuk Lo yang kuat lahir dan batin. Karena dari depan dan belakang semuanya pake Rust. Ya Rust itu dosen kiler bro yang kalo Lo salah dikit langsung di coret - coret sama Compiler dan Lo harus siap di maki - maki sama compiler Rust.
+Dulu gue kalo mau bikin UI yang interactive di web pilihannya cuma 2 kalo ga React ya Svelte. React punya komunitas yang gede mau cari apa aja ada sedangkan Svelte memberikan kenyamanan dan simple. Tapi sejak tahun 2024 awal Leptos V 0.6 akhirnya rilis versi stabilnya. 
+Akhirnya gue coba baca - baca dokumentasinya dan coba bikin project menggunakan Leptos. Nah hasilnya adalah website portfolio gue ini yang selsai pada bulan Juni 2024. 
+
+Pada catatan kali ini gue mau berbagi tentang dasar - dasar Leptos dari yang gue pelajari dan sesuai dengan dokumentasi reminya.
 
 `Leptos` is a fine grained, reactive, full-stack web framework for building fast and interactive web applications in Rust. It leverages fine-grained reactivity to offer a highly efficient and modern development experience, drawing inspiration from frameworks like `SolidJS`, and `Sycamore`.
 
@@ -36,7 +39,7 @@ Banyakan SSR ya sesajen-nya? Iya bro krna Leptos SSR perlu http server dan di ca
 </details>
 
 <details open>
-<summary><h2>📌 Leptos CSR (Client Side Rendering)</h2></summary>
+<summary><h2>📌 Get Started Leptos</h2></summary>
 
 Sebenarnya ada banyak cara untuk membuat CSR Leptos, namun cara paling mudah, simple dan rapi kita bisa buat pake <a href="https://trunkrs.dev/" target="_blank" rel="noopener noreferrer">Trunk</a> ini mirip <a href="https://vitejs.dev/" target="_blank" rel="noopener noreferrer">Vite</a> kalau di Javascript tapi Rust punya.
 
@@ -124,6 +127,8 @@ Nah mungkin sampe sini banyak muncul pertanyaan dihati Lo kalo misalnya Lo itu a
 
 Tapi sayangnya kita ga pake Javascript bro kita pake wasm. Jadi konsepnya ga kaya gitu kita ga pake tag `script lalu src="index.js"` atau pake element yang ada `id="root"`. Tapi untuk menghubungkan html dengan wasm itu udah dilakukan sama `Trunk`. Kalo Lo kepo sama Trunk Lo bisa baca artikel gue yang ini <a href="https://feri-irawansyah.my.id/catatan/frontend/bekerja-dengan-trunk-buat-frontend-web-application" target="_blank" rel="noopener noreferrer">Bekerja Dengan Trunk Buat Frontend Web Application</a>. 
 
+### Tentang `mount_to_body`
+
 Kita balik lagi ke `main.rs` lalu isikan code ini:
 
 ```rust
@@ -142,15 +147,17 @@ Maksudnya apa? `mount_to_body` itu sama aja kaya di react kaya gini:
     );
 ```
 
-Jadi Trunk akan membuat sebuah element di body html yang mana element tersebut adalah tag `<p><\p>`.
+Jadi Trunk akan membuat sebuah element di body html yang mana element tersebut adalah tag `<p><\p>`. pada `mount_to_body` inilah aplikasi Lo dibuat nantinya bro. 
+
+`mount_to_body` ini menerima parameter berupa `closure` biasanya `callback` atau `anonymous` function kalo javascript atau beberapa bahasa pemrograman lainnya. Dan return dari closure berupa `view! {}`.
 
 ```rust
 view! {
-   // Element 
+   // Element atau type data
 }
 ```
 
-View ini adalah `macro` atau syntax magic di rust leptos yang untuk melakukan render berupa `element html` atau tipe data tertentu seperti `String`.
+`view!` ini adalah `macro` atau syntax magic di rust leptos yang untuk melakukan render berupa `element html` atau tipe data tertentu seperti `String`, `integer`, `boolean`, `array`, `object`, dan lain - lain.
 
 ```rust
 view! {
@@ -158,5 +165,94 @@ view! {
 }
 ```
 
+Kalo Lo pake VS Code buat folder `.vscode` di root project dan buat file `settings.json` lalu isikan code ini:
+
+```json
+{
+    "rust-analyzer.procMacro.ignored": {
+        "leptos_macro": [
+            "component",
+        ],
+    },
+
+    "emmet.includeLanguages": {
+        "rust": "html"
+    }
+
+}
+```
+
+Configurasi ini untuk ngasih tau si VS Code agar macro `component` tidak di anggap error sama `rust-analyzer` dan ngasih tau `emmet` bahwa `rust` adalah bahasa pemrograman html jadi Lo bisa mengetikkan shortcut untuk membuat tag html. 
+
+Sekarang kita balik lagi ke `main.rs` lalu isikan code ini:
+
+```rust
+fn main() {
+    leptos::mount::mount_to_body(|| view! {
+        <h1>"Hello Leptos"</h1>
+        <header>"Header"</header>
+        <p>"Welcome to Leptos!"</p>
+        <b>Nama: Satria</b>
+        <span>Usia : 20 tahun</span>
+        <small>Status: Jomblo</small>
+        <footer>"Footer"</footer>
+    });
+}
+```
+
+Pada macro `view!` Lo bisa menuliskan tag html apapun. Dan `view!` bisa merender multiple html tidak seperti `jsx in React` yang wajib hanya merender satu tag html saja. Dan kalo Lo inspect/buka devtools di browser, struktur htmlnya bakal sama kaya yang Lo tulis di `main.rs`.
+
+<img src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/leptos-app/assets/inspect.png" class="img-fluid" alt="Hello Leptos 3"/>
+
+### Aturan pada macro `view!`
+
+Tapi tetap aja ada aturan di macro `view!` yaitu jadi Lo ga bisa juga asal sembarangan nulisin code atau element html:
+
+#### Satu node html
+
+Meskipun di Leptos bisa tanpa satu node html, tapi alangkah lebih baik menggunakan satu node sebagai pembungkus, atau menggunakan `<></>` jika tidak memerlukan tag html.
+
+#### Semua expression di html harus pake `{}`
+
+Misal Lo pingin parse atau render data dari variable, itu Lo wajib menggunakan expresiion `{}`.
+
+```rust
+let name = "Satria";
+view! {
+    <h1>{name}</h1>
+}
+```
+
+#### Text literal di-quote `("text")`
+
+Jadi di Leptos sebaiknya jika menuliskan text di tag html mengunakan quote `"text"`.
+
+```rust
+<p>"Halo dunia"</p> // aman✅
+<p>Halo dunia</p> // aman✅
+<p>"Jum'at"</p> // aman✅
+<p>Jum'at</p> // tidak aman❌ lebih baik pake quote "Jum'at"
+```
+
+#### Self-closing tag wajib pakai /
+
+```rust
+<input type="text" /> // aman✅
+
+<input type="text"> // tidak aman❌ harus pake /
+```
+
+#### Loop & kondisi pakai komponen built-in (For, Show, Transition, dll)
+
+Karena view! di-expand compile-time, kamu nggak bisa pakai if atau for langsung di markup.
+```rust
+view! {
+    if show {
+        <p>"Tampil"</p>
+    } else {
+        <p>"Sembunyi"</p>
+    }
+}
+```
 
 </details>
