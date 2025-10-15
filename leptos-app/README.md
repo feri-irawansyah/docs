@@ -38,7 +38,7 @@ Banyakan SSR ya sesajen-nya? Iya bro krna Leptos SSR perlu http server dan di ca
 
 </details>
 
-<details open>
+<details>
 <summary><h2>📌 Get Started Leptos</h2></summary>
 
 Sebenarnya ada banyak cara untuk membuat CSR Leptos, namun cara paling mudah, simple dan rapi kita bisa buat pake <a href="https://trunkrs.dev/" target="_blank" rel="noopener noreferrer">Trunk</a> ini mirip <a href="https://vitejs.dev/" target="_blank" rel="noopener noreferrer">Vite</a> kalau di Javascript tapi Rust punya.
@@ -303,5 +303,17 @@ view! {
 
 #### Semua syntax dicek di compile-time, bukan runtime
 
+Nah ini penting bro, Lo bikin UI pake rust dimana Lo ga bisa sembarang nulis code, karna kalo Lo salah dikit aplikasi Lo kaga bakal jalan beda sama JS yang penting jalan tapi soal bug dan error belakangan.
 
+</details>
+
+
+<details>
+<summary><h2>Component dan Props</h2></summary>
+
+Hampir semua frontend Library dan Framework modern sekarang semuanya menggunakan arsitektur component based dimana semua UI adalah kepingan - kepingan Leptos juga termasuk salah satunya. Untuk component di Leptos sama seperti Component di React, Solid dan Qwik artinya component berupa function. Bedanya di Rust perlu beberapa type dan macro:
+
+```rust
+#[component]
+```
 </details>
