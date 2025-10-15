@@ -309,7 +309,7 @@ Nah ini penting bro, Lo bikin UI pake rust dimana Lo ga bisa sembarang nulis cod
 
 
 <details>
-<summary><h2>Component dan Props</h2></summary>
+<summary><h2>📌 Component dan Props</h2></summary>
 
 Hampir semua frontend Library dan Framework modern sekarang semuanya menggunakan arsitektur component based dimana semua UI adalah kepingan - kepingan Leptos juga termasuk salah satunya. Untuk component di Leptos sama seperti Component di React, Solid dan Qwik artinya component berupa function. Bedanya di Rust perlu beberapa type dan macro:
 
