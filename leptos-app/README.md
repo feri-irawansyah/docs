@@ -325,4 +325,37 @@ fn MyComponent() -> impl IntoView {
 ```
 
 `#[component]` ini adalah macro dari Leptos untuk menandai kalo function rust itu adalah component
+
+`IntoView` adalah struct untuk type wajib di component. Dibelakang layar `IntoView` ini berisi object element html dan atribut html. Artinya function component akan mereturn html.
+
+Karena into View akan mengembalikan html jadi bisa juga menerima macro `view!`. Untuk memanggil component sama seperti di jsx yaitu `<MyComponent/>`
+
+Sekarang kita praktekkan ke aplikasi kita dm biar lebih rapi kita bikin file baru di `src/app.rs` isinya untuk main application atau component parent.
+
+```rust
+// src/app.rs
+use leptos::prelude::*;
+
+#[component]
+pub fn App() -> impl IntoView {
+    view! {
+      <main>
+        App
+      </main>
+    }
+}
+
+
+// src/main.rs
+use leptos::prelude::*;
+
+mod app;
+
+use crate::app::App;
+
+fn main() {
+    leptos::mount::mount_to_body(|| <App/>)
+}
+
+```
 </details>
