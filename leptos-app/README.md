@@ -246,6 +246,8 @@ Jadi di Leptos sebaiknya jika menuliskan text di tag html mengunakan quote `"tex
 
 Karena view! di-expand compile-time, kamu nggak bisa pakai if atau for langsung di markup.
 ```rust
+// tidak aman❌
+let show = true;
 view! {
     if show {
         <p>"Tampil"</p>
@@ -253,6 +255,53 @@ view! {
         <p>"Sembunyi"</p>
     }
 }
+
+// aman✅
+view! {
+    <Show when=move || show fallback=|| view! { <p>"Sembunyi"</p> }>
+        <p>"Tampil"</p>
+    </Show>
+}
+
+// aman✅
+view! {
+    {
+        if show {
+            view! { <p>"Tampil"</p> }
+        } else {
+            view! { <p>"Sembunyi"</p> }
+        }
+    }
+}
+
+// aman ✅
+let items = vec![];
+
+view! {
+    <ul>
+        <For
+            each=move || items
+            key=|item| item.id
+            children=move |item| view! { <li>{item.name}</li> }
+        />
+    </ul>
+}
+
 ```
+
+#### Semua variable yang dipakai di view! harus 'static atau move
+
+Karena macro ini akan capture closure, jadi kalau kamu pakai signal, event handler, atau variabel luar, biasanya harus:
+
+```rust
+view! {
+    <button on:click=move |_| log::info!("Clicked!")>
+        "Klik Saya"
+    </button>
+}
+```
+
+#### Semua syntax dicek di compile-time, bukan runtime
+
 
 </details>
