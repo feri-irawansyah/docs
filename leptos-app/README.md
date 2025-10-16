@@ -502,6 +502,65 @@ pub fn Greet(#[prop(default = "Hello")] text: &'static str) -> impl IntoView {
 ```
 
 Nah default props ini secara default juga memberikan Lo opsi untuk menuliskan nama atribut di component saat di panggil atau tidak.
+
+#### Props Children
+
+Props children artinya Lo bisa menambahkan children di component dengan cara menambahkan macro `#[prop(children)]` sebelum parameter.
+
+```rust
+// src/components/greet.rs
+use leptos::prelude::*;
+
+#[component]
+pub fn Greet(children: ChildrenFragment) -> impl IntoView {
+    view! {
+        <div>{children()
+            .nodes
+            .into_iter()
+            .map(|child| view! { {child} })
+            .collect::<Vec<_>>()}
+        </p>
+    }
+}
+
+// src/app.rs
+use leptos::prelude::*;
+
+use crate::components::greet::Greet;
+
+#[component]
+pub fn App() -> impl IntoView {
+    view! {
+      <main class="text-gray-600">
+        <Greet>"Hello world!"</Greet>
+      </main>
+    }
+}
+```
+
+Kenapa Children keliatan ribet, ga kaya di react yang bisa langsung tempet di jsx nya. Rust ini strict bro dan children ini typenya collection array buat `nodes` nya. Karena bisa aja Lo masukin beberapa element html di children. Misal:
+
+```rust
+use leptos::prelude::*;
+
+use crate::components::greet::Greet;
+
+#[component]
+pub fn App() -> impl IntoView {
+    view! {
+      <main class="text-gray-600">
+        <Greet>
+            "Hello world!"
+            <p>"Hello world!"</p>
+            <h1>"Hello world!"</h1>
+        </Greet>
+      </main>
+    }
+}
+```
+
+Jadi harus banget di render secara iterasi karena lebih dari satu element.
+
 </details>
 
 <details>
@@ -545,6 +604,111 @@ Namun akan berbeda jika datanya berupa array atau Lo perlu melakukan control flo
 
 ### Iteration (Looping)
 
-Untuk melakukan iterasi di leptos ada beberapa cara yang bisa Lo lakuin. Bisa pake `itter` method atau `for` loop atau `map`.
+Untuk melakukan iterasi di leptos ada beberapa cara yang bisa Lo lakuin. Bisa pake `map`.
+
+```rust
+use leptos::prelude::*;
+
+struct Contact {
+    username: &'static str,
+    fullname: &'static str,
+    contact: &'static str,
+    age: i32,
+    jomblo: bool
+}
+
+#[component]
+pub fn Greet(#[prop(default = "Hello ")] text: &'static str) -> impl IntoView {
+
+    let contact = vec![
+        Contact {
+            username: "satria",
+            fullname: "Satria Baja Ringan",
+            contact: "0123456789",
+            age: 30,
+            jomblo: true
+        },
+        Contact {
+            username: "akmen",
+            fullname: "Akmen Rider",
+            contact: "987654321",
+            age: 20,
+            jomblo: false
+        },
+        Contact {
+            username: "ultra",
+            fullname: "Ultra Boy",
+            contact: "9876543210",
+            age: 15,
+            jomblo: true
+        }
+    ];
+
+    view! {
+        <h1>{text} All</h1>
+
+        // Bisa seperti ini
+        <ul>
+            {contact.iter().map(|contact| view! {
+                <li>{contact.fullname}</li>
+                <li>{contact.username}</li>
+                <li>{contact.contact}</li>
+                <li>{contact.age}</li>
+                <li>{contact.jomblo}</li>
+            }).collect::<Vec<_>>()}
+        </ul>
+
+        // Atau seperti ini tapi artinya ownership nya diambil oleh view
+        <ul>
+            {contact.into_iter().map(|contact| view! {
+                <li>{contact.fullname}</li>
+                <li>{contact.username}</li>
+                <li>{contact.contact}</li>
+                <li>{contact.age}</li>
+                <li>{contact.jomblo}</li>
+            }).collect_view()}
+        </ul>
+    }
+}
+```
+
+### Control Flow (Conditional Rendering)
+
+Control flow disini adalah ketika Lo mau merender data dengan kriteria tertentu misal ketika data true bakal nampilin YES dan ketika data false bakal nampilin NO.
+
+#### Operator If
+```rust
+<li>{if contact.jomblo { "YES" } else { "NO" }}</li>
+```
+
+#### Pattern Matching
+```rust
+<li>{match contact.jomblo {
+    true => "YES",
+    false => "NO"
+}}</li>
+```
+
+#### Control Flow with Types
+```rust
+<li>
+    {if contact.age >= 10 {
+        "Kepala Satu"
+    } else if contact.age >= 20 {
+        "Kepala Dua"
+    } else if contact.age >= 30 {
+        "Kepala Tiga"
+    } else {
+        "Kepala Empat"
+    }}
+</li>
+```
+
+#### With `Show` Component
+```rust
+<Show when=move || contact.jomblo fallback=move || view! { <p>"NO"</p> }>
+    <p>"YES"</p>
+</Show>
+```
 
 </details>
