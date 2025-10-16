@@ -308,8 +308,10 @@ Nah ini penting bro, Lo bikin UI pake rust dimana Lo ga bisa sembarang nulis cod
 </details>
 
 
-<details>
+<details open>
 <summary><h2>📌 Component dan Props</h2></summary>
+
+### Component
 
 Hampir semua frontend Library dan Framework modern sekarang semuanya menggunakan arsitektur component based dimana semua UI adalah kepingan - kepingan Leptos juga termasuk salah satunya. Untuk component di Leptos sama seperti Component di React, Solid dan Qwik artinya component berupa function. Bedanya di Rust perlu beberapa type dan macro:
 
@@ -324,9 +326,7 @@ fn MyComponent() -> impl IntoView {
 }
 ```
 
-`#[component]` ini adalah macro dari Leptos untuk menandai kalo function rust itu adalah component
-
-`IntoView` adalah struct untuk type wajib di component. Dibelakang layar `IntoView` ini berisi object element html dan atribut html. Artinya function component akan mereturn html.
+`use leptos::prelude::*;` ini import semua type dan macro di Leptos. `#[component]` ini adalah macro dari Leptos untuk menandai kalo function rust itu adalah component dan `IntoView` adalah struct untuk type wajib di component. Dibelakang layar `IntoView` ini berisi object element html dan atribut html. Artinya function component akan mereturn html.
 
 Karena into View akan mengembalikan html jadi bisa juga menerima macro `view!`. Untuk memanggil component sama seperti di jsx yaitu `<MyComponent/>`
 
@@ -350,16 +350,106 @@ pub fn App() -> impl IntoView {
 use leptos::prelude::*;
 
 mod app;
-
-use crate::app::App;
+use app::App;
 
 fn main() {
     leptos::mount::mount_to_body(|| <App/>)
 }
-
 ```
 
 Kalo Lo tadi jalanin `trunk serve` harusnya leptos akan auto reload jadi kalo Lo buka url `http://localhost:8080` harusnya tampilan nya sudah berubah seperti ini:
+
+<img src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/leptos-app/assets/app-rs.png" class="img-fluid" alt="Hello Leptos 3"/>
+
+### Props
+
+Sama seperti beberapa modern JS framework berbasis component cara penggunaan props di Leptos juga sama yaitu menjadi suatu artribut du JSX dan Component akan menerimanya sebaai parameter di function Component.
+
+Coba Lo buat folder `src/components` lalu buat file `greet.rs` dan file `mod.rs` di dalamnya:
+
+```rust
+// src/components/greet.rs
+use leptos::prelude::*;
+
+#[component]
+pub fn Greet() -> impl IntoView {
+    view! {
+        <p>"Hello world!"</p>
+    }
+}
+
+// src/components/mod.rs
+pub mod greet;
+```
+
+Jangn lupa tambahkan di main.rs:
+
+```rust
+mod components;
+```
+
+Di file `src/app.rs` tambahkan:
+
+```rust
+use leptos::prelude::*;
+
+use crate::components::greet::Greet;
+
+#[component]
+pub fn App() -> impl IntoView {
+    view! {
+      <main>
+        App
+        <Greet/>
+      </main>
+    }
+}
+```
+
+Text `"Hello world!"` bisa kita kirimkan dari parent component ke child component dengan cara menambahkan atribut ke Component `<Greet/>`:
+
+```rust
+// src/app.rs
+<Greet text="Hello world!"/>
+```
+
+Jangan lupa tangkap data `Hello world!` di child component yaitu Function Component `Greet`:
+
+```rust
+use leptos::prelude::*;
+
+#[component]
+pub fn Greet(text: &'static str) -> impl IntoView {
+    view! {
+        <p>{text}</p> // text = "Hello world!"
+    }
+}
+```
+
+<img src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/leptos-app/assets/greet.png" class="img-fluid" alt="Hello Leptos 4"/>
+
+1. Props bisa menerima apa saja, bisa String, i8-i128, f32-f64, bool, tuple, vec, struct. Jadi bisa juga menerima Array, Object, bahkan element HTML/JSX dan lain - lain.
+2. Pada component kita bisa memberikan berapapun artribut.
+3. Kita bisa menuliskan berulang-ulang props di component tapi dengan syarat datanya di simpan di `stack` jika data di simpan di `heap` maka perlu di `clone` atau menggunakan reference karena jika Lo meletakkan data di element html bisa saja ownership nya dipindahkan.
+
+```rust
+// Aman kalo typenya &'static str
+use leptos::prelude::*;
+
+#[component]
+pub fn Greet(text: &'static str) -> impl IntoView {
+    view! {
+        <p>{text}</p>
+        <p>{text}</p>
+        <p>{text}</p>
+        <p>{text}</p>
+        <p>{text}</p>
+    }
+}
+```
+
+Tidak aman kalo seperti ini karena ownership nya di ambil oleh tag html `<p>{text}</p>` pertama:
+<img src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/leptos-app/assets/ownership-html.png" class="img-fluid" alt="Hello Leptos 5"/>
 
 
 </details>
