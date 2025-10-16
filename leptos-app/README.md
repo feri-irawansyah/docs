@@ -41,7 +41,7 @@ Banyakan SSR ya sesajen-nya? Iya bro krna Leptos SSR perlu http server dan di ca
 <details>
 <summary><h2>📌 Get Started Leptos</h2></summary>
 
-Sebenarnya ada banyak cara untuk membuat CSR Leptos, namun cara paling mudah, simple dan rapi kita bisa buat pake <a href="https://trunkrs.dev/" target="_blank" rel="noopener noreferrer">Trunk</a> ini mirip <a href="https://vitejs.dev/" target="_blank" rel="noopener noreferrer">Vite</a> kalau di Javascript tapi Rust punya.
+Sebenarnya ada banyak cara untuk membuat CSR Leptos, namun cara paling mudah, simple dan rapi Lo bisa buat pake <a href="https://trunkrs.dev/" target="_blank" rel="noopener noreferrer">Trunk</a> ini mirip <a href="https://vitejs.dev/" target="_blank" rel="noopener noreferrer">Vite</a> kalau di Javascript tapi Rust punya.
 
 ### Installation Setup
 
@@ -61,7 +61,7 @@ Tunggu dulu karena Rust harus compile terlebih dahulu dan memerlukan waktu yang 
 
 ### Membuat Aplikasi Leptos CSR
 
-Kita ikutin aja langkah - langkah yang ada di dokumentasi Leptos cpba Lo pergi ke halaman ini <a href="https://book.leptos.dev/getting_started/index.html" target="_blank" rel="noopener noreferrer">https://book.leptos.dev/getting_started/index.html</a>
+Lo ikutin aja langkah - langkah yang ada di dokumentasi Leptos cpba Lo pergi ke halaman ini <a href="https://book.leptos.dev/getting_started/index.html" target="_blank" rel="noopener noreferrer">https://book.leptos.dev/getting_started/index.html</a>
 
 ```bash
 $ cargo init leptos-csr
@@ -80,7 +80,7 @@ Kemudian ketikkan perintah ini di folder `leptos-csr` untuk menginstal package L
 $ cargo add leptos --features=csr
 ```
 
-Jika success nanti Cargo akan membuatkan kita project baru di folder `leptos-csr` dimana ada File src/main.rs dan Cargo.toml. Coba Lo buka projectnya di code editor favorit Lo gue pake VS Code. Tetap di posisi terminal sebelumnya lalu ketik perintah `code .` nanti akan terbuka projectnya di VS Code.
+Jika success nanti Cargo akan membuatkan Lo project baru di folder `leptos-csr` dimana ada File src/main.rs dan Cargo.toml. Coba Lo buka projectnya di code editor favorit Lo gue pake VS Code. Tetap di posisi terminal sebelumnya lalu ketik perintah `code .` nanti akan terbuka projectnya di VS Code.
 
 Langkah selanjutnya buat file index.html root project kalo Lo pake VS Code ketik tanda seru `(!) + enter/tab` nanti akan di buatkan strucktur html sama VS Code. 
 
@@ -121,15 +121,15 @@ Coba lo pergi ke alamat ini <a href="http://localhost:8080/" target="_blank" rel
 #### Summary
 
 Nah mungkin sampe sini banyak muncul pertanyaan dihati Lo kalo misalnya Lo itu anak Javascript.
-1. Tadi buat index html kok kita ga bikin element yang ada id `root`/`app`?
+1. Tadi buat index html kok Lo ga bikin element yang ada id `root`/`app`?
 2. Kalo ga ada id `root`/`app` terus kenapa ga ada juga tag `<script></script>` di index html?
 3. Kok bisa langsung ada port 8080 dan bisa buka file `index.html` di browser apa pake live server?
 
-Tapi sayangnya kita ga pake Javascript bro kita pake wasm. Jadi konsepnya ga kaya gitu kita ga pake tag `script lalu src="index.js"` atau pake element yang ada `id="root"`. Tapi untuk menghubungkan html dengan wasm itu udah dilakukan sama `Trunk`. Kalo Lo kepo sama Trunk Lo bisa baca artikel gue yang ini <a href="https://feri-irawansyah.my.id/catatan/frontend/bekerja-dengan-trunk-buat-frontend-web-application" target="_blank" rel="noopener noreferrer">Bekerja Dengan Trunk Buat Frontend Web Application</a>. 
+Tapi sayangnya Lo ga pake Javascript bro Lo pake wasm. Jadi konsepnya ga kaya gitu Lo ga pake tag `script lalu src="index.js"` atau pake element yang ada `id="root"`. Tapi untuk menghubungkan html dengan wasm itu udah dilakukan sama `Trunk`. Kalo Lo kepo sama Trunk Lo bisa baca artikel gue yang ini <a href="https://feri-irawansyah.my.id/catatan/frontend/bekerja-dengan-trunk-buat-frontend-web-application" target="_blank" rel="noopener noreferrer">Bekerja Dengan Trunk Buat Frontend Web Application</a>. 
 
 ### Tentang `mount_to_body`
 
-Kita balik lagi ke `main.rs` lalu isikan code ini:
+Lo balik lagi ke `main.rs` lalu isikan code ini:
 
 ```rust
 use leptos::prelude::*;
@@ -184,7 +184,7 @@ Kalo Lo pake VS Code buat folder `.vscode` di root project dan buat file `settin
 
 Configurasi ini untuk ngasih tau si VS Code agar macro `component` tidak di anggap error sama `rust-analyzer` dan ngasih tau `emmet` bahwa `rust` adalah bahasa pemrograman html jadi Lo bisa mengetikkan shortcut untuk membuat tag html. 
 
-Sekarang kita balik lagi ke `main.rs` lalu isikan code ini:
+Sekarang Lo balik lagi ke `main.rs` lalu isikan code ini:
 
 ```rust
 fn main() {
@@ -308,7 +308,7 @@ Nah ini penting bro, Lo bikin UI pake rust dimana Lo ga bisa sembarang nulis cod
 </details>
 
 
-<details open>
+<details>
 <summary><h2>📌 Component dan Props</h2></summary>
 
 ### Component
@@ -330,7 +330,7 @@ fn MyComponent() -> impl IntoView {
 
 Karena into View akan mengembalikan html jadi bisa juga menerima macro `view!`. Untuk memanggil component sama seperti di jsx yaitu `<MyComponent/>`
 
-Sekarang kita praktekkan ke aplikasi kita dm biar lebih rapi kita bikin file baru di `src/app.rs` isinya untuk main application atau component parent.
+Sekarang Lo praktekkan ke aplikasi Lo dm biar lebih rapi Lo bikin file baru di `src/app.rs` isinya untuk main application atau component parent.
 
 ```rust
 // src/app.rs
@@ -405,8 +405,9 @@ pub fn App() -> impl IntoView {
     }
 }
 ```
+#### Component Props
 
-Text `"Hello world!"` bisa kita kirimkan dari parent component ke child component dengan cara menambahkan atribut ke Component `<Greet/>`:
+Text `"Hello world!"` bisa Lo kirimkan dari parent component ke child component dengan cara menambahkan atribut ke Component `<Greet/>`:
 
 ```rust
 // src/app.rs
@@ -429,8 +430,8 @@ pub fn Greet(text: &'static str) -> impl IntoView {
 <img src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/leptos-app/assets/greet.png" class="img-fluid" alt="Hello Leptos 4"/>
 
 1. Props bisa menerima apa saja, bisa String, i8-i128, f32-f64, bool, tuple, vec, struct. Jadi bisa juga menerima Array, Object, bahkan element HTML/JSX dan lain - lain.
-2. Pada component kita bisa memberikan berapapun artribut.
-3. Kita bisa menuliskan berulang-ulang props di component tapi dengan syarat datanya di simpan di `stack` jika data di simpan di `heap` maka perlu di `clone` atau menggunakan reference karena jika Lo meletakkan data di element html bisa saja ownership nya dipindahkan.
+2. Pada component Lo bisa memberikan berapapun artribut.
+3. Lo bisa menuliskan berulang-ulang props di component tapi dengan syarat datanya di simpan di `stack` jika data di simpan di `heap` maka perlu di `clone` atau menggunakan reference karena jika Lo meletakkan data di element html bisa saja ownership nya dipindahkan.
 
 ```rust
 // Aman kalo typenya &'static str
@@ -446,10 +447,104 @@ pub fn Greet(text: &'static str) -> impl IntoView {
         <p>{text}</p>
     }
 }
+
+// Aman kalo clone tapi tidak di sarankan karena data di memory akan semakin banyak krna di cloning
+use leptos::prelude::*;
+
+#[component]
+pub fn Greet(text: String) -> impl IntoView {
+    view! {
+        <p>{text.clone()}</p>
+        <p>{text.clone()}</p>
+        <p>{text.clone()}</p>
+        <p>{text.clone()}</p>
+        <p>{text.clone()}</p>
+    }
+}
 ```
 
 Tidak aman kalo seperti ini karena ownership nya di ambil oleh tag html `<p>{text}</p>` pertama:
+
 <img src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/leptos-app/assets/ownership-html.png" class="img-fluid" alt="Hello Leptos 5"/>
 
+#### Optional Props
+Optional props artinya Lo tidak wajib menambahkan parameters di component dengan cara menambahkan macro `#[prop(optional)]` sebelum parameter.
+
+```rust
+// src/app.rs
+<Greet/>
+
+// src/components/greet.rs
+use leptos::prelude::*;
+
+#[component]
+pub fn Greet(#[prop(optional)] text: &'static str) -> impl IntoView {
+    view! {
+        <p>{text}</p>
+    }
+}
+```
+Tapi karena Lo tidak mengirimkan data ke `text` maka `text` akan bernilai `None` dan tidak akan tampil data apapun di tag html `<p>{text}</p>`.
+
+#### Default Props
+
+Default props artinya Lo akan memberika nilai default di component dengan cara menambahkan macro `#[prop(default = nilai default)]` sebelum parameter jadi jika datanya kosong maka akan diisi dengan `nilai default`.
+
+```rust
+use leptos::prelude::*;
+
+#[component]
+pub fn Greet(#[prop(default = "Hello")] text: &'static str) -> impl IntoView {
+    view! {
+        <p>{text}</p>
+    }
+}
+```
+
+Nah default props ini secara default juga memberikan Lo opsi untuk menuliskan nama atribut di component saat di panggil atau tidak.
+</details>
+
+<details>
+<summary><h2>📌 Data Rendering</h2></summary>
+
+Sebelumnya Lo sudah menggunakan rendering data di element html namun itu untuk data yang static. Contoh pake data Object.
+
+```rust
+use leptos::prelude::*;
+
+struct Contact {
+    username: &'static str,
+    fullname: &'static str,
+    contact: &'static str,
+    age: i32,
+    jomblo: bool
+}
+
+#[component]
+pub fn Greet(#[prop(default = "Hello ")] text: &'static str) -> impl IntoView {
+
+    let contact = Contact {
+        username: "satria",
+        fullname: "Satria Baja Ringan",
+        contact: "0123456789",
+        age: 30,
+        jomblo: true
+    };
+
+    view! {
+        <h1>{text} {contact.fullname}</h1>
+        <p>Username: {contact.username}</p>
+        <p>Nomor HP: {contact.contact}</p>
+        <p>Usia: {contact.age}</p>
+        <p>Jomblo: {contact.jomblo}</p>
+    }
+}
+```
+
+Namun akan berbeda jika datanya berupa array atau Lo perlu melakukan control flow terhadap datanya.
+
+### Iteration (Looping)
+
+Untuk melakukan iterasi di leptos ada beberapa cara yang bisa Lo lakuin. Bisa pake `itter` method atau `for` loop atau `map`.
 
 </details>
