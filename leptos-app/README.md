@@ -711,4 +711,20 @@ Control flow disini adalah ketika Lo mau merender data dengan kriteria tertentu 
 </Show>
 ```
 
+Component `<Show/>` ini lebih cocok kalo merender element html kenapa? kalo Lo pake conditional rendering pake `if else` tapi return nya element html itu harus sama element nya.
+
+```rust
+if contact.jomblo {
+   view! {
+      <div>YES</div>
+   }
+} else {
+   view! {
+      <p>NO</p>
+   }
+}
+
+```
+ini akan error karena Type `IntoView` mengharapkan `view!` dengan element dan atribut html yang sama. Namun masih bisa di lakukan kok dengan cara menambah `.into_any()` pada `view!`.
 </details>
+
