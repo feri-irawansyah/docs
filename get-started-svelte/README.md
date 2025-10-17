@@ -51,9 +51,12 @@ Nah apa itu, baru masuk langsung dapet bahasa Alien👽. Tenang bro, itu cuma ov
 Sebelum Lo mulai membuat Svete Project, Lo perlu beberapa hal yang harus dipenuhi dulu
 ### Pre Requisites
 - Pemahaman tentang Fundamental Javascript
-- <a href="https://nodejs.org/" target="_blank" rel="">NodeJS<a/> (npm, yarn, deno, bun, pnpm)
+- <a href="https://nodejs.org/" target="_blank" rel="">NodeJS </a> (npm, yarn, deno, bun, pnpm)
 - VS Code (bisa cod eeditor lain)
+- Pemahaman fundamental Vite
 
-### Svelte & Sveltekit
+### Vite & Svelte
+
+Untuk membuat Svelte project kita akan menggunakan <a href="https://vite.dev/" target="_blank" rel="">Vite</a> sebagai module bundlernya.
 </details>
 
