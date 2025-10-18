@@ -20,13 +20,13 @@ Sebelum mulai bikin app ada beberapa tempat keramat yang bisa Lo kunjungi bro.
 
 Selain Lo perlu tau tempat - tempat keramat itu Lo juga perlu siapin sesajen (pre requisites) untuk memulai bikin aplikasi Leptos.
 
-<h3 id="pre-requisites-csr">Pre Requisites CSR</h3>
+### Pre Requisites CSR
 
 - <a href="https://rust-lang.org/" target="_blank" rel="noopener noreferrer">https://rust-lang.org</a> Rust
 - `wasm32-unknown-unknown` Target
 - <a href="https://trunkrs.dev/" target="_blank" rel="noopener noreferrer">https://trunkrs.dev</a> Trunk
 
-<h3 id="pre-requisites-ssr">Pre Requisites SSR</h3>
+### Pre Requisites SSR
 
 - <a href="https://rust-lang.org/" target="_blank" rel="noopener noreferrer">https://rust-lang.org</a> Rust
 - `wasm32-unknown-unknown` Target
@@ -43,7 +43,7 @@ Banyakan SSR ya sesajen-nya? Iya bro krna Leptos SSR perlu http server dan di ca
 
 Sebenarnya ada banyak cara untuk membuat CSR Leptos, namun cara paling mudah, simple dan rapi Lo bisa buat pake <a href="https://trunkrs.dev/" target="_blank" rel="noopener noreferrer">Trunk</a> ini mirip <a href="https://vitejs.dev/" target="_blank" rel="noopener noreferrer">Vite</a> kalau di Javascript tapi Rust punya.
 
-<h3 id="installation-setup">Installation Setup</h3>
+### Installation Setup
 
 Okeh gue anggep Lo udah punya Rust di komputer lu, jadi yang Lo kakuin jalankan perintah ini di cmd/terminal lu:
 ```bash
@@ -127,7 +127,7 @@ Nah mungkin sampe sini banyak muncul pertanyaan dihati Lo kalo misalnya Lo itu a
 
 Tapi sayangnya Lo ga pake Javascript bro Lo pake wasm. Jadi konsepnya ga kaya gitu Lo ga pake tag `script lalu src="index.js"` atau pake element yang ada `id="root"`. Tapi untuk menghubungkan html dengan wasm itu udah dilakukan sama `Trunk`. Kalo Lo kepo sama Trunk Lo bisa baca artikel gue yang ini <a href="https://feri-irawansyah.my.id/catatan/frontend/bekerja-dengan-trunk-buat-frontend-web-application" target="_blank" rel="noopener noreferrer">Bekerja Dengan Trunk Buat Frontend Web Application</a>. 
 
-<h3 id="tentang-mount_to_body">Tentang `mount_to_body`</h3>
+### Tentang `mount_to_body`
 
 Lo balik lagi ke `main.rs` lalu isikan code ini:
 
