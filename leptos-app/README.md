@@ -1,7 +1,3 @@
-- [Introduction](#summary)
-- [Features](#component)
-
-
 Dulu gue kalo mau bikin UI yang interactive di web pilihannya cuma 2 kalo ga React ya Svelte. React punya komunitas yang gede mau cari apa aja ada sedangkan Svelte memberikan kenyamanan dan simple. Tapi sejak tahun 2024 awal Leptos V 0.6 akhirnya rilis versi stabilnya. 
 Akhirnya gue coba baca - baca dokumentasinya dan coba bikin project menggunakan Leptos. Nah hasilnya adalah website portfolio gue ini yang selsai pada bulan Juni 2024. 
 
@@ -122,7 +118,7 @@ Coba lo pergi ke alamat ini <a href="http://localhost:8080/" target="_blank" rel
 
 <img src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/leptos-app/assets/hello-leptos-2.png" class="img-fluid" alt="Hello Leptos 2"/>
 
-<h4 id="summary">Summary</h4>
+#### Summary
 
 Nah mungkin sampe sini banyak muncul pertanyaan dihati Lo kalo misalnya Lo itu anak Javascript.
 1. Tadi buat index html kok Lo ga bikin element yang ada id `root`/`app`?
@@ -315,7 +311,7 @@ Nah ini penting bro, Lo bikin UI pake rust dimana Lo ga bisa sembarang nulis cod
 <details>
 <summary><h2>📌 Component dan Props</h2></summary>
 
-<h3 id="component">Component</h3>
+### Component
 
 Hampir semua frontend Library dan Framework modern sekarang semuanya menggunakan arsitektur component based dimana semua UI adalah kepingan - kepingan Leptos juga termasuk salah satunya. Untuk component di Leptos sama seperti Component di React, Solid dan Qwik artinya component berupa function. Bedanya di Rust perlu beberapa type dan macro:
 
