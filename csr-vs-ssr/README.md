@@ -1,3 +1,12 @@
+<style>
+
+img.w-50 {
+ width: 100% ! important;
+
+}
+
+</style>
+
 Woi Bro, Kalo Lo programmer jaman batu kalo mau buat website simple tinggal buat folder terus Lo buat file inde.html, style.css dan script.js lalu Boom.
 
 <img src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/csr-vs-ssr/static/horor.png" class="img-fluid w-50" alt="Horor"/>
@@ -30,18 +39,3 @@ Jadi kalo website Lo di buat dengan CSR artinya Lo kaya ada aplikasi sendiri di 
 Sementara SSR itu document, artinya yang di kasih ke client atau di browser itu beneran document file jadi.
 
 </details>
-
-
-
-
-
-
-
-<style>
-
-img .w-50 {
- width: 100% ! important;
-
-}
-
-</style>
