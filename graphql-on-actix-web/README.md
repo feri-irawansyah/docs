@@ -1746,7 +1746,7 @@ Terakhri kita coba di browser untuk menambahkan order baru
 
 Jika sudah berhasil maka nanti akan langsung auto refresh data dan terdapat data order untuk User 3. 
 
-</img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/graphql-on-actix-web/assets/success-add-order.png" alt="graphql-on-actix-web/assets/1.png" width="100%" />
+<img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/graphql-on-actix-web/assets/success-add-order.png" alt="graphql-on-actix-web/assets/1.png" width="100%" />
 
 ## Update Operations
 
