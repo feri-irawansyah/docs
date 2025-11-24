@@ -29,4 +29,19 @@ Jadi kalo website Lo di buat dengan CSR artinya Lo kaya ada aplikasi sendiri di 
 
 Sementara SSR itu document, artinya yang di kasih ke client atau di browser itu beneran document file jadi.
 
-</details
+</details>
+
+
+
+
+
+
+
+<style>
+
+img .w-50 {
+ width: 100% ! important;
+
+}
+
+</style>
