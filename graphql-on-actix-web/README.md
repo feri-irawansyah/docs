@@ -1742,8 +1742,8 @@ Terakhir ganti tombol edit pada `src/routes/+page.svelte` jangan lupa untuk impo
 Terakhri kita coba di browser untuk menambahkan order baru
 
 <div class="d-flex gap 3 m-0">
-    <img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/graphql-on-actix-web/assets/input-add-order.png" alt="graphql-on-actix-web/assets/1.png" width="100%" />
-    <img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/graphql-on-actix-web/assets/add-order.png" alt="graphql-on-actix-web/assets/1.png" width="100%" />
+    <img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/graphql-on-actix-web/assets/input-add-order.png" alt="graphql-on-actix-web/assets/1.png" />
+    <img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/graphql-on-actix-web/assets/add-order.png" alt="graphql-on-actix-web/assets/1.png" />
 </div>
 
 Jika sudah berhasil maka nanti akan langsung auto refresh data dan terdapat data order untuk User 3. 
@@ -1861,10 +1861,10 @@ Lalu kita coba di browser untuk update user
 
 Ketika klik tombol edit maka form akan otomatis terisi dengan data user yang ingin di update. Kita akan mengubah domail email menjadi gmail.com.
 
-<div class="d-flex gap-3">
-<img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/graphql-on-actix-web/assets/update-edit-user.png" alt="graphql-on-actix-web/assets/1.png" width="100%" />
+<div class="d-flex gap-3 m-0">
+<img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/graphql-on-actix-web/assets/update-edit-user.png" alt="graphql-on-actix-web/assets/1.png" />
 
-<img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/graphql-on-actix-web/assets/edit-user.png" alt="graphql-on-actix-web/assets/1.png" width="100%" />
+<img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/graphql-on-actix-web/assets/edit-user.png" alt="graphql-on-actix-web/assets/1.png" />
 </div>
 
 <img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/graphql-on-actix-web/assets/success-edit-user.png" alt="graphql-on-actix-web/assets/1.png" width="100%" />
