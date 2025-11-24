@@ -43,3 +43,25 @@ Jadi CSR lebih scalable dong? Bisa iya bisa tidak tergantung context. Misalnya a
 Aplikasi dengan data yang dinamis berubah setiap detiknya misalnya ada banyak tabel, real-time chat, web trading, app offline dan lain lain yang intinya dimanis lah. Itu bakal sering bnyk perubahan UI dan sering request ke server. Kalo aplikasi begitu Lo pakein SSR kasian server Lo bro bakal ngos - ngosan dia selain ngurus request response api ad juga ngurusin render halaman. Jadi bakal kerja double si server. Makanya website - website yang dibuat dengan SSR itu biasanya reload ketika pindah halaman karena dia akan melakukan request ulang ke server.
 
 </details>
+
+<details>
+<summary><h2>📌Performance & Biaya</h2></summary>
+
+Soal performance gimana bro? Tergantung juga bro. Balik lagi ke use case nya gue kasih contoh website gue ini. Ini gue buat pake SSR kenapa? Karena suka - suka gue dong wkwkwk.
+
+<h3>Performance SSR</h3>
+
+Kaga bro gue bikin SSR karena di website ini gue banyak artikel dan catatan - catatan receh dan murah meriah gue banyak render text, data statis bahkan text panjang, dan biar SEO friendly juga jadi kalo di buat pake SSR ini lebih oke. Tapi keliatan dinamis dan ga reload dan dinamis? Ini karena gue pake fitur hydration dan fine grained reactivity milik `Leptos` jadi keliatan kaya CSR tapi sebenarnya ini SSR.
+
+Terus kenapa gue ga pake CSR aja? Pada awalnya gue bikin pake CSR tapi karena CSR itu membuat UI di browser jadi perlu ada loading atau placeholder ketika halaman awal blank. Selain itu banyak text panjang yang kaya Lo baca ini, perlu lazzy load untuk merendernya makanya gue pake SSR biar content langsung jadi document html di browser.
+
+Jadi untuk use case seperti ini sangat cocok menggunakan SSR dan performa nya jauh lebih baik karena content statis akan langsung japan di browser tanpa ada lazzy loading.
+
+<h3>Biaya Infrastruktur untuk SSR</h3>
+
+Karena data di artikel ini tidak banyak dan statis. Selain itu update data ke database jarang apalagi buat orang sibuk kaya gue dan memang datanya jarang berubah jadi penggunaan resource server sangat murah. Karena cuma render text artikel, text lagi dan text tidak ada tabel yang update tiap detik. Jadi server tetep santai sambil liburan.
+
+
+
+</details>
+
