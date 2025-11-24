@@ -1741,7 +1741,7 @@ Terakhir ganti tombol edit pada `src/routes/+page.svelte` jangan lupa untuk impo
 ```
 Terakhri kita coba di browser untuk menambahkan order baru
 
-<div class="d-flex gap-3">
+<div class="d-flex gap-3 px-3">
 <img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/graphql-on-actix-web/assets/input-add-order.png" alt="graphql-on-actix-web/assets/1.png" width="100%" />
 <img class="img-fluid" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/graphql-on-actix-web/assets/add-order.png" alt="graphql-on-actix-web/assets/1.png" width="100%" />
 </div>
