@@ -1,31 +1,11 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-<meta charset="UTF-8">
-<title>Dunia Misteri</title>
-<style>
-  body {
-    margin: 0;
-    height: 100vh;
-    background: black;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: red;
-    font-family: "Creepster", sans-serif;
-    font-size: 32px;
-    text-align: center;
-    text-shadow: 0 0 15px red;
-    animation: pulsate 2s infinite alternate;
-  }
-
-  @keyframes pulsate {
-    from { text-shadow: 0 0 15px red; }
-    to { text-shadow: 0 0 35px red; }
-  }
-</style>
-</head>
-<body>
-  Selamat Datang di Dunia<br>yang Penuh Misteri dan Ga Ada Gaji
-</body>
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		%sveltekit.head%
+	</head>
+	<body data-sveltekit-preload-data="hover">
+		<div style="display: contents">%sveltekit.body%</div>
+	</body>
 </html>
