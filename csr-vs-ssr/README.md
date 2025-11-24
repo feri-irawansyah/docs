@@ -61,7 +61,11 @@ Jadi untuk use case seperti ini sangat cocok menggunakan SSR dan performa nya ja
 
 Karena data di artikel ini tidak banyak dan statis. Selain itu update data ke database jarang apalagi buat orang sibuk kaya gue dan memang datanya jarang berubah jadi penggunaan resource server sangat murah. Karena cuma render text artikel, text lagi dan text tidak ada tabel yang update tiap detik. Jadi server tetep santai sambil liburan.
 
+Namun berbeda jika Lo pake SSR untuk website dengan data dinamis misalnya untuk website dashboard admin yang datanya selalu update, ketika data barubah SSR perlu request ulang datanya ke server ketika data berubah maka server akan melakukan re render ulang document nya kemudian si kembalikan lagi ke browser. Jika proses ini terjadi detiknya maka server akan sangat sibuk menangani request api, response api, re render ulang dan mengembalikan document terupdate nya ke browser. Ini mahal bro.
 
+<h3>Performance CSR</h3>
+
+Sebenarnya performance CSR ini selalu stabil artinya render selalu cepat tergantung response data yang di terima misalnya ketika api yang di gunakan oleh website CSR ini cepet response time nya maka frontend CSR juga bisa merendernya cepat juga. Karena CSR ini di render si client maka akan terjadi lazzy load misalnya awalnya tidak ada kemudian setelah data siap UI baru akan muncul. Nah fitur ini akan sangat cocok untuk website yang punya data dinamis dan sering berubah-ubah karena frontend akan menyesuaikan data yang dia consume, beda dengan CSR yang akan melakukan re render ulang dari server jika ada perubahan pada data.
 
 </details>
 
