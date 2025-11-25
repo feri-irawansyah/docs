@@ -14,7 +14,7 @@
     }
 
     .img-app img {
-        max-width: 50px;
+        max-height: 50px;
     }
 
     .img-app-item {
