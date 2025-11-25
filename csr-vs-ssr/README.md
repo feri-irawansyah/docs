@@ -168,4 +168,8 @@ Tapi balik lagi bro, security itu bukan di frontend tapi di backend dan server L
 
 Jadi mau CSR atau SSR itu sebenarnya sama aja bro, karena security itu di ranah backend bukan di frontend. Bedanya SSR itu lebih tertutup aja untuk data exposure karena data tetep di server.
 
+Asal Lo tau bro, gue ambil contoh lagi dari website tempat Lo baca article ini itu juga sama implementasinya. Meskipun frontend dibuat dengan `Rust` yang `type safe`, `memory safe`, `thread safe`, `compile time check` dan `wasm bundle` yang susah dibongkar ga kaya javascript bundle. Tapi tetep aja bro frontend hanyalah template bukan bussines logic. Gue teteap taro bussines logic di backend terpisah, tidak langsung raw query di `Leptos` karena bukan tempatnya.
+
+Dan katanya `Rust + Actix` itu tahan banting? Mau di spam tetep kek beton? Kaga juga bro, VM gue ini kecil cuma 500MB ram, jadi tetep gue pake rate limiter juga biar kaga sembarangan di spam. Karena keamanan itu bukan di teknologi, tapi dari diri Lo sendiri bro yang selalu hati - hati dan tetep berbuat kebaikan.
+
 </details>
