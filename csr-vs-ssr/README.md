@@ -173,3 +173,95 @@ Asal Lo tau bro, gue ambil contoh lagi dari website tempat Lo baca article ini i
 Dan katanya `Rust + Actix` itu tahan banting? Mau di spam tetep kek beton? Kaga juga bro, VM gue ini kecil cuma 500MB ram, jadi tetep gue pake rate limiter juga biar kaga sembarangan di spam. Karena keamanan itu bukan di teknologi, tapi dari diri Lo sendiri bro yang selalu hati - hati dan tetep berbuat kebaikan.
 
 </details>
+
+<details open>
+<summary><h2>📌 Contoh Aplikasi CSR dan SSR</h2></summary>
+
+Jadi ga semua aplikasi itu harus di pukul rata **POKOKNYA HARUS SSR** atau **POKOKNYA HARUS CSR** pakelah teknologi sesuai kebutuhan dan diskusi dengan tim untuk menentukan keputusan bersama. Mungkin kalo misal Lo bikin aplikasi sendiri itu terserah Lo bro, mau pake apa aja itu terserah Lo. Tapi kalo Lo kerja secara tim di perusahaan atau ada project dimana yang mengerjakan bukan Lo dan Ego Lo sendiri, itu harus dengan kesepakatan bersama.
+
+<h3>Category Aplikasi CSR</h3>
+
+<h4> SaaS (Software as a Service) </h4>
+
+Kenapa `SaaS` cocok dengan CSR?  
+1. Aplikasi SaaS biasanya memiliki banyak UI yang kompleks
+2. SasS juga mengunakan data yang dinamis
+3. CSR punya state local yang tidak hilang, jadi state bisa digunakan lagi oleh user ketika user pindah halaman
+4. Banyak event, websocket, data berubah cepat
+5. Banyak user dalam 1 platform shared infra jadi beban server lebih kecil
+
+Contohnya seperti `Notion`, `Jira`, `Slack Web` `Supabase Console` dan sebagainya.
+
+<div class="img-app">
+  <img src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/csr-vs-ssr/static/notion.png" class="img-fluid" alt="notion"/>
+  <img src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/csr-vs-ssr/static/jira.svg" class="img-fluid" alt="jira"/>
+  <img src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/csr-vs-ssr/static/slack.svg" class="img-fluid" alt="slack"/>
+</div>
+
+<h4> Back Office, ERP & CRM </h4>
+
+Fitur pada back office biasanya kurang lebih mirip dengan SaaS yaitu banyak event dan data dinamis. Selain itu aplikasi back office juga memiliki penggunaan data dengan jumlah yang banyak. Bisa memiliki banyak table yang sering diupdate tiap detik. Jadi aplikasi back office cocok dengan CSR.
+
+Conohnya seperti `Inventory System`, `Odoo UI` `Admin Dashboard` dan sebagainya.
+
+<h4> Realtime & Collaborative App </h4>
+
+Aplikasi dengan realtime update biasanya menggunakan koneksi dua arah seperti WebSocket, WebRTC, WebTrasport dan sebagainya. Jadi aplikasi realtime cocok dengan CSR. Karena perubahan data dilakukan secara realtime dan akan langsung ke pengguna lainnya. Jika menggunakan SSR akan menambahkan beban yang tinggi ke server dan bahkan bisa berbahaya untuk aplikasi yang menggunakan WebTransport karena menggunakan streaming video atau audio dalam mengirimkan event atau data.
+
+Contohnya seperti `Zoom`, `Google Meet` `Google Docs`, `WhatsApp` dan sebagainya.
+
+<h4> Data Analytics & Visualization Tools </h4>
+
+Website dengan fitur menampilkan grafik dan visualisasi biasanya akan menggunakan data yang cukup besar, penggunaan logika agregation membutuhkan event handler dan data yang dinamis. Jadi aplikasi ini cocok jika menggunakan rendering CSR karena akan banyak action di sisi client.
+
+Contohnya seperti `Google Data Studio`, `Power BI`, `Grafana` dan sebagainya.
+
+<h4>Email & Productivity</h4>
+
+Untuk aplikasi productivity ini tidak memerlukan SEO, selain itu aplikasi ini tergolong `Private content` jadi content pada aplikasi ini sangat sensitif dan tidak bisa dishare ke orang lain bahkan ke `google bot` atau `bing`. Interaktifitasnya juga sangat cepat dan sering mengubah halaman. Jadi aplikasi ini cocok dengan CSR.
+
+Contohnya seperti `Gmail`, `Outlook`, `Google Calendar` dan sebagainya.
+
+<h4>Online Store</h4>
+
+Aplikasi online store menggunakan CSR ? Jawabannya tidak sepenuhnya bro, jadi aplikasi online store ini di buat hybrid CSR + SSR. Karena online store ini sangat membutuhkan SEO untuk memasarkan penjualan tapi memiliki UI yang kompleks dan realtime update juga. 
+
+Lo mesti tidak asing dengan nama **Eko Kurniawan Khannedy** beliau adalah kontent creator youtube <a href="https://www.youtube.com/@ProgrammerZamanNow" target="_blank">Programmer Zaman Now</a> dan juga seorang Teknik Architect di <a href="https://www.blibli.com/" target="_blank">Blibli</a>. Pada salah satu Videonya yang berjudul <a href="https://www.youtube.com/watch?v=HG7_HKzmjtA" target="_blank">Server side render lemot</a> beliau pernah menyatakan bahwa Blibli dan E-Commerce lainnya menggunakan CSR dan SSR. Jadi content yang digunakan di client itu menggunakan SSR karena online store memerlukan SEO. Namun ketika user login, halaman yang di berikan ke user adalah CSR.
+
+Jadi aplikasi online store cocok dengan CSR + SSR. Contohnya seperti `Shopee`, `Tokopedia`, `Blibli` dan sebagainya.
+
+<h3>Category Aplikasi SSR</h3>
+
+SSR biasanya digunakan untuk aplikasi yang cendering memiliki kontent statis, event handler sedikit, branding dan sebagainya.
+
+<h4> Online Store (Product Page)</h4>
+
+Seperti yang gue bahas sebelumnya pada website online store itu menggunakan hybrid yaitu CSR dan SSR. Khususnya pada product page karena product page membutuhkan SEO untuk pemasaran product. 
+
+Contohnya seperti `Amazon`, `Shopee`, `Tokopedia`, `Blibli` dan sebagainya.
+
+<h4> News & Media </h4>
+
+Aplikasi berita ini banyak menggunakan SSR bahkan seperti diharuskan kenapa? Karena berita ini bersifat text content dan harus sesegera mungkin dipublikasikan ke halayak umum. Jadi memerlukan performa SEO yang tinggi untuk memasarkan konten makanya menggunakan SSR sebagai renderingnya.
+
+Contohnya seperti `Wikipedia`, `Detik`, `Kompas` dan sebagainya.
+
+<h4>Blog</h4>
+
+Aplikasi blog ini mirip seperti website news yaitu memuat konten text yang panjang bedanya secara penyampaian kontennya. Kontent blog lebih ke personal notes yaitu catatan dan opini pribadi seseorang bukan suatu berita yang ada di internet. Nah aplikasi yang merender kontent text ini memerlukan SEO juga agar dapat di crawl oleh `google bot` atau `bing` agar mudah dicari dicari di mesin pencarian.
+
+Contohnya seperti `Medium`, `Hashnode`, `Dev.to` dan sebagainya.
+
+<h4> Corporate & Company Profile </h4>
+
+Aplikasi company profile biasanya memuat konten statis berupa informasi perusahaan seperti deskripsi, kontak, laporan keuangan atau CSR (Corporate Social Responsibility) dan sebagainya. Company profile juga membantu menjelaskan identitas, visi misi, produk/layanan, dan pencapaian perusahaan kepada klien, investor, dan calon karyawan. Namun untuk website company profile tidak sekompleks seperti website news dan blog. Ada juga beberapa website company profile yang menggunakan static html render karena hanya sebagai identitas aja ga perlu database, state management, atau bahkan backend.
+
+Contohnya seperti `Google`, `Microsoft`, `Apple` dan sebagainya.
+
+<h4> Forum / Community </h4>
+
+Forum - forum diskusi online yang publik biasanya juga menggunakan SSR sebagai rendering nya karena memuat konten text argument dan komentar yang membutuhkan SEO. Biasanya pada website forum ini tidak menggunakan realtime update atau koneksi dua arah. Kenapa? Karena forum diskusi ini bersifat public discussion dan disediakan oleh community non provit yang tidak memiliki sumber untuk menyediakan server yang besar untuk menghandle realtime update. Jadi penyedia hanya menggunakan SSR sebagai renderingnya + backend 1 arah agar tetep mendapatkan SEO yang baik tapi performa stabil.
+
+Contohnya seperti `Stack Overflow`, `Quora`, `Reddit` dan sebagainya.
+
+</details>
