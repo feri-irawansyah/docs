@@ -41,7 +41,7 @@ Di artkel gue kali ini gue mau bahas antara CSR (Client Side Render) dengan SSR 
 
 `CSR` atau `Client Side Render` itu artinya UI di render atau di bentuk di browser. Jadi ketika membuka website ada 1 atau lebih file html (umumnya 1) kemudian javascript akan membentuk UI nya sesuai dengan yang Lo suruh. Sedangkan `SSR` atau `Server Side Render` UI di render atau di bentuk dari server, jadi ketika Lo mengakses website server sudah mengirimkan halam berupa html yang udah lengkap.
 
-Analoginya misal Lo minta mobil remote control ke bapak Lo nah karena emang bapak Lo itu tipikal orang CSR jadi dia cuma ngasih duit dan Lo di suruh beli sendiri. Sedangkan kalo bapak Lo itu tipikal SSR nah dia langsung ngasih mobil mainannya ke Lo bro. Kerja bro biar bisa beli mobil mevah kek Lambo.
+Analoginya misal Lo minta mobil remote control ke bapak Lo nah karena emang bapak Lo itu tipikal orang CSR jadi dia cuma ngasih duit dan Lo di suruh beli sendiri. Sedangkan kalo bapak Lo itu tipikal SSR nah dia langsung ngasih mobil mainannya ke Lo bro. Kerja bro biar bisa beli mobil mevvah kek Lambo.
 </details>
 
 <details open>
@@ -494,6 +494,12 @@ Di svelte CSR mungkin Lo hanya bisa ngasih batasan user masuk ke halaman tentent
 
 Selain itu perlu juga pemahaman tentang Route security (hooks.server.js) ini adalah semacam magic function di sveltekit yang akan jalan ketika ada request dan sebelum masuk ke route halaman.
 
+<h5>4. Perlu Runtime dan Sveltekit Adapter</h5>
 
+Karena UI atau halaman di render dari server artinya memerlukan http runtime kalo Lo misal build pake nodejs + npm, artinya ketika deployment ke server Lo juga harus install nodejs di server dan kalo resource server Lo kecil ini mahal banget karena nodejs akan menggunakan memory untuk runtime nya. Selain itu Lo nambah resource ke server ketika Lo ada update dependensi atau versi svelte Lo juga harus menyesuaikan compatible atau tidak dengan nodejs yang ada di server.
+
+Alternative lain kalo Lo ga mau install runtime di server Lo bisa pake `Bun` agar bisa compile ke single file executable tapi perlu skill Bun untuk menggunakan nya artinya Lo perlu belajar teknologi lain di luar sveltekit.
+
+Selain runtime Lo juga harus tau adapter sveltekit dan runtime yang Lo pake. 
 
 </details>
