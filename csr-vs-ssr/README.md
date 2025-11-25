@@ -6,6 +6,23 @@
         }
     }
 
+    .img-app {
+        display: flex;
+        justify-content: start;
+        flex-direction: row;
+        gap: 1rem;
+    }
+
+    .img-app img {
+        max-width: 50px;
+    }
+
+    .img-app-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
 </style>
 
 Woi Bro, Kalo Lo programmer jaman batu kalo mau buat website simple tinggal buat folder terus Lo buat file inde.html, style.css dan script.js lalu Boom.
@@ -190,19 +207,39 @@ Kenapa `SaaS` cocok dengan CSR?
 4. Banyak event, websocket, data berubah cepat
 5. Banyak user dalam 1 platform shared infra jadi beban server lebih kecil
 
-Contohnya seperti `Notion`, `Jira`, `Slack Web` `Supabase Console` dan sebagainya.
+Contohnya seperti `Notion`, `Jira`, `Slack Web` dan sebagainya.
 
 <div class="img-app">
-  <img src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/csr-vs-ssr/static/notion.png" class="img-fluid" alt="notion"/>
-  <img src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/csr-vs-ssr/static/jira.svg" class="img-fluid" alt="jira"/>
-  <img src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/csr-vs-ssr/static/slack.svg" class="img-fluid" alt="slack"/>
+  <div class="img-app-item">
+    <img src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/csr-vs-ssr/static/notion.png" class="img-fluid" alt="notion"/>
+    <p>Notion</p>
+  </div>
+  <div class="img-app-item">
+    <img src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/csr-vs-ssr/static/jira.svg" class="img-fluid" alt="jira"/>
+    <p>Jira</p>
+  </div>
+  <div class="img-app-item">
+    <img src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/csr-vs-ssr/static/slack.svg" class="img-fluid" alt="slack"/>
+    <p>Slack</p>
+  </div>
 </div>
 
 <h4> Back Office, ERP & CRM </h4>
 
 Fitur pada back office biasanya kurang lebih mirip dengan SaaS yaitu banyak event dan data dinamis. Selain itu aplikasi back office juga memiliki penggunaan data dengan jumlah yang banyak. Bisa memiliki banyak table yang sering diupdate tiap detik. Jadi aplikasi back office cocok dengan CSR.
 
-Conohnya seperti `Inventory System`, `Odoo UI` `Admin Dashboard` dan sebagainya.
+Conohnya seperti `Mekari`, `Odoo UI` `Admin Dashboard` dan sebagainya.
+
+<div class="img-app">
+  <div class="img-app-item">
+    <img src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/csr-vs-ssr/static/mekari.png" class="img-fluid" alt="mekari"/>
+    <p>Mekari</p>
+  </div>
+  <div class="img-app-item">
+    <img src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/csr-vs-ssr/static/odoo.svg" class="img-fluid" alt="odoo"/>
+    <p>Odoo</p>
+  </div>
+</div>
 
 <h4> Realtime & Collaborative App </h4>
 
@@ -210,17 +247,66 @@ Aplikasi dengan realtime update biasanya menggunakan koneksi dua arah seperti We
 
 Contohnya seperti `Zoom`, `Google Meet` `Google Docs`, `WhatsApp` dan sebagainya.
 
+<div class="img-app">
+  <div class="img-app-item">
+    <img src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/csr-vs-ssr/static/zoom.svg" class="img-fluid" alt="zoom"/>
+    <p>Zoom</p>
+  </div>
+  <div class="img-app-item">
+    <img src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/csr-vs-ssr/static/gmeet.svg" class="img-fluid" alt="gmeet"/>
+    <p>Google Meet</p>
+  </div>
+  <div class="img-app-item">
+    <img src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/csr-vs-ssr/static/gdocs.svg" class="img-fluid" alt="gdocs"/>
+    <p>Google Docs</p>
+  </div>
+  <div class="img-app-item">
+    <img src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/csr-vs-ssr/static/whatsapp.svg" class="img-fluid" alt="whatsapp"/>
+    <p>WhatsApp</p>
+  </div>
+</div>
+
 <h4> Data Analytics & Visualization Tools </h4>
 
 Website dengan fitur menampilkan grafik dan visualisasi biasanya akan menggunakan data yang cukup besar, penggunaan logika agregation membutuhkan event handler dan data yang dinamis. Jadi aplikasi ini cocok jika menggunakan rendering CSR karena akan banyak action di sisi client.
 
 Contohnya seperti `Google Data Studio`, `Power BI`, `Grafana` dan sebagainya.
 
+<div class="img-app">
+  <div class="img-app-item">
+    <img src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/csr-vs-ssr/static/gstudio.svg" class="img-fluid" alt="gstudio"/>
+    <p>Google Data Studio</p>
+  </div>
+  <div class="img-app-item">
+    <img src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/csr-vs-ssr/static/powerbi.svg" class="img-fluid" alt="powerbi"/>
+    <p>Power BI</p>
+  </div>
+  <div class="img-app-item">
+    <img src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/csr-vs-ssr/static/grafana.svg" class="img-fluid" alt="grafana"/>
+    <p>Grafana</p>
+  </div>
+</div>
+
 <h4>Email & Productivity</h4>
 
 Untuk aplikasi productivity ini tidak memerlukan SEO, selain itu aplikasi ini tergolong `Private content` jadi content pada aplikasi ini sangat sensitif dan tidak bisa dishare ke orang lain bahkan ke `google bot` atau `bing`. Interaktifitasnya juga sangat cepat dan sering mengubah halaman. Jadi aplikasi ini cocok dengan CSR.
 
 Contohnya seperti `Gmail`, `Outlook`, `Google Calendar` dan sebagainya.
+
+<div class="img-app">
+  <div class="img-app-item">
+    <img src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/csr-vs-ssr/static/gmail.svg" class="img-fluid" alt="gmail"/>
+    <p>Google Mail</p>
+  </div>
+  <div class="img-app-item">
+    <img src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/csr-vs-ssr/static/outlook.svg" class="img-fluid" alt="outlook"/>
+    <p>Microsoft Outlook</p>
+  </div>
+  <div class="img-app-item">
+    <img src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/csr-vs-ssr/static/gcalendar.svg" class="img-fluid" alt="gcalendar"/>
+    <p>Google Calendar</p>
+  </div>
+</div>
 
 <h4>Online Store</h4>
 
