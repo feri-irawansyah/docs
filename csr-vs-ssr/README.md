@@ -21,6 +21,7 @@
         display: flex;
         flex-direction: column;
         align-items: center;
+        justify-content: space-between;
     }
 
 </style>
@@ -198,6 +199,8 @@ Jadi ga semua aplikasi itu harus di pukul rata **POKOKNYA HARUS SSR** atau **POK
 
 <h3>Category Aplikasi CSR</h3>
 
+Aplikasi CSR umumnya di design untuk aplikasi private page yang muncul ketika user login. Berikut beberapa contoh aplikasi CSR:
+
 <h4> SaaS (Software as a Service) </h4>
 
 Kenapa `SaaS` cocok dengan CSR?  
@@ -316,6 +319,21 @@ Lo mesti tidak asing dengan nama **Eko Kurniawan Khannedy** beliau adalah konten
 
 Jadi aplikasi online store cocok dengan CSR + SSR. Contohnya seperti `Shopee`, `Tokopedia`, `Blibli` dan sebagainya.
 
+<div class="img-app">
+  <div class="img-app-item">
+    <img src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/csr-vs-ssr/static/shopee.svg" class="img-fluid" alt="shopee"/>
+    <p>Shopee</p>
+  </div>
+  <div class="img-app-item">
+    <img src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/csr-vs-ssr/static/tokopedia.svg" class="img-fluid" alt="Tokopedia"/>
+    <p>Tokopedia</p>
+  </div>
+  <div class="img-app-item">
+    <img src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/csr-vs-ssr/static/blibli.png" class="img-fluid" alt="blibli"/>
+    <p>Blibli</p>
+  </div>
+</div>
+
 <h3>Category Aplikasi SSR</h3>
 
 SSR biasanya digunakan untuk aplikasi yang cendering memiliki kontent statis, event handler sedikit, branding dan sebagainya.
@@ -326,17 +344,66 @@ Seperti yang gue bahas sebelumnya pada website online store itu menggunakan hybr
 
 Contohnya seperti `Amazon`, `Shopee`, `Tokopedia`, `Blibli` dan sebagainya.
 
+<div class="img-app">
+  <div class="img-app-item">
+    <img src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/csr-vs-ssr/static/amazon.svg" class="img-fluid" alt="amazon"/>
+    <p>Amazon</p>
+  </div>
+  <div class="img-app-item">
+    <img src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/csr-vs-ssr/static/shopee.svg" class="img-fluid" alt="shopee"/>
+    <p>Shopee</p>
+  </div>
+  <div class="img-app-item">
+    <img src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/csr-vs-ssr/static/tokopedia.svg" class="img-fluid" alt="Tokopedia"/>
+    <p>Tokopedia</p>
+  </div>
+  <div class="img-app-item">
+    <img src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/csr-vs-ssr/static/blibli.png" class="img-fluid" alt="blibli"/>
+    <p>Blibli</p>
+  </div>
+</div>
+
 <h4> News & Media </h4>
 
 Aplikasi berita ini banyak menggunakan SSR bahkan seperti diharuskan kenapa? Karena berita ini bersifat text content dan harus sesegera mungkin dipublikasikan ke halayak umum. Jadi memerlukan performa SEO yang tinggi untuk memasarkan konten makanya menggunakan SSR sebagai renderingnya.
 
 Contohnya seperti `Wikipedia`, `Detik`, `Kompas` dan sebagainya.
 
+<div class="img-app">
+  <div class="img-app-item">
+    <img src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/csr-vs-ssr/static/wikipedia.svg" class="img-fluid" alt="wikipedia"/>
+    <p>Wikipedia</p>
+  </div>
+  <div class="img-app-item">
+    <img src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/csr-vs-ssr/static/detik.png" class="img-fluid" alt="detik"/>
+    <p>Detik News</p>
+  </div>
+  <div class="img-app-item">
+    <img src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/csr-vs-ssr/static/kompas.png" class="img-fluid" alt="kompas"/>
+    <p>Kompas</p>
+  </div>
+</div>
+
 <h4>Blog</h4>
 
 Aplikasi blog ini mirip seperti website news yaitu memuat konten text yang panjang bedanya secara penyampaian kontennya. Kontent blog lebih ke personal notes yaitu catatan dan opini pribadi seseorang bukan suatu berita yang ada di internet. Nah aplikasi yang merender kontent text ini memerlukan SEO juga agar dapat di crawl oleh `google bot` atau `bing` agar mudah dicari dicari di mesin pencarian.
 
-Contohnya seperti `Medium`, `Hashnode`, `Dev.to` dan sebagainya.
+Contohnya seperti `Medium`, `Blogger`, `Ghost` dan sebagainya.
+
+<div class="img-app">
+  <div class="img-app-item">
+    <img src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/csr-vs-ssr/static/medium.svg" class="img-fluid" alt="medium"/>
+    <p>Medium</p>
+  </div>
+  <div class="img-app-item">
+    <img src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/csr-vs-ssr/static/blogger.svg" class="img-fluid" alt="blogger"/>
+    <p>Bloger</p>
+  </div>
+  <div class="img-app-item">
+    <img src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/csr-vs-ssr/static/gost.png" class="img-fluid" alt="gost"/>
+    <p>Ghost</p>
+  </div>
+</div>
 
 <h4> Corporate & Company Profile </h4>
 
@@ -344,10 +411,40 @@ Aplikasi company profile biasanya memuat konten statis berupa informasi perusaha
 
 Contohnya seperti `Google`, `Microsoft`, `Apple` dan sebagainya.
 
+<div class="img-app">
+  <div class="img-app-item">
+    <img src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/csr-vs-ssr/static/google.svg" class="img-fluid" alt="google"/>
+    <p>Google</p>
+  </div>
+  <div class="img-app-item">
+    <img src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/csr-vs-ssr/static/microsoft.svg" class="img-fluid" alt="microsoft"/>
+    <p>Microsoft</p>
+  </div>
+  <div class="img-app-item">
+    <img src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/csr-vs-ssr/static/apple.svg" class="img-fluid" alt="apple"/>
+    <p>Apple</p>
+  </div>
+</div>
+
 <h4> Forum / Community </h4>
 
 Forum - forum diskusi online yang publik biasanya juga menggunakan SSR sebagai rendering nya karena memuat konten text argument dan komentar yang membutuhkan SEO. Biasanya pada website forum ini tidak menggunakan realtime update atau koneksi dua arah. Kenapa? Karena forum diskusi ini bersifat public discussion dan disediakan oleh community non provit yang tidak memiliki sumber untuk menyediakan server yang besar untuk menghandle realtime update. Jadi penyedia hanya menggunakan SSR sebagai renderingnya + backend 1 arah agar tetep mendapatkan SEO yang baik tapi performa stabil.
 
 Contohnya seperti `Stack Overflow`, `Quora`, `Reddit` dan sebagainya.
+
+<div class="img-app">
+  <div class="img-app-item">
+    <img src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/csr-vs-ssr/static/stack-overflow.svg" class="img-fluid" alt="stack-overflow"/>
+    <p>Stack Overflow</p>
+  </div>
+  <div class="img-app-item">
+    <img src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/csr-vs-ssr/static/quora.svg" class="img-fluid" alt="quora"/>
+    <p>Quora</p>
+  </div>
+  <div class="img-app-item">
+    <img src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/csr-vs-ssr/static/reddit.svg" class="img-fluid" alt="reddit"/>
+    <p>Reddit</p>
+  </div>
+</div>
 
 </details>
