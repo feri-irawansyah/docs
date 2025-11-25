@@ -448,3 +448,52 @@ Contohnya seperti `Stack Overflow`, `Quora`, `Reddit` dan sebagainya.
 </div>
 
 </details>
+
+<details open>
+<summary><h2>📌 Developer Experience</h2></summary>
+
+Ini adalah penghujung catatan CSR + SSR gue buat ini. Untuk Dev Exp atau pengalaman developer ini beda tools/framework beda cara. Tapi pada intinya disemua framework itu perlu skill dan mainset full-stack developer kalo mau bangun SSR app. Sedangkan untuk CSR app Lo cukup tau dasar - dasarnya seperti HTML, CSS, Javascript DOM, State, Routing, Fetch (Axios atau Fetch API) ini sudah cukup untuk membangun CSR app.
+
+Gue kasih contoh dan implementasi dari 2 framework frontend favorit gue yaitu Svelte dan Leptos.
+
+<h3> Svelte </h3>
+
+Svelte ini bisa gue bilang framework minimalis tapi lengkap dan gue ga perlu nambah - nambah third party banyak udah bisa bikin aplikasi web yang lumayan compleks. Buat catatan tentang svelte Lo bisa baca di sini bro <a href="https://feri-irawansyah.my.id/catatan/frontend/catatan-ringan-ini-tentang-svelte-frontend-framework-yang-minimalis" target="_blank" rel="noopener noreferrer">Catatan Ringan Ini Tentang Svelte - Frontend Framework Yang Minimalis</a>. 
+
+<h4> Svelte CSR App </h4>
+
+Kalo Lo mau bikin CSR app pake Svelte ada beberapa skil yang harus Lo tau yaitu:
+
+- Javascript (Wajib) karena Svelte menggunakan Javascript
+- Javascript DOM
+- Build Tools (Vite, Rollup, Webpack, etc)
+- State
+- Component
+- Rune
+- Lifecycle State
+- State Management
+- Routing (svelte-spa-router atau sveltekit CSR) dan Authorization Routing
+- Fetch (Axios atau Fetch API) dan Asynchronous JavaScript
+- Skill lain (aksesibilitas, component design, animation, styling, semanitik html dan lain-lain)
+
+<h4> Svelte SSR App </h4>
+
+Kalo Lo mau bikin SSR app pake Svelte Lo wajib punya mainset seorang full-stack developer karena aplikasi frontend Lo udah ga jalan di client lagi, sekarang dia jalan di server. Nah ada beberapa skill lanjutan dari Svelte yang haru Lo tau yaitu:
+
+<h5> 1. Full Web Fundamentals </h5> 
+
+Kalo Lo mau buat SSR app Lo wajib banget punya pemahaman tentang Full Web Development seperti HTML Semantik, CSS, Js (DOM + Async), Http protocol, Cookies, Headers dan Lo juga harus paham tentang data yang akan dikirim ke halaman sebelum sampe ke user.
+
+<h5> 2. Sveltekit (Core) </h5>
+
+Kalo Lo mau buat SSR pake svelte Lo harus paham tentang Sveltekit seperti Routing (File based), Load function (Meskipun bisa di CSR tapi beda perilaku), Server Action, Streaming SSR dan Error Handling.
+
+<h5> 3. Authentication & Authorization </h5>
+
+Di svelte CSR mungkin Lo hanya bisa ngasih batasan user masuk ke halaman tententu. Di svelte SSR Lo harus paham tentang session store dan cookies (httponly). Meskipun menggunakan API terpisah untuk Auth, tapi SSR punya cookies dan http sendiri. Jadi Lo perlu handle session store dan cookies di server apakah bisa join ke API atau tidak. Kalo bisa join Lo juga harus hati - hati jangan sampai aplikasi lain juga bisa mengakses API yang Lo consume di SSR app.
+
+Selain itu perlu juga pemahaman tentang Route security (hooks.server.js) ini adalah semacam magic function di sveltekit yang akan jalan ketika ada request dan sebelum masuk ke route halaman.
+
+
+
+</details>
