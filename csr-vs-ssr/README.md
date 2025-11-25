@@ -24,6 +24,17 @@
         justify-content: space-between;
     }
 
+    .img-code {
+        max-width: 1.3rem;
+    }
+
+    .title-code {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 1rem;
+    }
+
 </style>
 
 Woi Bro, Kalo Lo programmer jaman batu kalo mau buat website simple tinggal buat folder terus Lo buat file inde.html, style.css dan script.js lalu Boom.
@@ -456,7 +467,7 @@ Ini adalah penghujung catatan CSR + SSR gue buat ini. Untuk Dev Exp atau pengala
 
 Gue kasih contoh dan implementasi dari 2 framework frontend favorit gue yaitu Svelte dan Leptos.
 
-<h3> Svelte </h3>
+<h3  class="title-code"> <img src="https://vjwknqthtunirowwtrvj.supabase.co/storage/v1/object/public/feri-irawansyah.my.id/assets/svg/skills/svelte.svg" class="img-code" alt="svelte"/> <span>Svelte</span> </h3>
 
 Svelte ini bisa gue bilang framework minimalis tapi lengkap dan gue ga perlu nambah - nambah third party banyak udah bisa bikin aplikasi web yang lumayan compleks. Buat catatan tentang svelte Lo bisa baca di sini bro <a href="https://feri-irawansyah.my.id/catatan/frontend/catatan-ringan-ini-tentang-svelte-frontend-framework-yang-minimalis" target="_blank" rel="noopener noreferrer">Catatan Ringan Ini Tentang Svelte - Frontend Framework Yang Minimalis</a>. 
 
@@ -494,12 +505,38 @@ Di svelte CSR mungkin Lo hanya bisa ngasih batasan user masuk ke halaman tentent
 
 Selain itu perlu juga pemahaman tentang Route security (hooks.server.js) ini adalah semacam magic function di sveltekit yang akan jalan ketika ada request dan sebelum masuk ke route halaman.
 
-<h5>4. Perlu Runtime dan Sveltekit Adapter</h5>
+<h5>4. Deployment & Infrastructure</h5>
+
+Deployment SSR tidak semudah deployment kaya CSR yang tinggal upload static file kemudian jalankan web server. SSR itu tidak di render di browser, tidak ada file html. Svelte SSR itu full javascript. Jadi javacsript akan membuat document html nya kemudian kirim ke browser.
 
 Karena UI atau halaman di render dari server artinya memerlukan http runtime kalo Lo misal build pake nodejs + npm, artinya ketika deployment ke server Lo juga harus install nodejs di server dan kalo resource server Lo kecil ini mahal banget karena nodejs akan menggunakan memory untuk runtime nya. Selain itu Lo nambah resource ke server ketika Lo ada update dependensi atau versi svelte Lo juga harus menyesuaikan compatible atau tidak dengan nodejs yang ada di server.
 
 Alternative lain kalo Lo ga mau install runtime di server Lo bisa pake `Bun` agar bisa compile ke single file executable tapi perlu skill Bun untuk menggunakan nya artinya Lo perlu belajar teknologi lain di luar sveltekit.
 
-Selain runtime Lo juga harus tau adapter sveltekit dan runtime yang Lo pake. 
+Kemudian setelah menjalankan Svelte SSR nanti ada port default misal 3000 nah kemudian Lo perlu reverse proxy kaya Nginx/Caddy agar port 3000 jangan di expose di internet. Kalo Lo pingin lebih scallable Lo bisa run di background pake PM2 atau Docker tapi balik lagi itu membutuhkan resource server yang cukup.
+
+<h5> Management Performance & Streaming SSR </h5>
+
+Kalo di frontend misal Lo pingin nampilin data dari api Lo tinggal fetch => dapet response => lalu buat UI dari data api, sesimple itu. Kalo response time cepat maka UI Lo akan cepat di render, kalo api lambat maka UI akan lambat dirender cara mengatasinya biasanya menggunakan lazy loading atau placeholder. 
+
+Di CSR ga sesederhanya itu ketika load data Lo berbasis page scope kalo response api lama, maka halaman tidak akan muncul sampai api response nya keluar. Untuk mengatasinya Svelte dan framework modern lain menggunakan hydration dan partial render. Jadi ketika load awal halaman akan ditampilkan secara bertahap dari komponent yang tidak menggunakan data dari api kemudian setelah api response nya keluar kemudian akan di render secara bertahap.
+
+Selain itu untuk memaksimalkannya Lo juga perlu paham tentang TTFB (Time to First Byte) optimization artinya Waktu dari user request dikirim sampai byte pertama dari server diterima. Optimisasi ini melibatkan juga performa dari backend yang dipake di frontend seperti:
+
+- Caching server side atau di backend
+- Database tuning
+- Penggunakan CDN untuk asset besar (jika server tidak ada internat tidak bisa digunakan)
+- Lazy data loading
+- Jika server backend terpisah dan lokasinya jauh optimasi akan sulit.
+
+<h5> Testing & Debug </h5>
+
+Svelte SSR debuging tidal di UI atau DOM jadi kalo Lu `console.log("halo")` itu akan muncul di CLI aau terminal yang Lo pake, karena halaman bersifat server bukan browser. Selain itu di Svelte SSR tidak ada `window` object karena server tidak tau window di browser.
+
+Selain itu untuk Unitest kaya `Vitest` atau `Jest` akan beda perilaku, ketika Lo pake unitest untuk frontend CSR maka Vites atau Jest akan melakukan testing Debug UI, Mock API, Component dan Performance Lighthouse. Vites atau Jest akan melakukan testing untuk Debug Server Load, Server logic test, Playwright atau Integration api test, Performance TTFB, Query dan Cache serta Security.
+
+<h3 class="title-code"><img class="img-code" src="https://vjwknqthtunirowwtrvj.supabase.co/storage/v1/object/public/feri-irawansyah.my.id/assets/img/skills/leptos.png" alt="leptos"/> <span>Leptos</span></h3>
+
+Contoh kedua ini rada mainstream karena bikin frontend pake bahasa pemrograman yang terkenal akan omelannya😅. Iya Leptos adalah framework frontend yang dibangun untuk ekosistem Rust dan framework frontend yang paling gue suka. Website ini juga dibikin pake Leptos bro.
 
 </details>
