@@ -8,6 +8,7 @@ Dikutip dari <a href="https://en.wikipedia.org/wiki/Svelte" target="_blank">Wiki
 
 <details>
 <summary><h2>📌 Svelte Frontend Framework</h2></summary>
+
 ### Kenapa Butuh Framework
 	
 Tapi nih kita udah jauh - jauh pake React, Vuew, Angular, Svelte tapi buat apa si framework? Bikin aplikasi web pake HTML, CSS, JS juga udah bisa dan bagus. Kalo Lo sendiri bukan tim bebas itu terserah Lo bro tapi kalo Lo kerja tim gimana? Mesti bakal ada beberapa kekurangan misal:
