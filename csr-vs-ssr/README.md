@@ -622,6 +622,111 @@ Web Asembly (wasm) biasanya ukurannya besar. Default compile pake Trunk build to
 
 <h6> - Rust low level programming </h6>
 
-Rust native binary ini native file tidak ada runtime tambahan dan bener - bener murni untuk Operating System byte code. Selain itu Rust tidak ada garbage collector. 
+Rust native binary ini native file tidak ada runtime tambahan dan bener - bener murni machine code dan siap di jalankan tanpa runtime. Selain itu Rust tidak punya garbage collector dan tidak membutuhkan garbage collector. Jadi meskipun requestnya banyak tidak ada ada proses stop the world untuk menghapus data di memory. Tapi Rust tidak mudah dipelajari konsep borrow checker dan ownership serta syntax yang sulit di baca menjadi bottleneck terhadap skill issue.
+
+<h6> - Perlu HTTP server </h6>
+
+Leptos bisa digunakan langsung di Rust dengan HTTP server rust/tokio (async runtime rust). Tapi buat integrasinya tidak mudah namun Leptos sudah suport dengan Framework HTTP besar di ekosistem rust terutama Actix dan Axum. Keduanya masih menduduki peringkat 10 besar framework tercepat di Techempower benchmark dunia. Inilah alasan kenapa SSR Leptos itu kuat bahkan cocok untuk game server yang latensi nya tinggi.
+
+<h6> - Partial Hydration tidak mudah digunakan </h6>
+
+Di Leptos ketika load website untuk pertamakalinya, browser akan download aset yang diperlukan termasuk wasm file yang akan digunakan untuk hydration. Leptos punya partial/lazy hydration jadi hydration dilakukan secara paralel ke UI terkecil yang benar-benar ada action atau perubahan. Nah proses hydration ini tidak semudah hydration di javascrpt. Di Leptos ketika semantik HTML tidak sesuai bisa menyebabkan hydrartion gagal. Contohnya seperti membuat tag `<li></li>` tanpa dibungkus `<ul></ul>` atau `<ol></ol>`.
+
+```rs
+use leptos::prelude::*;
+
+// Benar ✅
+#[component]
+fn List() -> impl IntoView {
+
+    view! {
+        <ul>
+            <li>"Item 1"</li>
+            <li>"Item 2"</li>
+        </ul>
+    }
+}
+
+// Salah ❌
+#[component]
+fn List() -> impl IntoView {
+
+    view! {
+        <li>"Item 1"</li>
+        <li>"Item 2"</li>
+    }
+}
+```
+
+<h6> - Pake `cargo_leptos` untuk mempermudah hidup </h6>
+
+Ketika membuat CSR Leptos pake Trunk Lo cukup jalankan `trunk server` udah bisa hot reload. Di Leptos SSR tidak ada trunk, karena pake http server. Nah untuk menjalankan project Leptos SSR perlu banyak mantra dan ritual bro. Dengan pake cargo_leptos akan mempermudah hidup Lo.
+
+- CSS Hidration
+- Auto Reload
+- Build binding asset
+- Prerender
+- Dx lainnya enak
+
+Itu beberapa keuntungan Lo pake cargo_leptos tanpa cargo_leptos, Lo bakal jadi dukun yang banyak baca mantra dan banyak ritual yang bakal numbalin waktu Lo.
+
+<h6> - Untitest & Debugging</h6>
+
+Belum ada Unitest khusus untuk Leptos, tapi Rust punya unitest bawaan yaitu dengan macro `#[test]`. 
+
+```rs
+#[component] // Leptos component
+pub fn Counter(cx: Scope) -> impl IntoView {
+    let (count, set_count) = create_signal(cx, 0);
+    view! { cx, <button on:click=move |_| set_count.update(|c| *c += 1)>{count}</button> }
+}
+
+#[cfg(test)] // unitest
+mod tests {
+    use super::*;
+    use leptos::*;
+
+    #[test]
+    fn counter_initial_value() {
+        leptos::create_runtime();
+        let cx = leptos::Scope::new();
+
+        let view = Counter(cx).into_view(cx);
+        let html = leptos::ssr::render_to_string(cx, move || view.clone());
+
+        assert!(html.contains(">0<")); 
+    }
+}
+```
+
+Lo bisa jalankan perintah
+```bash
+cargo test --exact counter_initial_value --show-output
+```
+
+Dan hasilnya
+```bash
+running 1 test
+test tests::counter_initial_value ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1 filtered out; finished in 0.04s
+```
+
+Jika debugging di level component lo bisa jalankan projectnya lalu tambahkan code ini di bagian yang ini Lo debug.
+
+```rs
+use leptos::prelude::*;
+
+#[component]
+pub fn Counter(cx: Scope) -> impl IntoView {
+    let (count, set_count) = create_signal(cx, 0);
+
+    console_log!("count: {}", count);
+
+    view! { cx, <button on:click=move |_| set_count.update(|c| *c += 1)>{count}</button> }
+}
+```
+
+Nanti di browser devtools console akan tampil `count: 0` dan `count: 1` ketika klik button.
 
 </details>
