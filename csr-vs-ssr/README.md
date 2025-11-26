@@ -17,6 +17,47 @@
         max-height: 50px;
     }
 
+    .img-app img[alt="notion"] {
+       max-width: 50px;
+    }
+    .img-app img[alt="jira"] {
+       max-width: 50px;
+    }
+    .img-app img[alt="slack"] {
+       max-width: 50px;
+    }
+    .img-app img[alt="zoom"] {
+       max-width: 50px;
+    }
+    .img-app img[alt="whatsapp"] {
+       max-width: 50px;
+    }
+    .img-app img[alt="gmeet"] {
+       max-width: 50px;
+    }
+    .img-app img[alt="powerbi"] {
+       max-width: 50px;
+    }
+    .img-app img[alt="grafana"] {
+       max-width: 50px;
+    }
+    .img-app img[alt="shopee"] {
+       max-width: 50px;
+    }
+    .img-app img[alt="blibli"] {
+       max-width: 50px;
+    }
+    .img-app img[alt="google"] {
+       max-width: 50px;
+    }
+    .img-app img[alt="reddit"] {
+       max-width: 50px;
+    }
+    .img-app img[alt="apple"] {
+       max-width: 50px;
+    }
+
+
     .img-app-item {
         display: flex;
         flex-direction: column;
@@ -185,7 +226,7 @@ Keamanan ? Kalo di lihat dari implementasinya SSR terasa lebih aman karena datan
 </table>
 
 Tapi balik lagi bro, security itu bukan di frontend tapi di backend dan server Lo. Frontend hanya UI dan template bukan bussines logic. 
-1. Bussines logic tetap ada di backend
+1. Bussines logic tetap ada di backend dan server
 2. Jangan expose data sensitif ke frontend
 3. Semua secret key jangan dikirim ke frontend, bisa gunakan serialize/encrypt jika memang butuh di frontend
 4. Berikan akses terbatas ke API (authorization header)
@@ -200,6 +241,8 @@ Jadi mau CSR atau SSR itu sebenarnya sama aja bro, karena security itu di ranah 
 Asal Lo tau bro, gue ambil contoh lagi dari website tempat Lo baca article ini itu juga sama implementasinya. Meskipun frontend dibuat dengan `Rust` yang `type safe`, `memory safe`, `thread safe`, `compile time check` dan `wasm bundle` yang susah dibongkar ga kaya javascript bundle. Tapi tetep aja bro frontend hanyalah template bukan bussines logic. Gue teteap taro bussines logic di backend terpisah, tidak langsung raw query di `Leptos` karena bukan tempatnya.
 
 Dan katanya `Rust + Actix` itu tahan banting? Mau di spam tetep kek beton? Kaga juga bro, VM gue ini kecil cuma 500MB ram, jadi tetep gue pake rate limiter juga biar kaga sembarangan di spam. Karena keamanan itu bukan di teknologi, tapi dari diri Lo sendiri bro yang selalu hati - hati dan tetep berbuat kebaikan.
+
+Notes: Backend disini maksud gue itu `Optional` terpisah. Sveltekit SSR itu jalan di runtime nodejs, jadi Lo juga bisa bikin layer sendiri untuk backend di satu project. Lo bisa pake express atau bisa pake framework lain. Kalo terpisah juga lebih bagus, karena tersentralisasi.
 
 </details>
 
@@ -336,7 +379,7 @@ Jadi aplikasi online store cocok dengan CSR + SSR. Contohnya seperti `Shopee`, `
     <p>Shopee</p>
   </div>
   <div class="img-app-item">
-    <img src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/csr-vs-ssr/static/tokopedia.svg" class="img-fluid" alt="Tokopedia"/>
+    <img src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/csr-vs-ssr/static/tokopedia.svg" class="img-fluid" alt="tokopedia"/>
     <p>Tokopedia</p>
   </div>
   <div class="img-app-item">
@@ -477,6 +520,7 @@ Kalo Lo mau bikin CSR app pake Svelte ada beberapa skil yang harus Lo tau yaitu:
 
 - Javascript (Wajib) karena Svelte menggunakan Javascript
 - Javascript DOM
+- Typescript (Jika backend di satu project Sveltekit, optional untuk frontend SSR pake Svelte aja)
 - Build Tools (Vite, Rollup, Webpack, etc)
 - State
 - Component
@@ -537,6 +581,47 @@ Selain itu untuk Unitest kaya `Vitest` atau `Jest` akan beda perilaku, ketika Lo
 
 <h3 class="title-code"><img class="img-code" src="https://vjwknqthtunirowwtrvj.supabase.co/storage/v1/object/public/feri-irawansyah.my.id/assets/img/skills/leptos.png" alt="leptos"/> <span>Leptos</span></h3>
 
-Contoh kedua ini rada mainstream karena bikin frontend pake bahasa pemrograman yang terkenal akan omelannya😅. Iya Leptos adalah framework frontend yang dibangun untuk ekosistem Rust dan framework frontend yang paling gue suka. Website ini juga dibikin pake Leptos bro.
+Contoh kedua ini rada mainstream karena bikin frontend pake bahasa pemrograman yang terkenal akan galak😅. Iya Leptos adalah framework frontend yang dibangun untuk ekosistem Rust dan framework frontend yang paling gue suka karena type safety nya bikin gue tidak sembarangan nulisin code jadi kemungkinan bug itu kecil. Perlu di gais bawahi Leptos ini sebenernya di design khusus untuk SSR. Tapi bisa juga untuk SSR hanya saja fitur partial hydration nya tidak berguna dan jadi aplikasi CSR biasa.
+
+<h4> Leptos CSR App </h4>
+
+Untuk bangun aplikasi pake Leptos CSR Lo bener - bener ga perlu pemahaman tentang Rust backend serius, karena meskipun pada dasarnya Rust itu untuk backend karena berada di low level programming language, tapi Leptos ini bener - bener ngasih Lo jadi Frontend Dev. Nah ada beberapa hal yang perlu dipahami:
+
+- Rust (Wajib) karena ngodingnya pake Rust
+- Build Tools (Trunk, Wasm Pack)
+- Wasm (Web Assembly)
+- Leptos Component
+- Signal untuk state
+- Lifecycle State
+- Fetch (leptos::fetch, leptos::prelude::create_resource, gloo_net)
+- State Management
+- Routing (leptos_router)
+- Skill lain (aksesibilitas, component design, animation, styling, semanitik html dan lain-lain)
+
+Kurang lebih sama kaya Frontend modern prerequisite frontend biasnaya berkaitan dengan build tool, component, state dan routing. Gue juga ada catatan tentang Leptos di sini <a href="https://feri-irawansyah.my.id/catatan/frontend/frontend-web-single-page-aplication-pake-rust-leptos-csr" target="_blank" rel="noopener noreferrer">Frontend Web Single Page Aplication Pake Rust (Leptos CSR)</a>.
+
+<h4> Leptos SSR App </h4>
+
+Sama seperti Svelte SSR, Leptos SSR juga membutuhkan pemahaman tentang Rust backend. Nah ada beberapa hal yang perlu dipahami:
+
+<h5> 1. Full Web Fundamentals </h5>
+
+Seperti Svelte SSR app, Leptos SSR app juga Lo wajib banget punya pemahaman tentang Full Web Development seperti HTML Semantik, CSS, Js (DOM), Http protocol, Cookies, Headers dan Lo juga harus paham tentang data yang akan dikirim ke halaman sebelum sampe ke user. Meskipun Lo nantinya pake Rust tapi pemahaman Js (DOM) ini dibutuhkan, karena yang ngerti DOM cuma javascript.
+
+<h5> 2. Authentication & Authorization </h5>
+
+Auth di Leptos pada dasarnya sama seperti teknologi lainnya. Jika dibandingkan dengan Sveltekit Leptos ini bukan file base routing. Jadi buat authorize suatu halaman di SSR, Lo harus lakukan di backend.
+
+<h5> 3. Deployment & Infrastructure </h5>
+
+Seperti yang gue bilang di awal Leptos ini memang di design untuk SSR (server app) jadi berbeda dengan Sveltekit untuk deployment Leptos SSR ini sedikit lebih murah dibanding CSR. Kok bisa?
+
+<h6> - Leptos compile ke wasm </h6>
+
+Web Asembly (wasm) biasanya ukurannya besar. Default compile pake Trunk build tools tanpa minify bisa 5MB untuk aplikasi hello world aja. Jadi untuk CSR mungkin akan lambat untuk load pertama karen browser akan download file wasm yang besar. Kalo pake leptos SSR server function akan dicompile ke native binary file. Dan binary file Rust ukurannya sangat kecil sehingga akan mengurangi beban di file wasm sehingga ukuran wasm akan jauh lebih kecil karena hanya dipake buat hydration aja bukan untuk runtime.
+
+<h6> - Rust low level programming </h6>
+
+Rust native binary ini native file tidak ada runtime tambahan dan bener - bener murni untuk Operating System byte code. Selain itu Rust tidak ada garbage collector. 
 
 </details>
