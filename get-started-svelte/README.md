@@ -10,14 +10,15 @@ Dikutip dari <a href="https://en.wikipedia.org/wiki/Svelte" target="_blank">Wiki
 <summary><h2>📌 Svelte Frontend Framework</h2></summary>
 
 ### Kenapa Butuh Framework
-	
-Tapi nih kita udah jauh - jauh pake React, Vuew, Angular, Svelte tapi buat apa si framework? Bikin aplikasi web pake HTML, CSS, JS juga udah bisa dan bagus. Kalo Lo sendiri bukan tim bebas itu terserah Lo bro tapi kalo Lo kerja tim gimana? Mesti bakal ada beberapa kekurangan misal:
+
+Di dunia frontend banyak sekali framework populer kaya React, Vue, Angular, Svelte tapi buat apa si framework? Bikin aplikasi web pake HTML, CSS, JS juga udah bisa dan bagus. Kalo Lo sendiri bukan tim bebas itu terserah Lo bro tapi kalo Lo kerja tim gimana? Mesti bakal ada beberapa kekurangan misal:
 	
 - Code Javascript hanya Lo yang tau. Tim Lo belum tentu tau
 - Tiap orang beda - beda nulis code bahkan arsitektur.
 - Tidak ada aturan dalam gaya penulisan code
+- Kalopun beneran pake vanila js, harus ada 1 atau 2 orang yang bikin arsitektur nya dan anggota lain mau ga mau harus mengikuti aturan yang di buat.
 
-Nah dengan adanya Framework tim Lo bakal terorganisir bro ada aturan tertentu dalam membuat code dan aturannya sudah dibuatkan oleh si pembuat Frameworknya dan udh menjadi standarisasi di dunia.
+Nah dengan adanya Framework tim Lo bakal terorganisir bro ada aturan tertentu dalam membuat code dan aturannya sudah dibuatkan oleh si pembuat Frameworknya dan udah menjadi standarisasi di dunia.
 
 ### Dokumentasi Svelte
 
@@ -58,6 +59,8 @@ Sebelum Lo mulai membuat Svete Project, Lo perlu beberapa hal yang harus dipenuh
 
 ### Vite & Svelte
 
-Untuk membuat Svelte project kita akan menggunakan <a href="https://vite.dev/" target="_blank" rel="">Vite</a> sebagai module bundlernya.
+Untuk membuat Svelte project kita akan menggunakan <a href="https://vite.dev/" target="_blank" rel="">Vite</a> frontend build tools. Sebenarnya ada banyak build tools seperti gulp, webpack, rollup dll. Tapi framework modern hampir mayoritas menggunakan Vite sebagai default nya.
+
+
 </details>
 
