@@ -61,6 +61,14 @@ Sebelum Lo mulai membuat Svete Project, Lo perlu beberapa hal yang harus dipenuh
 
 Untuk membuat Svelte project kita akan menggunakan <a href="https://vite.dev/" target="_blank" rel="">Vite</a> frontend build tools. Sebenarnya ada banyak build tools seperti gulp, webpack, rollup dll. Tapi framework modern hampir mayoritas menggunakan Vite sebagai default nya.
 
+### Membuat project Svelte 
 
+Untuk membuat project Svelte Lo cukup buka terminal dan arahkan ke folder dimana Lo pingin nyimpen source aplikasi nya lalu ketikkan
+
+```bash
+npm create vite@latest get-started-svelte
+```
+
+Nanti ada beberapa pilihan kaya gini
 </details>
 
