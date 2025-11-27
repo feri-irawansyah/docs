@@ -213,13 +213,13 @@ Keamanan ? Kalo di lihat dari implementasinya SSR terasa lebih aman karena datan
         <td>🟢 Sudah pre-render → lebih aman</td>
       </tr>
       <tr>
-        <th scope="row"></th>
+        <th scope="row">9</th>
         <td>Authentication</td>
         <td>⚠️ Banyak butuh localStorage/sessionStorage → bisa dicuri via XSS</td>
         <td>🟢 HTTP-Only Cookies lebih aman, Session validated server-side</td>
       </tr>
       <tr>
-        <th scope="row">9</th>
+        <th scope="row">10</th>
         <td>Role + Access Control</td>
         <td>❌ Logic di client bisa di-bypass</td>
         <td>🟢 Full access control di server</td>
@@ -236,8 +236,9 @@ Tapi balik lagi bro, security itu bukan di frontend tapi di backend dan server L
 5. Berikan validasi kuat di request header dan body agar tidak bisa inject script ke backend
 6. Bisa pake rate limiter agar tidak mudah dispam
 7. Bisa matikan DevTools ketika production atau blokir akses seperti iframe, sandbox, dan sebagainya
-8. Authentication tetep di Cookie dan backend yang handler, frontend hanya menerima response APi yang valid aja
-9. Role + Access Control tetep di server dan backend yang handler. Frontend hanya membuat logic dari response API yang valid aja
+8. Bisa pake HTTPS agar lebih aman
+9. Authentication tetep di Cookie dan backend yang handler, frontend hanya menerima response APi yang valid aja
+10. Role + Access Control tetep di server dan backend yang handler. Frontend hanya membuat logic dari response API yang valid aja
 
 Jadi mau CSR atau SSR itu sebenarnya sama aja bro, karena security itu di ranah backend bukan di frontend. Bedanya SSR itu lebih tertutup aja untuk data exposure karena data tetep di server.
 
