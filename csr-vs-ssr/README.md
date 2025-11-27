@@ -159,72 +159,74 @@ Karena rendering UI di lakukan di browser artinya server tidak perlu banyak beke
 
 Keamanan ? Kalo di lihat dari implementasinya SSR terasa lebih aman karena datanya tersentralisasi di server dan tidak ada data di browser. Gue breakdown beberapa masalah security CSR dan SSR.
 
-<table class="table">
-  <thead>
-    <tr>
-      <th scope="col">#</th>
-      <th scope="col">Security Aspect</th>
-      <th scope="col">CSR (Client-Side Rendering)</th>
-      <th scope="col">SSR (Server-Side Rendering)</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th scope="row">1</th>
-      <td>Exposure of Business Logic</td>
-      <td>❌ Business logic & API interaction ada di browser → bisa dicuri, dipelajari, di-manipulate</td>
-      <td>✅ Logic tetap di server → lebih sulit direkayasa</td>
-    </tr>
-    <tr>
-      <th scope="row">2</th>
-      <td>Data Sensitivity</td>
-      <td>❌ Semua data dikirim via API → bisa di-inspect</td>
-      <td>✅ Hanya hasil HTML dikirim → data sensitif tetap di server</td>
-    </tr>
-    <tr>
-      <th scope="row">3</th>
-      <td>API Key/Secrets Safety</td>
-      <td>❌ Jika keliru, keys bisa bocor di FE</td>
-      <td>✅ Semua secret aman di server</td>
-    </tr>
-    <tr>
-      <th scope="row">4</th>
-      <td>Attack Surface</td>
-      <td>❌ Endpoint API banyak & terbuka</td>
-      <td>⚠️ Fewer endpoints but still must be secured</td>
-    </tr>
-    <tr>
-      <th scope="row">5</th>
-      <td>XSS (Cross-Site Scripting)</td>
-      <td>⚠️ Rentan karena full DOM di browser</td>
-      <td>⚠️ Tetap bisa terjadi kalau sanitasi buruk</td>
-    </tr>
-    <tr>
-      <th scope="row">6</th>
-      <td>DDoS Impact</td>
-      <td>🟢 Lebih kuat → beban berat ada di client</td>
-      <td>🔴 Sangat rentan → rendering dilakukan tiap request</td>
-    </tr>
-    <tr>
-      <th scope="row">7</th>
-      <td>SEO Injection / HTML Tampering</td>
-      <td>⚠️ Bisa di override via DevTools</td>
-      <td>🟢 Sudah pre-render → lebih aman</td>
-    </tr>
-    <tr>
-      <th scope="row"></th>
-      <td>Authentication</td>
-      <td>⚠️ Banyak butuh localStorage/sessionStorage → bisa dicuri via XSS</td>
-      <td>🟢 HTTP-Only Cookies lebih aman, Session validated server-side</td>
-    </tr>
-    <tr>
-      <th scope="row">9</th>
-      <td>Role + Access Control</td>
-      <td>❌ Logic di client bisa di-bypass</td>
-      <td>🟢 Full access control di server</td>
-    </tr>
-  </tbody>
-</table>
+<div class="table-responsive">
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Security Aspect</th>
+        <th scope="col">CSR (Client-Side Rendering)</th>
+        <th scope="col">SSR (Server-Side Rendering)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th scope="row">1</th>
+        <td>Exposure of Business Logic</td>
+        <td>❌ Business logic & API interaction ada di browser → bisa dicuri, dipelajari, di-manipulate</td>
+        <td>✅ Logic tetap di server → lebih sulit direkayasa</td>
+      </tr>
+      <tr>
+        <th scope="row">2</th>
+        <td>Data Sensitivity</td>
+        <td>❌ Semua data dikirim via API → bisa di-inspect</td>
+        <td>✅ Hanya hasil HTML dikirim → data sensitif tetap di server</td>
+      </tr>
+      <tr>
+        <th scope="row">3</th>
+        <td>API Key/Secrets Safety</td>
+        <td>❌ Jika keliru, keys bisa bocor di FE</td>
+        <td>✅ Semua secret aman di server</td>
+      </tr>
+      <tr>
+        <th scope="row">4</th>
+        <td>Attack Surface</td>
+        <td>❌ Endpoint API banyak & terbuka</td>
+        <td>⚠️ Fewer endpoints but still must be secured</td>
+      </tr>
+      <tr>
+        <th scope="row">5</th>
+        <td>XSS (Cross-Site Scripting)</td>
+        <td>⚠️ Rentan karena full DOM di browser</td>
+        <td>⚠️ Tetap bisa terjadi kalau sanitasi buruk</td>
+      </tr>
+      <tr>
+        <th scope="row">6</th>
+        <td>DDoS Impact</td>
+        <td>🟢 Lebih kuat → beban berat ada di client</td>
+        <td>🔴 Sangat rentan → rendering dilakukan tiap request</td>
+      </tr>
+      <tr>
+        <th scope="row">7</th>
+        <td>SEO Injection / HTML Tampering</td>
+        <td>⚠️ Bisa di override via DevTools</td>
+        <td>🟢 Sudah pre-render → lebih aman</td>
+      </tr>
+      <tr>
+        <th scope="row"></th>
+        <td>Authentication</td>
+        <td>⚠️ Banyak butuh localStorage/sessionStorage → bisa dicuri via XSS</td>
+        <td>🟢 HTTP-Only Cookies lebih aman, Session validated server-side</td>
+      </tr>
+      <tr>
+        <th scope="row">9</th>
+        <td>Role + Access Control</td>
+        <td>❌ Logic di client bisa di-bypass</td>
+        <td>🟢 Full access control di server</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 
 Tapi balik lagi bro, security itu bukan di frontend tapi di backend dan server Lo. Frontend hanya UI dan template bukan bussines logic. 
 1. Bussines logic tetap ada di backend dan server
@@ -635,7 +637,7 @@ Selain itu untuk Unitest kaya `Vitest` atau `Jest` akan beda perilaku, ketika Lo
 
 <h3 class="title-code"><img class="img-code" src="https://vjwknqthtunirowwtrvj.supabase.co/storage/v1/object/public/feri-irawansyah.my.id/assets/img/skills/leptos.png" alt="leptos"/> <span>Leptos</span></h3>
 
-Contoh kedua ini rada mainstream karena bikin frontend pake bahasa pemrograman yang terkenal akan galak😅. Iya Leptos adalah framework frontend yang dibangun untuk ekosistem Rust dan framework frontend yang paling gue suka karena type safety nya bikin gue tidak sembarangan nulisin code jadi kemungkinan bug itu kecil. Perlu di gais bawahi Leptos ini sebenernya di design khusus untuk SSR. Tapi bisa juga untuk SSR hanya saja fitur partial hydration nya tidak berguna dan jadi aplikasi CSR biasa.
+Contoh kedua ini rada mainstream karena bikin frontend pake bahasa pemrograman yang terkenal galak😅. Iya Leptos adalah framework frontend yang dibangun untuk ekosistem Rust dan framework frontend yang paling gue suka karena type safety nya bikin gue tidak sembarangan nulisin code jadi kemungkinan bug itu kecil. Leptos ini sebenernya di design khusus untuk SSR. Tapi bisa juga untuk CSR hanya saja fitur partial hydration nya tidak berguna dan jadi aplikasi CSR biasa.
 
 <h4> Leptos CSR App </h4>
 
