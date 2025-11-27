@@ -73,6 +73,7 @@
       display: flex;
       flex-direction: row;
       align-items: center;
+      font-size: 1.3rem;
       gap: 1rem;
     }
 
@@ -118,7 +119,7 @@ Aplikasi dengan data yang dinamis berubah setiap detiknya misalnya ada banyak ta
 </details>
 
 <details open>
-<summary><h2>📌Performance & Biaya</h2></summary>
+<summary><h2>📌 Performance & Biaya</h2></summary>
 
 Soal performance gimana bro? Tergantung juga bro. Balik lagi ke use case nya gue kasih contoh website gue ini. Ini gue buat pake SSR kenapa? Karena suka - suka gue dong wkwkwk.
 
@@ -154,7 +155,7 @@ Karena rendering UI di lakukan di browser artinya server tidak perlu banyak beke
 
 
 <details open>
-<summary><h2>📌Security</h2></summary>
+<summary><h2>📌 Security</h2></summary>
 
 Keamanan ? Kalo di lihat dari implementasinya SSR terasa lebih aman karena datanya tersentralisasi di server dan tidak ada data di browser. Gue breakdown beberapa masalah security CSR dan SSR.
 
@@ -543,11 +544,45 @@ Kalo Lo mau buat SSR app Lo wajib banget punya pemahaman tentang Full Web Develo
 
 Kalo Lo mau buat SSR pake svelte Lo harus paham tentang Sveltekit seperti Routing (File based), Load function (Meskipun bisa di CSR tapi beda perilaku), Server Action, Streaming SSR dan Error Handling.
 
+```js
+// src/routes/+page.server.js
+export async function load() {
+
+  const res = await fetch('https://jsonplaceholder.typicode.com/posts');
+
+  if (res.ok) {
+
+    const data = await res.json();
+    return { posts: data };
+  }
+
+  throw error(404, 'Not Found');
+}
+```
+
+Seperti contohnya load function ini. Load function akan di jalankan sebelum page ditampilkan ke browser.
+
 <h5> 3. Authentication & Authorization </h5>
 
 Di svelte CSR mungkin Lo hanya bisa ngasih batasan user masuk ke halaman tententu. Di svelte SSR Lo harus paham tentang session store dan cookies (httponly). Meskipun menggunakan API terpisah untuk Auth, tapi SSR punya cookies dan http sendiri. Jadi Lo perlu handle session store dan cookies di server apakah bisa join ke API atau tidak. Kalo bisa join Lo juga harus hati - hati jangan sampai aplikasi lain juga bisa mengakses API yang Lo consume di SSR app.
 
 Selain itu perlu juga pemahaman tentang Route security (hooks.server.js) ini adalah semacam magic function di sveltekit yang akan jalan ketika ada request dan sebelum masuk ke route halaman.
+
+```js
+// src/hooks.server.js
+
+import { redirect } from '@sveltejs/kit';
+
+export function handle({ event, resolve }) {
+
+  const session = event.locals.session;
+
+  if (!session) {
+
+    throw redirect(302, '/login');
+  }
+}
+```
 
 <h5>4. Deployment & Infrastructure</h5>
 
@@ -576,6 +611,25 @@ Selain itu untuk memaksimalkannya Lo juga perlu paham tentang TTFB (Time to Firs
 <h5> Testing & Debug </h5>
 
 Svelte SSR debuging tidal di UI atau DOM jadi kalo Lu `console.log("halo")` itu akan muncul di CLI aau terminal yang Lo pake, karena halaman bersifat server bukan browser. Selain itu di Svelte SSR tidak ada `window` object karena server tidak tau window di browser.
+
+```js
+// src/routes/+page.server.js
+export async function load() {
+
+  const res = await fetch('https://jsonplaceholder.typicode.com/posts');
+
+  console.log(res);
+
+  return res.json();
+}
+```
+
+```bash
+# output console
+
+> fetch('https://jsonplaceholder.typicode.com/posts')
+Response {url: 'https://jsonplaceholder.typicode.com/posts', status: 200, statusText: 'OK', headers: Headers, type: 'cors', body: ReadableStream, size: 0}
+```
 
 Selain itu untuk Unitest kaya `Vitest` atau `Jest` akan beda perilaku, ketika Lo pake unitest untuk frontend CSR maka Vites atau Jest akan melakukan testing Debug UI, Mock API, Component dan Performance Lighthouse. Vites atau Jest akan melakukan testing untuk Debug Server Load, Server logic test, Playwright atau Integration api test, Performance TTFB, Query dan Cache serta Security.
 
@@ -727,6 +781,23 @@ pub fn Counter(cx: Scope) -> impl IntoView {
 }
 ```
 
-Nanti di browser devtools console akan tampil `count: 0` dan `count: 1` ketika klik button.
+Nanti di browser devtools console akan tampil `count: 0` dan `count: 1` ketika klik button. 
 
 </details>
+
+<details open>
+<summary><h2>📌 Summary</h2></summary>
+
+CSR (Client Side Render) artinya Lo membuat aplikasi yang berjalan di browser, sedangkan SSR (Server Side Render) artinya Lo membuat aplikasi yang berjalan di server dan dikirim ke browser. 
+
+Development CSR jauh lebih mudah dibandingkan dengan SSR karena CSR hanya berkaitan dengan bagaimana UI itu interactive dan menyesuaikan pengalaman user. Sedangkat SSR selain bagaimana UI itu interactive juga berkaitan dengan bagaimana data itu di render dan dikirim ke client.
+
+CSR dan SSR mempunyai kelebihan dan kekurangan masing-masing. Jadi ketika memilih antara CSR dan SSR, harus mempertimbangkan kebutuhan dan kebutuhan Lo. Semoga bermanfaat.
+
+</details>
+
+---
+
+<div class="d-flex flex-row justify-content-center align-items-center">Regards <a href="https://feri-irawansyah.my.id"><img witdh="1rem" src="https://feri-irawansyah.my.id/favicon.ico" alt="Feri Irawansyah"> Feri Irawansyah</a></div>
+
+---
