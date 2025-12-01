@@ -695,6 +695,8 @@ Intinya sesuaikan dengan kebutuhan.
 
 Kadang nih ada kasus misal Lo mau bikin state baru tapi dia relative ke state lain. Misal Lo ada state `let count = $state(0)` nah terus Lo ada increment atau decrement gitu ya, terus Lo pingin bikin state baru yang reactive ke count dan nilainya misal pingin di kali 2 dari count (count * 2). Nah Lo bisa pake `$derived` buat ngelakuin itu.
 
+Untuk lebih jelas bisa lihat [$derived Rune docs](https://svelte.dev/docs/svelte/$derived)
+
 ```html
 <!-- src/lib/Counter.svelte -->
 <script>
@@ -743,6 +745,199 @@ Okeh tapi misalnya Lo ada case lagi pingin pake expression control flow semacam 
 ```
 
 ### Derived By Rune `$derived.by(expression)`
+
+Untuk mengatasi expression control flow di `$derived` Lo bisa pake `$derived.by(expression)`. Ini masih sama dengan `$derived` tapi bisa pake expression control flow bahkan function yang kompleks. 
+
+```html
+<!-- src/lib/Counter.svelte -->
+<script>
+  let count = $state(0)
+  const increment = () => {
+    count += 1
+  }
+
+  let total = $derived.by(count * 2)
+  let status = $derived.by(() => {
+    if (count < 5) return 'low' 
+    else if (count < 10) return 'medium'
+    else return 'high'
+  })
+</script>
+
+<div class="div">
+  <p>total: {total}</p>
+  <p>status: {status}</p>
+</div>
+
+<button onclick={increment}>
+  count is {count}
+</button>
+```
+
+Nah kalo kaya gini bisa bro, coba buka halaman `http://localhost:5173/counter.html` dan coba click sampe nilai melebihin 5 dan 10.
+
+### Debugging Rune `$inspect()`
+
+Kadang saat membuat aplikasi, Lo biasanya sering melakukan log perubahan yang terjadi di State kan bro pake `console.log(state)` Tapi, karena reactive state itu sebenarnya adalah Proxy Object, maka akan terjadi warning ketika kita lakukan itu dan perubahan state juga ga terdeteksi oleh `console.log`.
+Disarankan untuk menggunakan Rune $inspect(state) jika kita ingin pendeteksian perubahan yang terjadi pada state. 
+Kalo Lo pingin lebih compleks atau custom Lo bisa pake `$inpect` dengan cara begini `$inspect(state).with((type, data) => …)`. Dokumentasi lengkapnya ada di [$inspect Rune docs](https://svelte.dev/docs/svelte/$inspect).
+
+```html
+<!-- src/lib/Counter.svelte -->
+<script>
+  let count = $state(0)
+  const increment = () => {
+    count += 1
+  }
+
+  let total = $derived.by(count * 2)
+  let status = $derived.by(() => {
+    if (count < 5) return 'low' 
+    else if (count < 10) return 'medium'
+    else return 'high'
+  })
+
+  // Pake $inspect
+  $inspect(total).with((type, data) => {
+    console.log(type, data)
+  })
+</script>
+
+<div class="div">
+  <p>total: {total}</p>
+  <p>status: {status}</p>
+</div>
+
+<button onclick={increment}>
+  count is {count}
+</button>
+ ```
+
+<img class="img-fluid" alt="inspect-rune" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/get-started-svelte/public/inspect-rune.png" />
+
+Tapi bro`$inspect` hanya jalan di mode development, ketika kode Svelte udah Lo build pake  Vite `$inspect` ga akan jalan dan kalo Lo pake minify malah akan dibuang codenya.
+Jadi aman Lo menambahkan `$inspect` sebanyak apapun, karena hanya jalan di development, tidak akan jalan di production.
+
+### Effect Rune `$effect()`
+
+Lo pernah kepikiran ga bro? Misalnya suatu state berubah nah Lo pingin lakuin sesuatu gitu gimana caranya. *Ah gampang tinggal pake if di tag `script` nanti pas nilainya sesuai baru lo jalanin function*. Okeh kita coba.
+
+```html
+<!-- src/lib/Counter.svelte -->
+<script>
+  let count = $state(0)
+  const increment = () => {
+    count += 1
+  }
+
+  let status = $state('')
+
+  if(count > 5) {
+    status = 'high'
+  } else {
+    status = 'low'
+  }
+
+</script>
+
+<div class="div">
+  <p>status: {status}</p>
+</div>
+
+<button onclick={increment}>
+  count is {count}
+</button>
+ ```
+
+Kaya gini kan maksud nya? Wkwkwkwk sayangnya ga jalan bro nih gue udah sampe seratus blm belubah statusnya.
+
+<img class="img-fluid" alt="no-effect" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/get-started-svelte/public/no-effect.png" />
+
+ Kenapa bisa gitu? Karena perubahan statenya tidak di deteksi if atau apapun yang di tulis di tag `script` hanya akan di jalankan sekali ketika load aja, sedangkan Rune state adalah Proxy. Untuk melakukannya Lo harus pake `$effect`.
+
+ ```html
+<!-- src/lib/Counter.svelte -->
+<script>
+  let count = $state(0)
+  const increment = () => {
+    count += 1
+  }
+
+  let status = $state('')
+
+  $effect(() => {
+    if(count > 5) {
+      status = 'high'
+    } else {
+      status = 'low'
+    }
+  })
+
+</script>
+
+<div class="div">
+  <p>status: {status}</p>
+</div>
+
+<button onclick={increment}>
+  count is {count}
+</button>
+ ```
+
+<img class="img-fluid" alt="effect" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/get-started-svelte/public/effect.png" />
+
+Nah ini baru jalan, Tapi kenapa ga pake Rune `$derived` aja? Kayanya sama aja kan. Kelihatannya sama tapi beda fungsi bro.
+
+<div class="table-responsive">
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Context</th>
+        <th scope="col">$effect</th>
+        <th scope="col">$derived</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th scope="row">1</th>
+        <td>Tujuan</td>
+        <td>Menjalankan efek samping (side-effects)</td>
+        <td>Menghitung nilai baru berdasarkan state lain</td>
+      </tr>
+      <tr>
+        <th scope="row">2</th>
+        <td>Jenis</td>
+        <td>Imperatif (jalanin aksi)</td>
+        <td>Deklaratif (computed value)</td>
+      </tr>
+      <tr>
+        <th scope="row">3</th>
+        <td>Dipanggil ulang saat state berubah</td>
+        <td>Iyes</td>
+        <td>Iyes, tapi hanya hasil computation</td>
+      </tr>
+      <tr>
+        <th scope="row">4</th>
+        <td>Bisa mutasi state?</td>
+        <td>✅ Boleh (misalnya fetch data, update store)</td>
+        <td>❌ Tidak boleh – harus pure function</td>
+      </tr>
+      <tr>
+        <th scope="row">5</th>
+        <td>Return Value</td>
+        <td>Abaikan</td>
+        <td>Hasil data baru</td>
+      </tr>
+      <tr>
+        <th scope="row">6</th>
+        <td>Cocok untuk</td>
+        <td>Fetch API, update DOM/manual event, logging</td>
+        <td>Format data, kalkulasi, filter, mapping</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 
 
 
