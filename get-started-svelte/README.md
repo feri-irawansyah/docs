@@ -100,7 +100,7 @@ v22.20.0
 
 ### Vite & Svelte
 
-Untuk membuat Svelte project kita akan menggunakan <a href="https://vite.dev/" target="_blank" rel="">Vite</a> frontend build tools. Sebenarnya ada banyak build tools seperti gulp, webpack, rollup dll. Tapi framework modern hampir mayoritas menggunakan Vite sebagai default nya.
+Untuk membuat Svelte project kita akan menggunakan <a href="https://vite.dev/" target="_blank" rel="">Vite</a> frontend build tools. Sebenarnya ada banyak build tools seperti gulp, webpack, rollup dll. Tapi framework modern hampir mayoritas menggunakan Vite sebagai default nya. Ouh iya membuat project Svelte ini kurang direkomendasikan untuk website besar karena Lo akan melakukan setup sendiri dengan Vite js dan itu memerlukan efort dan waktu lebih lama. Tapi kalo Lo mau full control dan mau bikin arsitektur Lo sendir valid - valid aja.
 
 ### Membuat project Svelte 
 
@@ -202,7 +202,17 @@ Ketik ctrl + c untuk keluar dari terminal lalu buka projectnya di VS Code. Tetap
 
 <img class="img-fluid" alt="svelte-vscode" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/get-started-svelte/public/svelte-vscode.png" />
 
-Code utama svelte untuk development ada di src untuk yang lainnya adalah file - file configurasi bawaan dari Vite.
+Code utama svelte untuk development ada di src untuk yang lainnya adalah file - file configurasi bawaan dari Vite. Nah defaultnya Vite ngasih kita contoh component dan state (nanti kita bahas) 
+
+```svelte
+<!-- src/App.svelte -->
+
+ <script>
+  import Counter from "./lib/Counter.svelte";
+
+</script>
+<Counter />
+```
 </details>
 
 <details open>
