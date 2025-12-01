@@ -494,5 +494,98 @@ Nah tapi gimana misalnya Lo bener - bener utuh buat nampilin HTML dari suatu tex
 </style>
 ```
 
+<img class="img-fluid" alt="html-tags" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/get-started-svelte/public/html-tags-2.png" />
+
 </details>
 
+<details open>
+<summary><h2>📌 Rune</h2></summary>
+
+`Rune` adalah suatu simbol atau keyword di Svelte yang akan mengontrol Svelte Compiler seperti di awal catatan bahwa Svelte akan melakukan kompilasi code nya ke Javascript DOM murni tanpa Runtime seperti Virtual DOM. Oleh karena itu Rune itu sangat penting untuk mengontrol Svelte Compiler saat menggunakan suatu data, state atau element.
+
+`Rune` memiliki awalan/prefix `$` dan kalo Lo pake VS Code akan terlihat seperti sebbuah function seperti `$state("hello");` artinya Lo pake `Rune state` yang memiliki parameter `hello`. 
+
+Di svelte tersedia banyak Rune dan punya fiturnya masing-masing seperti `$state` contohnya. Lo bisa langsung kunjungi ke website nya di <a href="https://svelte.dev/docs/svelte/$state" target="_blank">Rune State</a> untuk melihatnya.
+
+### Rune State `$state()`
+
+Rune `$state()` adalah Rune yang digunakan untuk membuat reactive state di Svelte. Apa bedanya reactive sate dengan state biasa? 
+
+Pada state biasa yang kita buat dalam variable, ketika terjadi perubahan pada variabel tersebut, maka UI tidak akan bereaksi terhadap perubahannya, hal ini menjadikan UI tidak akan berubah mengikuti perubahan state.
+
+Nah sedangkan reactive state itu beda perilakunya bro, ketika terjadi perubahan pada reactive state, maka UI akan bereaksi terhadap perubahan tersebut tanpa kita lakuin apapun. Udah tinggal bengong aja nanti UI akan berubah sendiri.
+
+- `$state("nilai awal")` parameter bisa di isi tipe data apa aja, bisa `number`, `string`, `boolean`, `object`, `array`, `null`, `undefined` dan `function`.
+- Ketika membuat variable untuk menampung reactive state haus mengunakan `mutable variable` seperti `let` atau `var` jangan gunakan `const`.
+
+Aturannya ga terlalu ketat kok bro, tapi Lo harus bijak buat pakenya. Contoh kita balik ke halaman root atau index.html. disitu ada contoh pake `$state` di component `Counter.svelte`.
+
+```html
+<!-- src/lib/Counter.svelte -->
+ <script>
+  let count = $state(0)
+  const increment = () => {
+    count += 1
+  }
+</script>
+
+<button onclick={increment}>
+  count is {count}
+</button>
+```
+
+Biar ga terlalu bingung karena di `App.svelte` ada banyak element, kita buat halaman baru aja. Coba Lo buat `counter.html` dan `counter.js` seperti ini:
+
+```html
+<!-- counter.html -->
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Counter State</title>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="/src/counter.js"></script>
+  </body>
+</html>
+```
+
+```js
+// vite.config.js
+import { defineConfig } from 'vite'
+import { svelte } from '@sveltejs/vite-plugin-svelte'
+
+// https://vite.dev/config/
+export default defineConfig({
+  plugins: [svelte()],
+  build: {
+    rollupOptions: {
+      input: {
+        index: 'index.html',
+        hello: 'hello.html',
+        counter: 'counter.html'
+      }
+    }
+  }
+})
+```
+
+```js
+// src/counter.js
+import { mount } from 'svelte'
+import './app.css'
+import Counter from './lib/Counter.svelte'
+
+const app = mount(Counter, {
+  target: document.getElementById('app'),
+})
+
+export default app
+```
+
+<img class="img-fluid" alt="counter-state" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/get-started-svelte/public/counter-state.png" />
+
+</details>
