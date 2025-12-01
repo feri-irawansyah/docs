@@ -507,7 +507,7 @@ Nah tapi gimana misalnya Lo bener - bener utuh buat nampilin HTML dari suatu tex
 
 Di svelte tersedia banyak Rune dan punya fiturnya masing-masing seperti `$state` contohnya. Lo bisa langsung kunjungi ke website nya di <a href="https://svelte.dev/docs/svelte/$state" target="_blank">Rune State</a> untuk melihatnya.
 
-### Rune State `$state()`
+### State Rune `$state()`
 
 Rune `$state()` adalah Rune yang digunakan untuk membuat reactive state di Svelte. Apa bedanya reactive sate dengan state biasa? 
 
@@ -691,5 +691,59 @@ Saat Lo click datanya UI nya ga berubah, tapi datanya cuma Object biasa bukan pr
 
 Intinya sesuaikan dengan kebutuhan.
 
-### Rune `$derived()`
+### Derived Rune `$derived()`
+
+Kadang nih ada kasus misal Lo mau bikin state baru tapi dia relative ke state lain. Misal Lo ada state `let count = $state(0)` nah terus Lo ada increment atau decrement gitu ya, terus Lo pingin bikin state baru yang reactive ke count dan nilainya misal pingin di kali 2 dari count (count * 2). Nah Lo bisa pake `$derived` buat ngelakuin itu.
+
+```html
+<!-- src/lib/Counter.svelte -->
+<script>
+  let count = $state(0)
+  const increment = () => {
+    count += 1
+  }
+
+  let total = $derived(count * 2)
+  // let total = count * 2 // ❌ Tidak reactive
+</script>
+
+Total: {total}
+
+<button onclick={increment}>
+  count is {count}
+</button>
+```
+
+Okeh tapi misalnya Lo ada case lagi pingin pake expression control flow semacam bikin sebuah condisi atau function yang compleks di `$derived` sayangnya itu ga bisa bro. 
+
+```html
+<!-- src/lib/Counter.svelte -->
+<script>
+  let count = $state(0)
+  const increment = () => {
+    count += 1
+  }
+
+  let total = $derived(count * 2)
+  let status = $derived(() => {
+    if (count < 5) return 'low' 
+    else if (count < 10) return 'medium'
+    else return 'high'
+  })
+</script>
+
+<div class="div">
+  <p>total: {total}</p>
+  <p>status: {status}</p>
+</div>
+
+<button onclick={increment}>
+  count is {count}
+</button>
+```
+
+### Derived By Rune `$derived.by(expression)`
+
+
+
 </details>
