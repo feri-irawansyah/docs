@@ -515,7 +515,7 @@ Pada state biasa yang kita buat dalam variable, ketika terjadi perubahan pada va
 
 Nah sedangkan reactive state itu beda perilakunya bro, ketika terjadi perubahan pada reactive state, maka UI akan bereaksi terhadap perubahan tersebut tanpa kita lakuin apapun. Udah tinggal bengong aja nanti UI akan berubah sendiri.
 
-- `$state("nilai awal")` parameter bisa di isi tipe data apa aja, bisa `number`, `string`, `boolean`, `object`, `array`, `null`, `undefined` dan `function`.
+- `$state("nilai awal")` parameter bisa di isi tipe data apa aja, bisa `number`, `string`, `boolean`, `null`, dan `undefined`.
 - Ketika membuat variable untuk menampung reactive state haus mengunakan `mutable variable` seperti `let` atau `var` jangan gunakan `const`.
 
 Aturannya ga terlalu ketat kok bro, tapi Lo harus bijak buat pakenya. Contoh kita balik ke halaman root atau index.html. disitu ada contoh pake `$state` di component `Counter.svelte`.
@@ -588,4 +588,98 @@ export default app
 
 <img class="img-fluid" alt="counter-state" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/get-started-svelte/public/counter-state.png" />
 
+Sekarang coba Lo bikin pake state biasa javascript seperti ini:
+
+```html
+<!-- src/lib/Counter.svelte -->
+<script>
+  let count = 0;
+
+  const increment = () => {
+    count += 1;
+    document.getElementById("count").innerHTML = "" + count;
+  };
+</script>
+
+<button on:click={increment}>
+  count is <span id="count">0</span>
+</button>
+```
+
+Seperti ini juga sama aja dia Reactive juga tapi Lo harus pake DOM bro. Nah sebenarnya yang terjadi dari Svelte melakukan kompilasi itu akan mengubah code menjadi JS DOM yang kaya Lo buat dan + nya Svelte melakukan optimasi terhadap codenya.
+
+### Deep State `($state.raw())`
+
+Kalau Lo pake tipe data seperti `Array` atau `Object` di `$state`, maka data tersebut akan dibungkus dalam <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy" target="_blank">JavaScript Proxy</a>. Dengan begitu, perubahan yang terjadi pada data tersebut, Svelte bisa mendeteksinya, dan secara otomatis UI akan bereaksi terhadap perubahan data nya.
+
+Karena `$state` itu Proxy maka kalo Lo mau kirim data ke API ga direkomendasikan langsung mentah-mentah kasih value dari `$state`. Kenapa?
+
+- `$state` itu Proxy punya metadata, jadi misal Lo kirim serialize ke backend datanya bisa beda.
+- Ukuran proxy lebih besar daripada data aslinya.
+- Rawan infinite loop kalo Lo kirim proxy langsung ke backend.
+- Bisa Error. Library Validasi kaya `Zod`, `Yup`, `Joi` dll biasanya suka bentrok atau ga cocok dengan Proxy.
+
+Jadi misalnya Lo mau pake data buat di kirim ke backend, maka Lo bisa pake `$state.raw()` karena data udah clean. Tapi sayangnya tidak reactive karena tidak berkaitan dengan UI.
+
+Analoginya gini
+- `$state` = Armor Iron Man (Berat, Reactive bisa terbang, ada jarvis, bisa buat gelut) tapi ga bisa Lo pake buat jalan kaki.
+- `$state.raw` = Tony Stark (Wujud asli, ga ribet, ga bisa terbang, tapi bisa buat jalan kaki).
+
+Jadi `$state` tidak mendukung tipe data Collection seperti `Set` atau `Map`, namun Svelte menyediakan fitur `$state.raw()` untuk mengakses data tersebut. Contoh coba Lo buat halaman baru `salam.html`, `salam.js` dan `Salam.svelte` kaya sebelumnya. Nah terus pake code ini di `Salam.svelte`:
+
+```html
+<!-- src/lib/Salam.svelte -->
+<script>
+    let person = $state({
+        firstName: 'Feri',
+        lastName: 'Irawansyah'
+    })
+
+    function gantiNama() {
+        person.firstName = 'Snake'
+        person.lastName = 'System'
+        console.log(person)
+    }
+
+</script>
+
+<h1>Hello {person.firstName} {person.lastName}</h1>
+<button onclick={gantiNama}>Ganti Nama</button>
+```
+
+<div class="d-flex">
+<img class="img-fluid" alt="proxy-1" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/get-started-svelte/public/proxy-1.png" />
+<img class="img-fluid" alt="proxy-2" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/get-started-svelte/public/proxy-2.png" />
+</div>
+
+Ketika Lo click UI akan langsung berubah dan data di console menunjukan datanya adalah Proxy yang punya Header, Target dan metadata lainnya. Coba Lo bandingkan sama yang ini:
+
+```html
+<!-- src/lib/Salam.svelte -->
+<script>
+    let person = $state.raw({ // Ini pake `$state.raw()`
+        firstName: 'Feri',
+        lastName: 'Irawansyah'
+    })
+
+    function gantiNama() {
+        person.firstName = 'Snake'
+        person.lastName = 'System'
+        console.log(person)
+    }
+
+</script>
+
+<h1>Hello {person.firstName} {person.lastName}</h1>
+<button onclick={gantiNama}>Ganti Nama</button>
+```
+
+<div class="d-flex">
+<img class="img-fluid" alt="proxy-1" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/get-started-svelte/public/proxy-1.png" />
+<img class="img-fluid" alt="proxy-3" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/get-started-svelte/public/proxy-3.png" />
+</div>
+
+Saat Lo click datanya UI nya ga berubah, tapi datanya cuma Object biasa bukan proxy, Nah jadi ketika Lo serialize misal pake `JSON.stringify` maka datanya akan menjadi Object String biasa.
+
+Intinya sesuaikan dengan kebutuhan.
 </details>
