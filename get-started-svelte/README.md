@@ -49,7 +49,7 @@ Nah apa itu, baru masuk langsung dapet bahasa Alien👽. Tenang bro, itu cuma ov
 
 Hampir semua frontend framework modern mengunakan Component sebagai base nya. Component adalah kumpulan code yang bisa digunakan secara independe dan biasanya berisikan satu atau lebih Element HTML, kode Javascript dan CSS. Tidak ada aturan seberapa besar atau kecil ukuran component seperti saat Lo bikin function Lo bisa bikin panjang atau kecil dan di pisah - pisah.
 
-Kalo Lo kurang baham dengan konsep Component, component itu anggaplah kaya Lego yang Lo bisa susun dari kepingan kepingan agar jadi sutu bentuk yang Lo mau. Bedanya dengan javascript biasa Lo harus bikin dan jahit sendiri kek Lo bikin patung pake tanah liat.
+Kalo Lo kurang baham dengan konsep Component, component itu anggaplah kaya Lego yang Lo bisa susun dari kepingan kepingan agar jadi suatu bentuk yang Lo mau. Bedanya dengan javascript biasa Lo harus bikin dan jahit sendiri kek Lo bikin patung pake tanah liat.
 
 Seperti code yang ada di halaman dokumentasi Svelte code itu adalah contoh component di Svelte. Semua file dengan extention atau format `.svelte` itu adalah component.
 
@@ -257,14 +257,242 @@ Jadi pada intinya agar lebih konsistem dan rapi untuk membuat component di svelt
 
 #### Bahas file `main.js`
 
+Di baris pertama ada `import { mount } from 'svelte'` function `mount` ini digunakan untuk merender suatu Component yaitu `App` ke dalam Element HTML dengan id `app`. Nah kalo Lo buka file `index.html` di root project Lo ada file HTML dengan element `<div id="app"></div>`.
 
+```html
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>get-started-svelte</title>
+  </head>
+  <body>
+    <div id="app"></div> <!-- Element di panggil di file main.js -->
+    <script type="module" src="/src/main.js"></script> <!-- File main.js di panggil di file index.html -->
+  </body>
+</html>
+```
+
+Jadi App Lo di taro di element HTML div ini. Nah pada catatan ini kita bakal pake `mount` untuk merender App ke dalam Element HTML.
+
+### Studi Case Hello World
+
+```html
+<!-- src/lib/HelloWorld.svelte -->
+ <script>
+    alert("Hello World");
+</script>
+
+<h1>Hellow World</h1>
+
+<style>
+    h1 {
+        color: salmon;
+    }
+</style>
+```
+
+```html
+<!-- hello.html -->
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hello World</title>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="/src/hello.js"></script>
+  </body>
+</html>
+ ```
+
+```js
+// src/hello.js
+import { mount } from 'svelte'
+import './app.css'
+import HelloWorld from './lib/HelloWorld.svelte'
+
+const app = mount(HelloWorld, {
+  target: document.getElementById('app'),
+})
+
+export default app
+```
+
+```js
+// vite.config.js
+import { defineConfig } from 'vite'
+import { svelte } from '@sveltejs/vite-plugin-svelte'
+
+// https://vite.dev/config/
+export default defineConfig({
+  plugins: [svelte()],
+  build: {
+    rollupOptions: {
+      input: {
+        index: 'index.html',
+        hello: 'hello.html'
+      }
+    }
+  }
+})
+```
+
+<img class="img-fluid" alt="hello-world" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/get-started-svelte/public/hello-world.png" />
 
 </details>
 
 <details open>
-<summary><h2>📌 Component</h2></summary>
+<summary><h2>📌 Template HTML</h2></summary>
+
+File Svelte atai `.svelte` sebenarnya sama seperti HTML biasa Lo bisa mmenuliskan tag html terserah Lo ga ada aturan harus di bungkus pake `<></>` atau ada component khusus seperti `<Fragment></Fragment>` engga bro, file Svelte sama kaya file HTML. Bedanya ada fitur - fitur tambahan buat mempermudah hidup Lo.
+
+File `.svelte` juga ga mewajibkan Lo buat nutup tag HTML, Nah di Framework lain seperti React atau Leptos Lo wajib nutup tag HTML `Self Closing Tag` seperti `<input />`, `<img />`, `<hr/>`. Kecuali ketika Lo manggil suatu Component seperti `<Counter />` Lo wajib pake tutup tag HTML.
+
+Jadi biar konsisten direkomendasikan buat tetep pake `Self Closing Tag` aja.
+
+### Text Expression
+
+Fitur pertama adalah `Text Expression` ini diguakan untuk mengakses langsung suatu data dari Javascript. Ouh iya sebenarnya fitur pertama di file .svelte ini Lo bisa langsung akses suatu data dari tag `<script></script>` dan tag `<style></style>` juga bisa langsung akses suatu data. Nah dengan begini `Text Expression` lebih mudah digunakan.
+
+Fitur lainnya di Text Expression ini Lo bisa juga lakuin function, method, dan juga object dari Javascript. Seperti `toUpperCase`, `toLowerCase`, `concat`, `split`, `slice`, dan masih banyak lagi.
+
+Untuk cara pakenya itu Lo bisa pake kurung kurawal `{disini valuenya}`. Coba Lo buka file `HelloWorld.svelte` di folder `lib` dan ubah code nya menjadi ini
+
+```html
+<!-- src/lib/HelloWorld.svelte -->
+ <script>
+	const name = "Feri";
+</script>
+
+<h1>Hellow {name.toUpperCase()}</h1>
+
+<style>
+	h1 {
+		color: salmon;
+	}
+</style>
+```
+
+<img class="img-fluid" alt="text-expression" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/get-started-svelte/public/text-expression.png" />
 
 
+### Dynamic Attribute
+
+Karena file `.svelte` sama kaya HTML, artinya Lo juga bisa pake atribut HTML persis kaya HTML biasa. Bedanya kalo misalnya variable yang Lo pake di atribut svelte ini memiliki nama yang sama Lo bisa memanggilnya sama persis kaya Text Expression.
+
+```html
+<!-- src/lib/HelloWorld.svelte -->
+<script>
+    const name = "Feri";
+    const src = "https://feri-irawansyah.my.id/favicon.ico";
+</script>
+
+<h1>Hellow {name.toUpperCase()}</h1>
+
+<img src={src} alt="Logo Snakesystem"/>
+
+<img {src} alt="Logo Snakesystem"/> <!-- Fitur Svelte -->
+
+<style>
+    h1 {
+        color: salmon;
+    }
+</style>
+```
+
+<img class="img-fluid" alt="dynamic-attribute" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/get-started-svelte/public/dynamic-attribute.png" />
+
+### Nested Component
+
+Nah kaya yang gue bilang di awal Component itu kaya Kepingan - Kepingan Lego yang bisa Lo susun jadi suatu bentuk yang Lo mau. Jadi nested component inilah implementasi dari Lego itu bro. 
+
+Sekarang Coba Lo bikin file baru dengan nama `Logo.svelte` di folder `lib` dan Lo pindahin tag `<img/>` tadi ke dalam file `Logo.svelte` dan Lo ubah code nya menjadi ini:
+
+```html
+<!-- src/lib/Logo.svelte -->
+<script>
+    const src = "https://feri-irawansyah.my.id/favicon.ico";
+</script>
+
+<img {src} alt="Logo Snakesystem"/>
+```
+
+```html
+<!-- src/lib/HelloWorld.svelte -->
+ <script>
+    import Logo from "./Logo.svelte";
+
+    const name = "Feri";
+</script>
+
+<h1>Hellow {name.toUpperCase()}</h1>
+
+<Logo/>
+
+<style>
+    h1 {
+        color: salmon;
+    }
+</style>
+```
+
+<img class="img-fluid" alt="nested-component" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/get-started-svelte/public/nested-component.png" />
+
+### HTML Tags
+
+Saat menggunakan `Text Expression` di svelte itu udah aman dari `XSS (Cross Site Scripting)`. Jadi misal Lo mau nampilin text yang didalemnya ada tag HTML Svelte bakal lakuin escape text dulu baru di render.
+
+```html
+<!-- src/lib/HelloWorld.svelte -->
+<script>
+    import Logo from "./Logo.svelte";
+
+    const name = "Feri";
+    const text = "<h1>Hello Snakesystem</h1>";
+</script>
+
+<h1>Hellow {name.toUpperCase()}</h1>
+{text}
+
+<Logo/>
+
+<style>
+    h1 {
+        color: salmon;
+    }
+</style>
+```
+
+<img class="img-fluid" alt="html-tags" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/get-started-svelte/public/html-tags-1.png" />
+
+Nah tapi gimana misalnya Lo bener - bener utuh buat nampilin HTML dari suatu text atau string? Nah di svelte ada fitur namanya HTML Tags `@html`.
+
+```html
+<!-- src/lib/HelloWorld.svelte -->
+<script>
+    import Logo from "./Logo.svelte";
+
+    const name = "Feri";
+    const text = "<h1>Hello Snakesystem</h1>";
+</script>
+
+<h1>Hellow {name.toUpperCase()}</h1>
+{@html text}
+
+<Logo/>
+
+<style>
+    h1 {
+        color: salmon;
+    }
+</style>
+```
 
 </details>
 
