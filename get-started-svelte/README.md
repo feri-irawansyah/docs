@@ -647,9 +647,13 @@ Jadi `$state` tidak mendukung tipe data Collection seperti `Set` atau `Map`, nam
 <button onclick={gantiNama}>Ganti Nama</button>
 ```
 
-<div class="d-flex">
+<div class="row">
+<div class="col-md-6">
 <img class="img-fluid" alt="proxy-1" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/get-started-svelte/public/proxy-1.png" />
+</div>
+<div class="col-md-6">
 <img class="img-fluid" alt="proxy-2" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/get-started-svelte/public/proxy-2.png" />
+</div>
 </div>
 
 Ketika Lo click UI akan langsung berubah dan data di console menunjukan datanya adalah Proxy yang punya Header, Target dan metadata lainnya. Coba Lo bandingkan sama yang ini:
@@ -674,12 +678,18 @@ Ketika Lo click UI akan langsung berubah dan data di console menunjukan datanya 
 <button onclick={gantiNama}>Ganti Nama</button>
 ```
 
-<div class="d-flex">
+<div class="row">
+<div class="col-md-6">
 <img class="img-fluid" alt="proxy-1" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/get-started-svelte/public/proxy-1.png" />
+</div>
+<div class="col-md-6">
 <img class="img-fluid" alt="proxy-3" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/get-started-svelte/public/proxy-3.png" />
+</div>
 </div>
 
 Saat Lo click datanya UI nya ga berubah, tapi datanya cuma Object biasa bukan proxy, Nah jadi ketika Lo serialize misal pake `JSON.stringify` maka datanya akan menjadi Object String biasa.
 
 Intinya sesuaikan dengan kebutuhan.
+
+### Rune `$derived()`
 </details>
