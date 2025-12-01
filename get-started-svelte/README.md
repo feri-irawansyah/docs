@@ -204,15 +204,61 @@ Ketik ctrl + c untuk keluar dari terminal lalu buka projectnya di VS Code. Tetap
 
 Code utama svelte untuk development ada di src untuk yang lainnya adalah file - file configurasi bawaan dari Vite. Nah defaultnya Vite ngasih kita contoh component dan state (nanti kita bahas) 
 
-```svelte
+```html
 <!-- src/App.svelte -->
 
  <script>
   import Counter from "./lib/Counter.svelte";
 
 </script>
-<Counter />
+<Counter /> <!-- Component Counter -->
 ```
+
+```html
+<!-- src/lib/Counter.svelte -->
+
+<script>
+	let count = $state(0)
+	const increment = () => {
+		count += 1
+	}
+</script>
+
+<button onclick={increment}>
+  	count is {count}
+</button>
+
+```
+
+```js
+// src/main.js
+
+import { mount } from 'svelte'
+import './app.css'
+import App from './App.svelte'
+
+const app = mount(App, {
+  target: document.getElementById('app'),
+})
+
+export default app
+```
+
+#### Element `<Counter />`
+
+Ketika Lo mau panggil Component di svelte component itu akan jadi Element HTML dengan Format `PascalCase` mengikuti nama file yang Lo bikin `Counter.svelte`.
+
+- Jika Lo bikin component dengan nama `counter.svelte` maka teteap akan jadi `<Counter />`
+- Kalo Lo bikin dengan `snake_case` seperti `hello_svelte.svelte` maka akan jadi `<HelloSvelte />`
+- Kalo Lo bikin dengan `kebab-case` seperti `hello-svelte.svelte` maka akan jadi `<HelloSvelte />` meskipun di Svelte 4 - 1 bisa `<hello-svelte />` dan sekarang di Svelte 5 masih bisa, tapi tidak direkomendasikan lagi.
+- Kalo Lo bikin dengan `camelCase` seperti `helloSvelte.svelte` maka akan jadi `<HelloSvelte />`
+
+Jadi pada intinya agar lebih konsistem dan rapi untuk membuat component di svelte disarankan menggunakan `PascalCase` untuk membuat component.
+
+#### Bahas file `main.js`
+
+
+
 </details>
 
 <details open>
