@@ -939,6 +939,149 @@ Nah ini baru jalan, Tapi kenapa ga pake Rune `$derived` aja? Kayanya sama aja ka
   </table>
 </div>
 
+#### Jangan Asal Pake `$effect`
+
+Karena effect ini akan memantau setiap perubahan state artinya apapun yang terjadi pada state dia akan menjalankan apapun yang Lo perintahkan. Gue ada beberapa contoh penggunaan `$effect` yang bisa jadi bom buat Lo.
+
+##### Memantau sebuat state, tapi mengubah state itu juga
+
+```html
+<script>
+	let count = $state(0);
+
+	$effect(() => {
+		count++; // Mutasi state yang jadi dependency-nya sendiri
+	});
+</script>
+```
+
+Yang terjadi bakal ngitung terus tanpa henti, kok bisa? Karena `$effect` akan memantau perubahan `count` dan dia sendiri juga yang melakukan perubahan jadi siklusnya ga akan berhenti.
+
+##### Tidak melakukan cleanup
+
+```html
+<script>
+	let count = $state(0);
+	let interval = $state(1000);
+
+	$effect(() => {
+		setInterval(() => {
+			count++;
+		}, interval);
+	});
+</script>
+
+<h1>{count}</h1>
+<button onclick={() => interval += 1000}>Change Interval to {interval} ms</button>
+```
+
+Lo kira ini aman? Kaga bro ketika Lo klik tombolnya, yang terjadi count terlihat tidak konsisten pergerakannya. Ini terjadi karena Interval yang sebelumnya belum berhenti dan ketika Lo klik maka akan menambahkan interval baru. Ini bahaya bro bisa jadi memory leak. Terus gimana cara pake `$effect` ini?
+
+- Jangan gunakan effect untuk memantau dan mengubah state yang sama.
+- Selalu gunakan Cleanup untuk side-effect jangka panjang
+- Batasi dependency sebanyak mungkin
+- Effect merupakan cara yang biasanya dilakukan terakhir jika memang tidak ada cara lain, misal seperti memanipulasi DOM secara manual
+- Jangan terlalu banyak menggunakan effect, terutama misal ketika ingin memanipulasi data secara synchronized, kita bisa manfaatkan contohnya $derived, dibanding menggunakan $effect
+
+Untuk kasus sebelumnya Lo bisa pake cara ini
+
+```html
+<script>
+	let count = $state(0);
+	let interval = $state(1000);
+
+	$effect(() => {
+		const id = setInterval(() => {
+			count++;
+		}, interval);
+
+		return () => clearInterval(id);
+	});
+</script>
+
+<h1>{count}</h1>
+<button onclick={() => interval += 1000}>Change Interval to {interval} ms</button>
+```
+
+Lo bisa lakuin cleanup dengan menambahkan callback di akhir `$effect` kemudian isinya adalah action yang Lo mau.
+
+### Props Rune `$props()`
+
+Lo pernah kepikiran ga bro misal ketika Lo panggil suatu component nah Lo pingin sharing data dari parent ke child. Misal Lo ada halaman user, nah dari pada Lo tampilin datanya langsung di component user, mending Lo buat component terpisah aja. Nanti data yang diparent tinggal pindah ke component lain.
+
+Okeh ini bisa aja. Tapi bagaimana kalo misa parent component juga butuh data yang Lo pindah? Bikin 2 data gitu?. Nah dari pada Lo buat 2 data, mending Lo pake rune `$props()`.
+
+Coba Lo buat halaman baru `user.html`, `user.js`, `User.svelte` dan `UserRow.svelte`. untuk component `User.svelte` dan `UserRow.svelte` kaya gini:
+
+```html
+<!-- src/lib/User.svelte -->
+<script>
+  import UserRow from "./UserRow.svelte";
+
+</script>
+<table>
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Address</th>
+        </tr>
+    </thead>
+    <tbody>
+        <UserRow id="1" name="Snake System" address="Jakarta" />
+    </tbody>
+</table>
+```
+
+```html
+<!-- src/lib/UserRow.svelte -->
+<script>
+    const { id, name, address } = $props();
+</script>
+
+<tr>
+    <td>{id}</td>
+    <td>{name}</td>
+    <td>{address}</td>
+</tr>
+```
+
+Seperti ini bisa bro. Maksudnya gimana?
+
+- Jadi saat Lo panggil component Lo bisa ngasih atribut apa aja, misal `id`, `name`, `address` selagi tidak ada sepace seperti `add ress` ini ga boleh. Lo bisa pake `camelCase`, `PascalCase`, `snake_case` atau `kebab-case` juga.
+- Atribut yang pasang itu yang nantinya di ambil oleh Rune `$props()`
+- Ketika diambil formatnya akn berubah menjadi object dengan begitu Lo bisa pake distructuring kaya gini `{ id, name, address }`.
+
+Lo juga bisa pake variable bro ga harus langsung menuliskan valuenya ke atribut.
+
+```html
+<!-- src/lib/User.svelte -->
+<script>
+  import UserRow from "./UserRow.svelte";
+
+  const user = {
+	id: "1",
+	name: "Snake System",
+	address: "Jakarta",
+  }
+
+</script>
+<table>
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Address</th>
+        </tr>
+    </thead>
+    <tbody>
+        <UserRow id={user.id} name={user.name} address={user.address} />
+    </tbody>
+</table>
+```
+
+### Spread Props
+
 
 
 </details>
