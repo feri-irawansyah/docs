@@ -1256,11 +1256,11 @@ Gue ada nambah `emoji` di depan id, biar lebih cakepan dikit.
 </table>
 ```
 
-<img class="img-fluid" alt="remove-each" src="https://raw.githubremove-eachcontent.com/feri-irawansyah/docs/refs/heads/main/get-started-svelte/public/user.png" />
+<img class="img-fluid" alt="remove-each" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/get-started-svelte/public/remove-each.png" />
 
 Lah kok aneh? wkwkwk, usernya kehapus tapi emojinya kok kaga ya malah ngegeser pindah ke id 2 padahal id emoji uler kan 1 ya?
 
-Sebenarnya inilah kelebihan Svelte yaitu, Svelte tidak akan merender ulang component ketika ada perubahan data. Jadi component `UserRow.svelte` itu ya masih tetep ga terjadi apa-apa karena yang berubah datanya jadi elemen yang nempel sama datanya aja yang berubah yaitu `td`.
+Sebenarnya inilah kelebihan Svelte yaitu, Svelte tidak akan merender ulang component ketika ada perubahan data. Jadi component `UserRow.svelte` itu ya masih tetep ga terjadi apa-apa karena yang berubah datanya aja, jadi elemen yang nempel sama datanya aja yang berubah yaitu `td`. Sedangkan emoji adalah data baru bukan termasuk dalam data user.
 
 Jadi saat memanipulasi data Array yang digunakan di Each Block, misal menghapus data, maka Svelte akan coba menghapus elemen terakhir. Termasuk ketika menambah data, Svelte akan menambah elemen di bagian akhir. Kalo Lo sebelumnya pernah pake React atau Vue ini ga akan kejadian, karena ketika ada perubahan data component akan di render ulang. Makanya Svelte jauh lebih cepat karena langsung spesifik ke element yang emang terjadi perubahan bukan component nya yang di render ulang.
 
@@ -1313,6 +1313,8 @@ Dengan cara ini, `Each` akan memantau perubahannya menggunakan key `user.id` seb
 </tr>
 ```
 
+Cara kedua pake Rune `$derived` bisa juga karena Rune ini akan memantau perubahan data dan kemudian membuat data emoji berdasarkan perubahan dari data user.
+
 ##### Langsung render emoji di `Each Block`
 
 ```html
@@ -1345,16 +1347,47 @@ Dengan cara ini, `Each` akan memantau perubahannya menggunakan key `user.id` seb
 </tr>
 ```
 
+Kenapa cara ini bisa? Karena data emoji langsung di tempelkan di elemen. Kalo sebelumnya data emoji dibentuk dari javascript tidak reactive karena tidak mengikuti perubahan dam DOM. Sedangkan untuk cara ini data emoji langsung mengikuti perubahan dari elemen nya.
+
+Dokumentasi dari `#each` bisa dilihat di [https://svelte.dev/docs/svelte/each](https://svelte.dev/docs/svelte/each). dan dokumentasi dari `key #each` bisa dilihat di [https://svelte.dev/docs/svelte/each#Keyed-each-blocks](https://svelte.dev/docs/svelte/each#Keyed-each-blocks).
+
+### Asyncronous Expression `{#await ...}`
+
+Di Svelte Lo bisa langsung pake `Promise` didalam tag HTML, kaya gini cara pakenya:
+
+- `{#await expression}...{:then name}...{:catch name}...{/await}`
+- `{#await expression}...{:then name}...{/await}`
+- `{#await expression then name}...{/await}`
+- `{#await expression catch name}...{/await}`
+
+Untuk lebih jelasnya bisa lihat di [https://svelte.dev/docs/svelte/await](https://svelte.dev/docs/svelte/await).
+
+Wiiih keren dong gue ga perlu bikin promise di Javascript lagi misal mau bikin lazy loading. Yoi bro, Nah buat contoh coba Lo bikin halaman baru `article.html`, `article.js`, `Article.svelte`, dan `article.json` untuk nyimpen data. Ouh iya data article gue taro di `public/article.json`
+
+```html
+<!-- src/lib/Article.svelte -->
+ <script>
+    async function getArticle() {
+        const response = await fetch("/article.json");
+        return await response.json();
+    }
+</script>
+
+{#await getArticle()}
+    <p>Loading...</p>
+{:then article}
+    <h1>{article.title}</h1>
+    {@html article.content}
+{:catch error}
+    <p style="color: red">{error.message}</p>
+{/await}
+```
 
 
 
 
 
-
-
-
-
-
+---
 
 ### HTML Tags
 
