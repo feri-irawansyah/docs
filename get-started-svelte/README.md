@@ -4,7 +4,7 @@ Perlu gue akui 2 benda itu bagus 👍, modern technology 🤖 dan bisa buat full
 
 <img class="img-fluid" alt="image" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/get-started-svelte/public/svelte-wiki-1.png" />
 
-Dikutip dari <a href="https://en.wikipedia.org/wiki/Svelte" target="_blank">Wikipedia</a> Svelte ini dibuat oleh Bapak - Bapak yang namanya <a href="https://x.com/rich_harris" target="_blank">Rich Harris</a> dan Kroco - Krocony tentunya Svelte Team. Dan Svelte ini langsung di compile ke **JS DOM**, tanpa Runtime, Hasil Kompilasi **Mini Size** dan ga kaya **React** atau **Vue** yang pake Virtual DOM katanya. Serasa bikin murni javascript? Tapi Declarative? Dan tanpa cari-cari class atau id bahkan element?. Wow minimalis sekali tapi apakah sepowerfull itu? Okeh kita coba sekarang.
+Dikutip dari <a href="https://en.wikipedia.org/wiki/Svelte" target="_blank">Wikipedia</a> Svelte ini dibuat oleh Bapak - Bapak yang namanya <a href="https://x.com/rich_harris" target="_blank">Rich Harris</a> dan Kroco - Krocony tentunya Svelte Team. Dan Svelte ini langsung di compile ke **JS DOM**, tanpa Runtime, Hasil Kompilasi **Mini Size** dan ga kaya **React** atau **Vue** yang pake Virtual DOM katanya. Serasa bikin murni javascript? Tapi Declarative? Dan tanpa cari-cari class atau id bahkan elemen?. Wow minimalis sekali tapi apakah sepowerfull itu? Okeh kita coba sekarang.
 
 <details open>
 <summary><h2>📌 Svelte Frontend Framework</h2></summary>
@@ -47,7 +47,7 @@ Nah apa itu, baru masuk langsung dapet bahasa Alien👽. Tenang bro, itu cuma ov
 
 <h3>Component</h3>
 
-Hampir semua frontend framework modern mengunakan Component sebagai base nya. Component adalah kumpulan code yang bisa digunakan secara independe dan biasanya berisikan satu atau lebih Element HTML, kode Javascript dan CSS. Tidak ada aturan seberapa besar atau kecil ukuran component seperti saat Lo bikin function Lo bisa bikin panjang atau kecil dan di pisah - pisah.
+Hampir semua frontend framework modern mengunakan Component sebagai base nya. Component adalah kumpulan code yang bisa digunakan secara independe dan biasanya berisikan satu atau lebih elemen HTML, kode Javascript dan CSS. Tidak ada aturan seberapa besar atau kecil ukuran component seperti saat Lo bikin function Lo bisa bikin panjang atau kecil dan di pisah - pisah.
 
 Kalo Lo kurang baham dengan konsep Component, component itu anggaplah kaya Lego yang Lo bisa susun dari kepingan kepingan agar jadi suatu bentuk yang Lo mau. Bedanya dengan javascript biasa Lo harus bikin dan jahit sendiri kek Lo bikin patung pake tanah liat.
 
@@ -238,15 +238,15 @@ import './app.css'
 import App from './App.svelte'
 
 const app = mount(App, {
-  target: document.getElementById('app'),
+  target: document.getelemenById('app'),
 })
 
 export default app
 ```
 
-#### Element `<Counter />`
+#### elemen `<Counter />`
 
-Ketika Lo mau panggil Component di svelte component itu akan jadi Element HTML dengan Format `PascalCase` mengikuti nama file yang Lo bikin `Counter.svelte`.
+Ketika Lo mau panggil Component di svelte component itu akan jadi elemen HTML dengan Format `PascalCase` mengikuti nama file yang Lo bikin `Counter.svelte`.
 
 - Jika Lo bikin component dengan nama `counter.svelte` maka teteap akan jadi `<Counter />`
 - Kalo Lo bikin dengan `snake_case` seperti `hello_svelte.svelte` maka akan jadi `<HelloSvelte />`
@@ -257,7 +257,7 @@ Jadi pada intinya agar lebih konsistem dan rapi untuk membuat component di svelt
 
 #### Bahas file `main.js`
 
-Di baris pertama ada `import { mount } from 'svelte'` function `mount` ini digunakan untuk merender suatu Component yaitu `App` ke dalam Element HTML dengan id `app`. Nah kalo Lo buka file `index.html` di root project Lo ada file HTML dengan element `<div id="app"></div>`.
+Di baris pertama ada `import { mount } from 'svelte'` function `mount` ini digunakan untuk merender suatu Component yaitu `App` ke dalam elemen HTML dengan id `app`. Nah kalo Lo buka file `index.html` di root project Lo ada file HTML dengan elemen `<div id="app"></div>`.
 
 ```html
 <!doctype html>
@@ -269,13 +269,13 @@ Di baris pertama ada `import { mount } from 'svelte'` function `mount` ini digun
     <title>get-started-svelte</title>
   </head>
   <body>
-    <div id="app"></div> <!-- Element di panggil di file main.js -->
+    <div id="app"></div> <!-- elemen di panggil di file main.js -->
     <script type="module" src="/src/main.js"></script> <!-- File main.js di panggil di file index.html -->
   </body>
 </html>
 ```
 
-Jadi App Lo di taro di element HTML div ini. Nah pada catatan ini kita bakal pake `mount` untuk merender App ke dalam Element HTML.
+Jadi App Lo di taro di elemen HTML div ini. Nah pada catatan ini kita bakal pake `mount` untuk merender App ke dalam elemen HTML.
 
 ### Studi Case Hello World
 
@@ -318,7 +318,7 @@ import './app.css'
 import HelloWorld from './lib/HelloWorld.svelte'
 
 const app = mount(HelloWorld, {
-  target: document.getElementById('app'),
+  target: document.getelemenById('app'),
 })
 
 export default app
@@ -362,7 +362,7 @@ Fitur pertama adalah `Text Expression` ini diguakan untuk mengakses langsung sua
 
 Fitur lainnya di Text Expression ini Lo bisa juga lakuin function, method, dan juga object dari Javascript. Seperti `toUpperCase`, `toLowerCase`, `concat`, `split`, `slice`, dan masih banyak lagi.
 
-Untuk cara pakenya itu Lo bisa pake kurung kurawal `{disini valuenya}`. Coba Lo buka file `HelloWorld.svelte` di folder `lib` dan ubah code nya menjadi ini
+Untuk cara pakenya itu Lo bisa pake kurung kurawal `{disini valuenya}`. Coba Lo buka file `HelloWorld.svelte` di folder `lib` dan ubah code nya menjadi ini:
 
 ```html
 <!-- src/lib/HelloWorld.svelte -->
@@ -444,64 +444,14 @@ Sekarang Coba Lo bikin file baru dengan nama `Logo.svelte` di folder `lib` dan L
 
 <img class="img-fluid" alt="nested-component" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/get-started-svelte/public/nested-component.png" />
 
-### HTML Tags
-
-Saat menggunakan `Text Expression` di svelte itu udah aman dari `XSS (Cross Site Scripting)`. Jadi misal Lo mau nampilin text yang didalemnya ada tag HTML Svelte bakal lakuin escape text dulu baru di render.
-
-```html
-<!-- src/lib/HelloWorld.svelte -->
-<script>
-    import Logo from "./Logo.svelte";
-
-    const name = "Feri";
-    const text = "<h1>Hello Snakesystem</h1>";
-</script>
-
-<h1>Hellow {name.toUpperCase()}</h1>
-{text}
-
-<Logo/>
-
-<style>
-    h1 {
-        color: salmon;
-    }
-</style>
-```
-
-<img class="img-fluid" alt="html-tags" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/get-started-svelte/public/html-tags-1.png" />
-
-Nah tapi gimana misalnya Lo bener - bener utuh buat nampilin HTML dari suatu text atau string? Nah di svelte ada fitur namanya HTML Tags `@html`.
-
-```html
-<!-- src/lib/HelloWorld.svelte -->
-<script>
-    import Logo from "./Logo.svelte";
-
-    const name = "Feri";
-    const text = "<h1>Hello Snakesystem</h1>";
-</script>
-
-<h1>Hellow {name.toUpperCase()}</h1>
-{@html text}
-
-<Logo/>
-
-<style>
-    h1 {
-        color: salmon;
-    }
-</style>
-```
-
-<img class="img-fluid" alt="html-tags" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/get-started-svelte/public/html-tags-2.png" />
+Di Svelte untuk Text Expression atau menampilkan suatu data di HTML ini sudah aman dari XSS (Cross Site Scripting) karena Svelte akan melakukan escape sebelum menampilkan data tersebut ke HTML.
 
 </details>
 
 <details open>
 <summary><h2>📌 Rune</h2></summary>
 
-`Rune` adalah suatu simbol atau keyword di Svelte yang akan mengontrol Svelte Compiler seperti di awal catatan bahwa Svelte akan melakukan kompilasi code nya ke Javascript DOM murni tanpa Runtime seperti Virtual DOM. Oleh karena itu Rune itu sangat penting untuk mengontrol Svelte Compiler saat menggunakan suatu data, state atau element.
+`Rune` adalah suatu simbol atau keyword di Svelte yang akan mengontrol Svelte Compiler seperti di awal catatan bahwa Svelte akan melakukan kompilasi code nya ke Javascript DOM murni tanpa Runtime seperti Virtual DOM. Oleh karena itu Rune itu sangat penting untuk mengontrol Svelte Compiler saat menggunakan suatu data, state atau elemen.
 
 `Rune` memiliki awalan/prefix `$` dan kalo Lo pake VS Code akan terlihat seperti sebbuah function seperti `$state("hello");` artinya Lo pake `Rune state` yang memiliki parameter `hello`. 
 
@@ -534,7 +484,7 @@ Aturannya ga terlalu ketat kok bro, tapi Lo harus bijak buat pakenya. Contoh kit
 </button>
 ```
 
-Biar ga terlalu bingung karena di `App.svelte` ada banyak element, kita buat halaman baru aja. Coba Lo buat `counter.html` dan `counter.js` seperti ini:
+Biar ga terlalu bingung karena di `App.svelte` ada banyak elemen, kita buat halaman baru aja. Coba Lo buat `counter.html` dan `counter.js` seperti ini:
 
 ```html
 <!-- counter.html -->
@@ -580,7 +530,7 @@ import './app.css'
 import Counter from './lib/Counter.svelte'
 
 const app = mount(Counter, {
-  target: document.getElementById('app'),
+  target: document.getelemenById('app'),
 })
 
 export default app
@@ -597,7 +547,7 @@ Sekarang coba Lo bikin pake state biasa javascript seperti ini:
 
   const increment = () => {
     count += 1;
-    document.getElementById("count").innerHTML = "" + count;
+    document.getelemenById("count").innerHTML = "" + count;
   };
 </script>
 
@@ -1060,9 +1010,9 @@ Lo juga bisa pake variable bro ga harus langsung menuliskan valuenya ke atribut.
   import UserRow from "./UserRow.svelte";
 
   const user = {
-	id: "1",
-	name: "Snake System",
-	address: "Jakarta",
+    id: "1",
+    name: "Snake System",
+    address: "Jakarta",
   }
 
 </script>
@@ -1082,6 +1032,380 @@ Lo juga bisa pake variable bro ga harus langsung menuliskan valuenya ke atribut.
 
 ### Spread Props
 
+Tapi dengan cara membuat banyak atribut di component, akan membuat component semakin panjang. Di svelte, Lo bisa pake spread props. Kaya gini:
 
+```html
+<!-- src/lib/User.svelte -->
+<script>
+  import UserRow from "./UserRow.svelte";
+
+  const user = {
+    id: "1",
+    name: "Snake System",
+    address: "Jakarta",
+  }
+
+</script>
+<table>
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Address</th>
+        </tr>
+    </thead>
+    <tbody>
+        <UserRow {...user} />
+    </tbody>
+</table>
+```
+
+Dengan seperti ini code Lo jauh lebih simpel dan ga banyak boilerplate.
+
+Sebenarnya masih ada 2 Rune yang lagi yang belum gue bahas yaitu `$host` dan `$bindable` tapi 2 Rune ini lumayan compleks nanti gue bahas di bagian **binding** dan **event**.
+
+</details>
+
+<details open>
+
+<summary><h2>📌 Syntax Templating</h2></summary>
+
+### Control Flow Expression `{#if}...{/if}`
+
+Ketika ingin menampilkan suatu data di HTML, kadang Lo juga ga pingin menampilkan datanya mentah-mentah kan bro? Misalnya Lo mau bikin suatu control pada semua data umur misalnya kalo umurnya 10 kebawah itu anak-anak, 20 kebawah itu remaja, 30 keatas itu dewasa dan sebagainya.
+
+Di Svelte ada fitur namanya `Control Flow Expression` seperti `if`, `else if`, `else`, `switch` dan `case` tapi langsung di HTML.
+
+- `#if expression}...{/if}`
+- `{#if expression}...{:else if expression}...{/if}`
+- `{#if expression}...{:else}...{/if}`
+
+Kita coba ambil contoh buat data user sebelumnya, tambahkan object key age.
+
+```html
+<!-- src/lib/User.svelte -->
+<script>
+  import UserRow from "./UserRow.svelte";
+
+</script>
+<table>
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Address</th>
+            <th>Age</th>
+        </tr>
+    </thead>
+    <tbody>
+        <UserRow id="1" name="Snake System" address="Jakarta" age={9} />
+        <UserRow id="2" name="Feri Irawansyah" address="Semarang" age={25} />
+        <UserRow id="3" name="Satria Baja Ringan" address="bandung" age={34} />
+    </tbody>
+</table>
+```
+
+Kemudian di `UserRow.svelte` tambahkan control flow expression.
+
+```html
+<!-- src/lib/UserRow.svelte -->
+<script>
+    const { id, name, address, age } = $props();
+</script>
+
+<tr>
+  <td>{id}</td>
+  <td>{name}</td>
+  <td>{address}</td>
+  <td>
+    {#if age < 20}
+      Anak-anak
+    {:else if age < 30}
+      Remaja
+    {:else}
+      Dewasa
+    {/if}
+  </td>
+</tr>
+```
+
+<img class="img-fluid" alt="user" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/get-started-svelte/public/user.png" />
+
+### Iteration (Looping) Expression `{#each ...}`
+
+Sebelumnya Lo bikin nya kaya gini kan bro
+
+```html
+<UserRow id="1" name="Snake System" address="Jakarta" age={9} />
+<UserRow id="2" name="Feri Irawansyah" address="Semarang" age={25} />
+<UserRow id="3" name="Satria Baja Ringan" address="bandung" age={34} />
+```
+
+Sekarang coba Lo bayangin misalnya usernya bertambah jadi 100 orang, jadi Lo nanti copy paster component nya gitu kan? Wkwkwk. Ada cara yang lebih baik, yaitu menggunakan `Iteration Expression` seperti ini:
+
+- `{#each expression as name}...{/each}`
+- `{#each expression as name, index}...{/each}`
+- `{#each expression as name (key)}...{/each}`
+
+Kapan menggunakan Iteration? Tentunya ketika Lo bertemu dengan data `Array` karena cara mengakses data didalam sebuah `Array` itu kita perlu melakukan looping. Sekarang coba Lo refactor code di component `User` datanya di tampung  ke variable `users`:
+
+```html
+<!-- src/lib/User.svelte -->
+ <script>
+  import UserRow from "./UserRow.svelte";
+
+  const users = [
+    { id: 1, name: "Snake System", address: "Jakarta", age: 9 },
+    { id: 2, name: "Feri Irawansyah", address: "Semarang", age: 25 },
+    { id: 3, name: "Satria Baja Ringan", address: "Bandung", age: 34 },
+  ]
+
+</script>
+<table>
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Address</th>
+            <th>Age</th>
+        </tr>
+    </thead>
+    <tbody>
+        {#each users as user}
+            <UserRow {...user}/>
+        {/each}
+    </tbody>
+</table>
+```
+
+Sekarang Lo juga bisa implement `Spread Props` lagi karena data yang Lo kirim ke child sudah berbentuk object sesuai yang di harapkan sama `$props()`.
+
+<img class="img-fluid" alt="user" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/get-started-svelte/public/user.png" />
+
+Tampilannya sama aja kok, bedanya sekarang data nya diambil dari `Array` bukan `Object` seperti sebelumnya dan Lo ga perlu nulisin satu-satu componentnya. Dari tadi perasaan ga ada CRUD nya ya? Yaudah sekarang kita coba implementasi CRUD.
+
+#### Menghapus User
+
+```html
+<!-- src/lib/UserRow.svelte -->
+ <script>
+    const { id, name, address, age } = $props();
+
+    const emojies = {
+        "1": "🐍",
+        "2": "👨‍⚕️",
+        "3": "🤖",
+    }
+
+    const emoji = emojies[id];
+
+</script>
+
+<tr>
+  <td>{emoji}</td>
+  <td>{id}</td>
+  <td>{name}</td>
+  <td>{address}</td>
+  <td>
+    {#if age < 20}
+      Anak-anak
+    {:else if age < 30}
+      Remaja
+    {:else}
+      Dewasa
+    {/if}
+  </td>
+</tr>
+```
+
+Gue ada nambah `emoji` di depan id, biar lebih cakepan dikit.
+
+```html
+<!-- src/lib/User.svelte -->
+ <script>
+  import UserRow from "./UserRow.svelte";
+
+  const users = $state([
+    { id: 1, name: "Snake System", address: "Jakarta", age: 9 },
+    { id: 2, name: "Feri Irawansyah", address: "Semarang", age: 25 },
+    { id: 3, name: "Satria Baja Ringan", address: "Bandung", age: 34 },
+  ]);
+
+  const remove = () => {
+      users.shift();
+  }
+
+</script>
+
+<button onclick={remove}>Remove</button>
+
+<table>
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Address</th>
+            <th>Age</th>
+        </tr>
+    </thead>
+    <tbody>
+        {#each users as user}
+            <UserRow {...user}/>
+        {/each}
+    </tbody>
+</table>
+```
+
+<img class="img-fluid" alt="remove-each" src="https://raw.githubremove-eachcontent.com/feri-irawansyah/docs/refs/heads/main/get-started-svelte/public/user.png" />
+
+Lah kok aneh? wkwkwk, usernya kehapus tapi emojinya kok kaga ya malah ngegeser pindah ke id 2 padahal id emoji uler kan 1 ya?
+
+Sebenarnya inilah kelebihan Svelte yaitu, Svelte tidak akan merender ulang component ketika ada perubahan data. Jadi component `UserRow.svelte` itu ya masih tetep ga terjadi apa-apa karena yang berubah datanya jadi elemen yang nempel sama datanya aja yang berubah yaitu `td`.
+
+Jadi saat memanipulasi data Array yang digunakan di Each Block, misal menghapus data, maka Svelte akan coba menghapus elemen terakhir. Termasuk ketika menambah data, Svelte akan menambah elemen di bagian akhir. Kalo Lo sebelumnya pernah pake React atau Vue ini ga akan kejadian, karena ketika ada perubahan data component akan di render ulang. Makanya Svelte jauh lebih cepat karena langsung spesifik ke element yang emang terjadi perubahan bukan component nya yang di render ulang.
+
+Loh tapi bukannya keliatan kaya Bug malah ya? wkwkwk. Yap Lo ga salah bro, emang itu bug. Sebenarnya ada beberapa cara untuk mengatasinya.
+
+##### Gunakan `key` di `Each Block`
+
+```html
+<!-- src/lib/User.svelte -->
+<tbody>
+  {#each users as user(user.id)}
+      <UserRow {...user}/>
+  {/each}
+</tbody>
+```
+
+Dengan cara ini, `Each` akan memantau perubahannya menggunakan key `user.id` sebagai identity untuk emoji.
+
+##### Pake Rune `$derived`
+
+```html
+<!-- src/lib/UserRow.svelte -->
+<script>
+  const { id, name, address, age } = $props();
+
+  const emojies = {
+      "1": "🐍",
+      "2": "👨‍⚕️",
+      "3": "🤖",
+  }
+  
+  const emoji = $derived(emojies[id]);
+
+</script>
+
+<tr>
+  <td>{emoji}</td>
+  <td>{id}</td>
+  <td>{name}</td>
+  <td>{address}</td>
+  <td>
+    {#if age < 20}
+      Anak-anak
+    {:else if age < 30}
+      Remaja
+    {:else}
+      Dewasa
+    {/if}
+  </td>
+</tr>
+```
+
+##### Langsung render emoji di `Each Block`
+
+```html
+<!-- src/lib/UserRow.svelte -->
+ <script>
+    const { id, name, address, age } = $props();
+
+    const emojies = {
+        "1": "🐍",
+        "2": "👨‍⚕️",
+        "3": "🤖",
+    }
+
+</script>
+
+<tr>
+  <td>{emojies[id]}</td>
+  <td>{id}</td>
+  <td>{name}</td>
+  <td>{address}</td>
+  <td>
+    {#if age < 20}
+      Anak-anak
+    {:else if age < 30}
+      Remaja
+    {:else}
+      Dewasa
+    {/if}
+  </td>
+</tr>
+```
+
+
+
+
+
+
+
+
+
+
+
+
+### HTML Tags
+
+Saat menggunakan `Text Expression` di svelte itu udah aman dari `XSS (Cross Site Scripting)`. Jadi misal Lo mau nampilin text yang didalemnya ada tag HTML Svelte bakal lakuin escape text dulu baru di render.
+
+```html
+<!-- src/lib/HelloWorld.svelte -->
+<script>
+    import Logo from "./Logo.svelte";
+
+    const name = "Feri";
+    const text = "<h1>Hello Snakesystem</h1>";
+</script>
+
+<h1>Hellow {name.toUpperCase()}</h1>
+{text}
+
+<Logo/>
+
+<style>
+    h1 {
+        color: salmon;
+    }
+</style>
+```
+
+<img class="img-fluid" alt="html-tags" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/get-started-svelte/public/html-tags-1.png" />
+
+Nah tapi gimana misalnya Lo bener - bener utuh buat nampilin HTML dari suatu text atau string? Nah di svelte ada fitur namanya HTML Tags `@html`.
+
+```html
+<!-- src/lib/HelloWorld.svelte -->
+<script>
+    import Logo from "./Logo.svelte";
+
+    const name = "Feri";
+    const text = "<h1>Hello Snakesystem</h1>";
+</script>
+
+<h1>Hellow {name.toUpperCase()}</h1>
+{@html text}
+
+<Logo/>
+
+<style>
+    h1 {
+        color: salmon;
+    }
+</style>
+```
+
+<img class="img-fluid" alt="html-tags" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/get-started-svelte/public/html-tags-2.png" />
 
 </details>
