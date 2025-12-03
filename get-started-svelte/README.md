@@ -1832,7 +1832,7 @@ Di Svelte Lo bisa bikin custom elemen HTML misal `<my-component></my-component>`
 
 Disini ada `<svelte:options customElement={{ tag: 'custom-element', shadow: "none" }} />` ini adalah salah satu dari `Special Elements` di Svelte, nanti gue bahas.
 
-Nah dengan custom element ini, Lo juga bisa bikin custom handler bro. Ini cara baru dari Svelte 5 untuk membuat Custom Event dengan cara membuat Custom Elemen juga dengan Rune `$host()`.
+Nah dengan custom element ini, Lo juga bisa bikin custom handler bro. Ini cara baru dari Svelte 5 untuk membuat Custom Event dengan cara membuat Custom Elemen juga dengan `svelte:option/>` dan Rune `$host()` untuk bikin custom event handler.
 
 </details>
 
