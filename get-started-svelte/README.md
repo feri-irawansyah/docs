@@ -1835,3 +1835,12 @@ Disini ada `<svelte:options customElement={{ tag: 'custom-element', shadow: "non
 Nah dengan custom element ini, Lo juga bisa bikin custom handler bro. Ini cara baru dari Svelte 5 untuk membuat Custom Event dengan cara membuat Custom Elemen juga dengan Rune `$host()`.
 
 </details>
+
+<details open>
+<summary><h2>📌 Binding</h2></summary>
+
+### Two Way Binding
+
+Lo tau ga bro, Svelte merupakan salah satu Library/Framework yang menggunakan perubahan data dengan 2 arah atau `Two Way Binding`. Ada banyak Library yang menggunakan konsep ini seperti `AngularJs` (Ini pendahulunya), `Angular`, `Vue`, `Knockout`, `Alpine`, `Ember` dan `Svelte`.
+
+</details>
