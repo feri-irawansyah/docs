@@ -1528,6 +1528,236 @@ Tapi bedanya sekarang lebih dinamis, coba Lo panggil component yang Lo buat sebe
 
 <img class="img-fluid" alt="render-3" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/get-started-svelte/public/render-3.png" />
 
-Sekarng Lo jadi puny kaya halaman web yang di susun dari bnyak component yang dinamis.
+Sekarng Lo jadi punya kaya halaman web yang di susun dari bnyak component yang dinamis.
+
+### Snippet Templating `{#snippet ...}`
+
+Fitur snippet ini sebenarnya fitur baru di Svelte tapi lumayan berguna kalo Lo pingin bikin semacam code yang berulang tapi pingin lebih simple di satu component.
+
+- `{#snippet name()}...{/snippet}`
+- `{#snippet name(param1, param2, paramN)}...{/snippet}`
+
+```js
+// src/lib/Snippet.svelte
+ {#snippet Row(name)}
+  <tr>
+    <td>{name}</td>
+  </tr>
+{/snippet}
+
+<table>
+  {@render Row("Feri")}
+  {@render Row("Snake System")}
+  {@render Row("Satria")}
+</table>
+```
+
+Misal kaya gini, jadi dari pada Lo menuliskan ulang suatu elemen jadi Lo pake snippet aja. Tapi ada beberapa hal yang perlu perhatiin.
+
+1. `#snippet` hanya bisa dipake di satu component aja.
+2. `#snippet` butuh templating `{@render ...}` untuk implementasinya.
+3. Tidak punya state dan lifecycle. Artinya ketika ada perubahan data maka `snippet` akan dirender ulang.
+
+### Debugger Template `{#debug ...}`
+
+Kalo sebelumnya ada rune untuk debuging di level state. Di svelte Lo juga bisa deguging di level elemen. Misal kaya gini:
+
+```js
+// src/lib/Snippet.svelte
+{#snippet Row(name)}
+  <tr>
+    <td>{name}</td>
+    {@debug name}
+  </tr>
+{/snippet}
+
+<table>
+  {@render Row("Feri")}
+  {@render Row("Snake System")}
+  {@render Row("Satria")}
+</table>
+```
+
+<img class="img-fluid" alt="debug" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/get-started-svelte/public/debug.png" />
+<img class="img-fluid" alt="debug-2" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/get-started-svelte/public/debug-2.png" />
+
+Ada tombol untuk next, jadi ketika jalan maka akan masuk ke debug mode, jadi browser akan melakukan loading. Lo bisa pencet tombol next yang gue garisin merah itu, nah nanti browser akan memberikan cursor ke code yang Lo jalanin. Ini cocok misal Lo mau ngecek code Lo baris demi baris.
+
+Masih ada beberapa lagi templating syntax di Svelte seperti `{@attach ...}` (nanti gue bahas setelah 2 way binding), `{@const ...}`, dan `{#key ...}` ini jarang dipake, tapi Lo bisa baca baca di dokumentasinya Svelte.
+</details>
+
+<details open>
+<summary><h2>📌 Event Handler</h2></summary>
+
+### Normal Event
+
+Bicara soal Javascript mesinya ga jauh - jauh dari yang namanya `Event Handler`. Yes bro event handler adalah suatu action ketika Lo mau ngelakuin sesuai misal ketika Lo click suatu element, sedang mengetikkan kalimat, bahkan ketika Lo scrill halaman. Semua itu adalah event.
+
+Sebelumnya Lo udah pernah pake salah satu Event Handler yaitu untuk hapus data. Di svelte, Lo bisa bikin event handler dengan cara `on<event>={function}`. Misal kaya gini:
+
+```html
+ <button onclick={() => console.log("pencet")}>Pencet</button>
+
+<input oninput={(e) => console.log(e.target.value)} />
+```
+
+ Gue contohin di halaman `user.html` kita akan mencoba untuk menambahkan data.
+
+```html
+<!-- src/lib/User.svelte -->
+ <script>
+  import UserRow from "./UserRow.svelte";
+
+  let users = $state([
+    { id: 1, name: "Snake System", address: "Jakarta", age: 9 },
+    { id: 2, name: "Feri Irawansyah", address: "Semarang", age: 25 },
+    { id: 3, name: "Satria Baja Ringan", address: "Bandung", age: 34 },
+  ]);
+
+  let input = $state('');
+
+  const remove = () => {
+    users.shift();
+  }
+
+  const add = (e) => {
+    e.preventDefault();
+
+    users = [...users, {
+      id: users.length + 1,
+      name: input,
+      address: "Jakarta",
+      age: 9
+    }]
+  }
+
+  const inputChange = (e) => {
+    input = e.target.value;
+  }
+
+</script>
+
+<button onclick={remove}>Remove</button>
+<button onclick={add}>Tambah</button>
+
+<input type="text" onchange={inputChange}>
+
+<table>
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Address</th>
+            <th>Age</th>
+        </tr>
+    </thead>
+    <tbody>
+        {#each users as user}
+            <UserRow {...user}/>
+        {/each}
+    </tbody>
+</table>
+```
+
+<img class="img-fluid" alt="add-user" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/get-started-svelte/public/add-user.png" />
+
+Event handler juga ga berlaku hanya di elemen itu aja, memang pada dasarnya Event akan menempel di suatu elemen HTML, tapi Lo juga bisa mengirimkan Event lewat props. Misal kaya gini:
+
+```html
+<!-- Child component -->
+<script>
+    const { onclick } = $props();
+</script>
+
+<button onclick={onclick}>Pencet</button>
+
+<!-- Parent component -->
+<Child onclick={() => console.log("pencet")} />
+```
+
+Nah coba sekarang Lo pindah tombol delete ke UserRow, dan juga gue mau hapus bagian emoji biar lebih rapi aja.
+
+```html
+<!-- src/lib/User.svelte -->
+<script>
+  import UserRow from "./UserRow.svelte";
+
+  let users = $state([
+    { id: 1, name: "Snake System", address: "Jakarta", age: 9 },
+    { id: 2, name: "Feri Irawansyah", address: "Semarang", age: 25 },
+    { id: 3, name: "Satria Baja Ringan", address: "Bandung", age: 34 },
+  ]);
+
+  let input = $state('');
+
+  const remove = (id) => {
+    users = users.filter(user => user.id !== id);
+  }
+
+  const add = (e) => {
+      e.preventDefault();
+
+      users = [...users, {
+          id: users.length + 1,
+          name: input,
+          address: "Jakarta",
+          age: 9
+      }]
+  }
+
+  const inputChange = (e) => {
+      input = e.target.value;
+  }
+
+</script>
+<button onclick={add}>Tambah</button>
+
+<input type="text" onchange={inputChange}>
+
+<table>
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Address</th>
+            <th>Age</th>
+        </tr>
+    </thead>
+    <tbody>
+        {#each users as user}
+            <UserRow {...user} onclick={() => remove(user.id)}/>
+        {/each}
+    </tbody>
+</table>
+```
+
+```html
+<!-- src/lib/UserRow.svelte -->
+<script>
+  const { id, name, address, age, onclick } = $props();
+</script>
+
+<tr>
+  <td>{id}</td>
+  <td>{name}</td>
+  <td>{address}</td>
+  <td>
+    {#if age < 20}
+      Anak-anak
+    {:else if age < 30}
+      Remaja
+    {:else}
+      Dewasa
+    {/if}
+  </td>
+  <td><button type="button" {onclick}>Hapus</button></td>
+</tr>
+```
+
+<img class="img-fluid" alt="remove-user" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/get-started-svelte/public/remove-user.png" />
+
+### Dispatch Event
+
+Di Svelte Lo bisa bikin event handler custom punya Lo sendiri. Dengan `createEventDispatcher`. 
 
 </details>
