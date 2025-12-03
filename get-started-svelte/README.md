@@ -6,7 +6,7 @@ Perlu gue akui 2 benda itu bagus 👍, modern technology 🤖 dan bisa buat full
 
 Dikutip dari <a href="https://en.wikipedia.org/wiki/Svelte" target="_blank">Wikipedia</a> Svelte ini dibuat oleh Bapak - Bapak yang namanya <a href="https://x.com/rich_harris" target="_blank">Rich Harris</a> dan Kroco - Krocony tentunya Svelte Team. Dan Svelte ini langsung di compile ke **JS DOM**, tanpa Runtime, Hasil Kompilasi **Mini Size** dan ga kaya **React** atau **Vue** yang pake Virtual DOM katanya. Serasa bikin murni javascript? Tapi Declarative? Dan tanpa cari-cari class atau id bahkan elemen?. Wow minimalis sekali tapi apakah sepowerfull itu? Okeh kita coba sekarang.
 
-<details open>
+<details>
 <summary><h2>📌 Svelte Frontend Framework</h2></summary>
 
 ### Kenapa Butuh Framework
@@ -81,7 +81,7 @@ Kekurangannya ekosistemnya kecil. Karena hanya internal tim svelte yang mengamba
 
 </details>
 
-<details open>
+<details>
 <summary><h2>📌 Get Started Svelte</h2></summary>
 
 Sebelum Lo mulai membuat Svete Project, Lo perlu beberapa hal yang harus dipenuhi dulu
@@ -347,7 +347,7 @@ export default defineConfig({
 
 </details>
 
-<details open>
+<details>
 <summary><h2>📌 Template HTML</h2></summary>
 
 File Svelte atai `.svelte` sebenarnya sama seperti HTML biasa Lo bisa mmenuliskan tag html terserah Lo ga ada aturan harus di bungkus pake `<></>` atau ada component khusus seperti `<Fragment></Fragment>` engga bro, file Svelte sama kaya file HTML. Bedanya ada fitur - fitur tambahan buat mempermudah hidup Lo.
@@ -366,7 +366,7 @@ Untuk cara pakenya itu Lo bisa pake kurung kurawal `{disini valuenya}`. Coba Lo 
 
 ```html
 <!-- src/lib/HelloWorld.svelte -->
- <script>
+<script>
 	const name = "Feri";
 </script>
 
@@ -448,7 +448,7 @@ Di Svelte untuk Text Expression atau menampilkan suatu data di HTML ini sudah am
 
 </details>
 
-<details open>
+<details>
 <summary><h2>📌 Rune</h2></summary>
 
 `Rune` adalah suatu simbol atau keyword di Svelte yang akan mengontrol Svelte Compiler seperti di awal catatan bahwa Svelte akan melakukan kompilasi code nya ke Javascript DOM murni tanpa Runtime seperti Virtual DOM. Oleh karena itu Rune itu sangat penting untuk mengontrol Svelte Compiler saat menggunakan suatu data, state atau elemen.
@@ -1066,7 +1066,7 @@ Sebenarnya masih ada 2 Rune yang lagi yang belum gue bahas yaitu `$host` dan `$b
 
 </details>
 
-<details open>
+<details>
 
 <summary><h2>📌 Syntax Templating</h2></summary>
 
@@ -1586,7 +1586,7 @@ Ada tombol untuk next, jadi ketika jalan maka akan masuk ke debug mode, jadi bro
 Masih ada beberapa lagi templating syntax di Svelte seperti `{@attach ...}` (nanti gue bahas setelah 2 way binding), `{@const ...}`, dan `{#key ...}` ini jarang dipake, tapi Lo bisa baca baca di dokumentasinya Svelte.
 </details>
 
-<details open>
+<details>
 <summary><h2>📌 Event Handler</h2></summary>
 
 ### Normal Event
@@ -1758,6 +1758,80 @@ Nah coba sekarang Lo pindah tombol delete ke UserRow, dan juga gue mau hapus bag
 
 ### Dispatch Event
 
-Di Svelte Lo bisa bikin event handler custom punya Lo sendiri. Dengan `createEventDispatcher`. 
+Di Svelte Lo bisa bikin event handler custom punya Lo sendiri dengan `createEventDispatcher`. Misal event onclick di remove user Lo ganti jadi `onhapus`. Nah tapi formatnya sekarang jadi `on:<event>`. jadi custom event Lo jadi `on:hapus` Misal kaya gini:
+
+```html
+<!-- src/lib/UserRow.svelte -->
+<script>
+  import { createEventDispatcher } from "svelte";
+
+  const { id, name, address, age } = $props();
+
+  const dispatch = createEventDispatcher();
+
+</script>
+
+<tr>
+  <td>{id}</td>
+  <td>{name}</td>
+  <td>{address}</td>
+  <td>
+    {#if age < 20}
+      Anak-anak
+    {:else if age < 30}
+      Remaja
+    {:else}
+      Dewasa
+    {/if}
+  </td>
+  <td><button type="button" onclick={() => dispatch("hapus")}>Hapus</button></td>
+</tr>
+```
+
+```html
+<!-- src/lib/User.svelte -->
+<tbody>
+  {#each users as user}
+      <UserRow {...user} on:hapus={() => remove(user.id)}/>
+  {/each}
+</tbody>
+```
+
+Keren ya bro, Lo bisa bikin custom handler sendiri. Tapi sayangnya `createEventDispatcher` ini udah deprecated di Svelte 5, makanya ketika jadi event handler `on:hapus` karena dulu di Svelte 4 semua event handler pake `on:`. Tapi masih compatible kok dipake di Svelte 5.
+
+### Custom Element & Rune Host `$host()`
+
+Di Svelte Lo bisa bikin custom elemen HTML misal `<my-component></my-component>` dengan Rune `$host()`. Kenapa Rune ini gue bahas terpisah ? Karena Rune ini berkaitan dengan Event handler dimana Lo bisa bikin Custom Event Handler kaya pake createEventDispatcher. Coba buat halaman baru bro `element.html`:
+
+```html
+<!-- src/lib/CustomElement.svelte -->
+<svelte:options customElement={{ tag: 'custom-element', shadow: "none" }} />
+
+<script>
+	function dispatch(type) {
+		$host().dispatchEvent(new CustomEvent(type));
+	}
+</script>
+
+<button class="btn" onclick={() => dispatch('hello')}>Hello</button>
+```
+
+```html
+<!-- src/lib/Element.svelte -->
+ <script>
+    import './CustomElement.svelte';
+
+    const onHello = () => {
+        alert('Hello')
+    }
+
+</script>
+
+<custom-element onhello={onHello}></custom-element>
+```
+
+Disini ada `<svelte:options customElement={{ tag: 'custom-element', shadow: "none" }} />` ini adalah salah satu dari `Special Elements` di Svelte, nanti gue bahas.
+
+Nah dengan custom element ini, Lo juga bisa bikin custom handler bro. Ini cara baru dari Svelte 5 untuk membuat Custom Event dengan cara membuat Custom Elemen juga dengan Rune `$host()`.
 
 </details>
