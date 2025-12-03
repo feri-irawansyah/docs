@@ -1070,7 +1070,7 @@ Sebenarnya masih ada 2 Rune yang lagi yang belum gue bahas yaitu `$host` dan `$b
 
 <summary><h2>📌 Syntax Templating</h2></summary>
 
-### Control Flow Expression `{#if}...{/if}`
+### Control Flow Templating `{#if}...{/if}`
 
 Ketika ingin menampilkan suatu data di HTML, kadang Lo juga ga pingin menampilkan datanya mentah-mentah kan bro? Misalnya Lo mau bikin suatu control pada semua data umur misalnya kalo umurnya 10 kebawah itu anak-anak, 20 kebawah itu remaja, 30 keatas itu dewasa dan sebagainya.
 
@@ -1182,9 +1182,7 @@ Sekarang Lo juga bisa implement `Spread Props` lagi karena data yang Lo kirim ke
 
 <img class="img-fluid" alt="user" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/get-started-svelte/public/user.png" />
 
-Tampilannya sama aja kok, bedanya sekarang data nya diambil dari `Array` bukan `Object` seperti sebelumnya dan Lo ga perlu nulisin satu-satu componentnya. Dari tadi perasaan ga ada CRUD nya ya? Yaudah sekarang kita coba implementasi CRUD.
-
-#### Menghapus User
+Tampilannya sama aja kok, bedanya sekarang data nya diambil dari `Array` bukan `Object` seperti sebelumnya dan Lo ga perlu nulisin satu-satu componentnya. Sekarang coba Lo hapus datanya.
 
 ```html
 <!-- src/lib/UserRow.svelte -->
@@ -1266,7 +1264,7 @@ Jadi saat memanipulasi data Array yang digunakan di Each Block, misal menghapus 
 
 Loh tapi bukannya keliatan kaya Bug malah ya? wkwkwk. Yap Lo ga salah bro, emang itu bug. Sebenarnya ada beberapa cara untuk mengatasinya.
 
-##### Gunakan `key` di `Each Block`
+#### Gunakan `key` di `Each Block`
 
 ```html
 <!-- src/lib/User.svelte -->
@@ -1279,7 +1277,7 @@ Loh tapi bukannya keliatan kaya Bug malah ya? wkwkwk. Yap Lo ga salah bro, emang
 
 Dengan cara ini, `Each` akan memantau perubahannya menggunakan key `user.id` sebagai identity untuk emoji.
 
-##### Pake Rune `$derived`
+#### Pake Rune `$derived`
 
 ```html
 <!-- src/lib/UserRow.svelte -->
@@ -1315,7 +1313,7 @@ Dengan cara ini, `Each` akan memantau perubahannya menggunakan key `user.id` seb
 
 Cara kedua pake Rune `$derived` bisa juga karena Rune ini akan memantau perubahan data dan kemudian membuat data emoji berdasarkan perubahan dari data user.
 
-##### Langsung render emoji di `Each Block`
+#### Langsung render emoji di `Each Block`
 
 ```html
 <!-- src/lib/UserRow.svelte -->
@@ -1351,7 +1349,7 @@ Kenapa cara ini bisa? Karena data emoji langsung di tempelkan di elemen. Kalo se
 
 Dokumentasi dari `#each` bisa dilihat di [https://svelte.dev/docs/svelte/each](https://svelte.dev/docs/svelte/each). dan dokumentasi dari `key #each` bisa dilihat di [https://svelte.dev/docs/svelte/each#Keyed-each-blocks](https://svelte.dev/docs/svelte/each#Keyed-each-blocks).
 
-### Asyncronous Expression `{#await ...}`
+### Asyncronous Templating `{#await ...}`
 
 Di Svelte Lo bisa langsung pake `Promise` didalam tag HTML, kaya gini cara pakenya:
 
@@ -1383,15 +1381,11 @@ Wiiih keren dong gue ga perlu bikin promise di Javascript lagi misal mau bikin l
 {/await}
 ```
 
+<img class="img-fluid" alt="article" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/get-started-svelte/public/article.png" />
 
+### HTML Templating
 
-
-
----
-
-### HTML Tags
-
-Saat menggunakan `Text Expression` di svelte itu udah aman dari `XSS (Cross Site Scripting)`. Jadi misal Lo mau nampilin text yang didalemnya ada tag HTML Svelte bakal lakuin escape text dulu baru di render.
+Saat menggunakan `Text Expression` di svelte itu udah aman dari `XSS (Cross Site Scripting)`. Jadi misal Lo mau nampilin text yang didalemnya ada tag HTML Svelte bakal lakuin escape text dulu baru di render. Kita coba di halaman `hello.html`.
 
 ```html
 <!-- src/lib/HelloWorld.svelte -->
@@ -1440,5 +1434,100 @@ Nah tapi gimana misalnya Lo bener - bener utuh buat nampilin HTML dari suatu tex
 ```
 
 <img class="img-fluid" alt="html-tags" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/get-started-svelte/public/html-tags-2.png" />
+
+
+### Render Templating `{@render ...}`
+
+Lo pernah mikir ga bro atau pernah dapet kasus misalnya Lo pingin nampilin elemen tpi dinamis, pokoknya di satu tempat Lo pingin elemen nya bisa berubah-ubah. Gampang bro tinggal pake aja `{@html}` terus jadiin elemen nya html string. Nah misalnya component? Gimana tuh. Sayangnya component di jadiin string ga bakal jalan. Contoh coba Lo buat halaman baru `render.html`, `render.js`, `Render.svelte`:
+
+```html
+<!-- src/lib/Render.svelte -->
+<script>
+    import Logo from "./Logo.svelte";
+
+    const logo = "<Logo />";
+</script>
+
+
+{@html logo}
+```
+<img class="img-fluid" alt="render" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/get-started-svelte/public/render.png" />
+
+
+Ga bisa bro, kosong karena `<Logo/>` itu component, bukan murni elemen HTML. Nah cara yang benar pake `@render`. Jadi `@render` digunakan untuk melakukan rendering component yang dinamis bahkan beserta props yang menempel dengan componentnya.
+
+```html
+<!-- src/lib/Render.svelte -->
+<script>
+    import Logo from "./Logo.svelte";
+</script>
+
+{@render Logo()}
+```
+
+Kaya gini baru bisa, Ouh iya kalo Lo pake `@render` component yang Lo panggil caranya jadi kaya manggil function `NamaComponent()` bukan `{@render <NamaComponent />}`. 
+
+Dengan `@render`, Lo juga bisa bikin props yang dinamis berupa component, props akan diterima sebagai `children`, sekarang Lo buat component baru dengan nama `RenderLayout.svelte` dan ubah `render.js` jadi ky gini:
+
+```js
+// src/render.js
+import { mount } from 'svelte'
+import './app.css'
+import RenderLayout from './lib/RenderLayout.svelte'
+
+const app = mount(RenderLayout, {
+  target: document.getElementById('app'),
+})
+
+export default app
+```
+
+```html
+<!-- src/lib/RenderLayout.svelte -->
+<script>
+  import Logo from "./Logo.svelte";
+  import Render from "./Render.svelte";
+
+</script>
+<Render>
+    <Logo />
+</Render>
+```
+
+```html
+<!-- src/lib/Render.svelte -->
+ <script>
+    const { children } = $props();
+</script>
+
+{@render children()}
+```
+
+Sekarng harusnya seperti ini sam ketika Lo pake `{@render Logo()}`. 
+
+<img class="img-fluid" alt="render-2" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/get-started-svelte/public/render-2.png" />
+
+Tapi bedanya sekarang lebih dinamis, coba Lo panggil component yang Lo buat sebelumnya kaya gini:
+
+```html
+<script>
+  import Article from "./Article.svelte";
+  import Counter from "./Counter.svelte";
+  import Logo from "./Logo.svelte";
+  import Render from "./Render.svelte";
+  import User from "./User.svelte";
+
+</script>
+<Render>
+    <Logo />
+    <Counter/>
+    <Article/>
+    <User/>
+</Render>
+```
+
+<img class="img-fluid" alt="render-3" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/get-started-svelte/public/render-3.png" />
+
+Sekarng Lo jadi puny kaya halaman web yang di susun dari bnyak component yang dinamis.
 
 </details>
