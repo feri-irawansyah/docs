@@ -1,0 +1,1 @@
+Bro Lo seorng backend engineer atau backend developer yang handal kan bro. Lo bisa bikin aplikasi dalam hitungan detik karena Lo pen cepet jadi yaudh password Lo user Lo simpen mentah - mentah di database Lo. Dan saat ada orang lain masuk ke jalanin `SELECT * FROM users`
