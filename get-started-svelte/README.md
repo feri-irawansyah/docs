@@ -1847,4 +1847,14 @@ Two Way Binding contohnya misal Lu input suatu text dan text itu akan langsung d
 
 #### Input Value `bind:value={value}`
 
+Bind value dipake buat ambil input dengan type string, number dan date. Misalnya Lo pingin ambil inputan nama, umur dan tanggal lahir contoh.
+
+```html
+<script>
+   let value = $state('');
+</script>
+
+<input type="text" bind:value/>
+```
+
 </details>
