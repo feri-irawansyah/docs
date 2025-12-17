@@ -1836,7 +1836,7 @@ Nah dengan custom element ini, Lo juga bisa bikin custom handler bro. Ini cara b
 
 </details>
 
-<details open>
+<details>
 <summary><h2>📌 Binding</h2></summary>
 
 ### Two Way Binding
