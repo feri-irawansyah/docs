@@ -1843,4 +1843,5 @@ Nah dengan custom element ini, Lo juga bisa bikin custom handler bro. Ini cara b
 
 Lo tau ga bro, Svelte merupakan salah satu Library/Framework yang menggunakan perubahan data dengan 2 arah atau `Two Way Binding`. Ada banyak Library yang menggunakan konsep ini seperti `AngularJs` (Ini pendahulunya), `Angular`, `Vue`, `Knockout`, `Alpine`, `Ember` dan `Svelte`.
 
+Jadi mirip web socket gitu ya? Dilihat dari cara kerjanya ya emng mirip tapi beda. 
 </details>
