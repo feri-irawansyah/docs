@@ -1851,10 +1851,18 @@ Bind value dipake buat ambil input dengan type string, number dan date. Misalnya
 
 ```html
 <script>
-   let value = $state('');
+   let name = $state('');
+   let age = $state(0);
+   let birth = $state(null);
 </script>
 
-<input type="text" bind:value/>
+<input type="text" bind:value={name} pleceholder="Full name"/>
+
+<input type="number" bind:value={name} pleceholder="Age" />
+
+<input type="date" bind:value={birth} pleceholder="Birth date" />
 ```
+
+Cukup kaya gini aja Lo udah bisa ambil value dari input tanpa menambah event handler seperti `oninput` atau `onchange`. Tapi Lo juga tetep bisa pake event handler kalo emang di butuhkan. 
 
 </details>
