@@ -1836,7 +1836,7 @@ Nah dengan custom element ini, Lo juga bisa bikin custom handler bro. Ini cara b
 
 </details>
 
-<details>
+<details open>
 <summary><h2>📌 Binding</h2></summary>
 
 ### Two Way Binding
@@ -1854,15 +1854,110 @@ Bind value dipake buat ambil input dengan type string, number dan date. Misalnya
    let name = $state('');
    let age = $state(0);
    let birth = $state(null);
+   let sex = $state('');
+
+   $inspect(name, age, birth, sex);
 </script>
 
-<input type="text" bind:value={name} pleceholder="Full name"/>
+<input type="text" bind:value={name} placeholder="Full name"/>
 
-<input type="number" bind:value={name} pleceholder="Age" />
+<input type="number" bind:value={name} placeholder="Age" />
 
-<input type="date" bind:value={birth} pleceholder="Birth date" />
+<input type="date" bind:value={birth} placeholder="Birth date" />
+
+<select bind:value={sex}>
+  <option value="male">Male</option>
+  <option value="female">Female</option>
+</select>
 ```
 
 Cukup kaya gini aja Lo udah bisa ambil value dari input tanpa menambah event handler seperti `oninput` atau `onchange`. Tapi Lo juga tetep bisa pake event handler kalo emang di butuhkan. 
+
+<img class="img-fluid" alt="bind-value" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/get-started-svelte/public/bind-value.png" />
+
+Secara otomatis ketika menggunakan reactive state maka perilakunya akan sama seperti ketik Lo pke event handler `oninput` yaitu data akan otomtis terupdate ketika inputan tersebut diubah.
+
+#### Input Checkbox `bind:checked={value}`
+
+Bind checked dipake buat ambil inputan checkbox yang artinya dia hanya menerima `true` atau `false`. Misalnya Lo pingin ambil inputan `Agree to Terms and Conditions` contoh. 
+
+```html
+<script>
+   let agree = $state(false);
+</script>
+
+<label for="agree">
+  <input type="checkbox" bind:checked={agree} id="agree" />
+  I agree
+</label>
+```
+
+Karena input checkbox ini tidak punya placeholder dan bentuknya cuma input kecil dan hanya bisa diklik jadi Lo bisa bungkus pake label agar lebih menarik dan punya deskripsi.
+
+#### Input Checkbox `bind:indeterminate={value}`
+
+Bagian ini sebenernya masih berkaitan dengan input checkbox cuma jarang digunakan karena secara functional seperti perlu ga perlu. `bind:indeterminate` ini akan menghasilnya cektang separo pada input checkbox Lo jadi seolah olah kaya belum di apa - apain. Contohnya gini:
+
+```html
+<script>
+	let checked = $state(false);
+	let indeterminate = $state(true);
+</script>
+
+<form>
+	<input type="checkbox" bind:checked bind:indeterminate>
+
+	{#if indeterminate}
+		waiting...
+	{:else if checked}
+		checked
+	{:else}
+		unchecked
+	{/if}
+</form>
+```
+
+<img class="img-fluid" alt="bind-indeterminate" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/get-started-svelte/public/bind-indeterminate.png" />
+
+Bentuknya akan kaya gini, ketika Lo klik dan valuenya jadi `true` maka akan centang, kalo `false` maka tidak centang.
+
+#### Input Group `bind:group={value}`
+
+Input Group ini juga masih berkaitan dengan input checkbox dan binding ini menurut gue cukup sakti karena Lo bisa buat suatu list checkox tanpa melakukan iterator atau looping. Selain itu magicnya lagi Lo bisa ambil semua value dalam entuk `array` atau list.
+
+```html
+<script>
+	let fillings = $state([]);
+
+  $inspect(fillings)
+
+</script>
+
+<label><input type="checkbox" bind:group={fillings} value="Rice" /> Rice</label>
+<label><input type="checkbox" bind:group={fillings} value="Beans" /> Beans</label>
+<label><input type="checkbox" bind:group={fillings} value="Cheese" /> Cheese</label>
+<label><input type="checkbox" bind:group={fillings} value="Guac (extra)" /> Guac (extra)</label>
+```
+
+<img class="img-fluid" alt="bind-group-check" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/get-started-svelte/public/bind-group-check.png" />
+
+Dengan begini Lo ga perlu buat looping dan suatu event yang bisa push ke dalam array jika ada value baru ditambahkan. Selain itu `bind:group` juga bisa Lo pake untuk input type `radio` karena seperti yang Lo tau input radio hanya mengharapkan 1 nilai saja, sedangkan ketika nili itu udah dipilih maka nilai yang lain akan di hapus. Contohnya gini:
+
+```html
+<script>
+	let tortilla = $state('Plain');
+
+  $inspect(tortilla)
+
+</script>
+
+<label><input type="radio" bind:group={tortilla} value="Plain" /> Plain</label>
+<label><input type="radio" bind:group={tortilla} value="Whole wheat" /> Whole wheat</label>
+<label><input type="radio" bind:group={tortilla} value="Spinach" /> Spinach</label>
+```
+
+<img class="img-fluid" alt="bind-group-radio" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/get-started-svelte/public/bind-group-radio.png" />
+
+Ketika Lo pilih salah satu maka semua input radio lain akan di uncheck. Dan ketika Lo pilih input radio yang sama maka input radio lain akan di uncheck.
 
 </details>
