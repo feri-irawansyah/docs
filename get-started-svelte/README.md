@@ -1834,9 +1834,35 @@ Disini ada `<svelte:options customElement={{ tag: 'custom-element', shadow: "non
 
 Nah dengan custom element ini, Lo juga bisa bikin custom handler bro. Ini cara baru dari Svelte 5 untuk membuat Custom Event dengan cara membuat Custom Elemen juga dengan `svelte:option/>` dan Rune `$host()` untuk bikin custom event handler.
 
+### Mount Action `use:action`
+
+Selain action yang akan dijalankan ketika ada event handler, svelte juga menyediakan semacam auto action. Jadi ketika element dimount ke layar, svelte akan menjalankan function tersebut dan berlaku hanya untuk element tersebut.
+
+```html
+<script>
+    let value = $state(3000);
+
+    function formatCurrency(node) {
+        // Simple currency formatting
+        function formatValue(val) {
+            let num = parseFloat(val.replace(/[^0-9.-]/g, ''));
+            if (isNaN(num)) num = 0;
+            return num.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+        }
+        node.value = formatValue(node.value);
+    }
+
+</script>
+
+<!-- input type currency -->
+<input type="text" bind:value={value} use:formatCurrency/>
+```
+
+<img class="img-fluid" alt="mount-action" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/get-started-svelte/public/mount-action.png" />
+
 </details>
 
-<details open>
+<details>
 <summary><h2>📌 Binding</h2></summary>
 
 ### Two Way Binding
@@ -1959,5 +1985,108 @@ Dengan begini Lo ga perlu buat looping dan suatu event yang bisa push ke dalam a
 <img class="img-fluid" alt="bind-group-radio" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/get-started-svelte/public/bind-group-radio.png" />
 
 Ketika Lo pilih salah satu maka semua input radio lain akan di uncheck. Dan ketika Lo pilih input radio yang sama maka input radio lain akan di uncheck.
+
+#### Input File `bind:files={value}`
+
+Binding ini digunakan untuk input file kaya gambar, excel, pdf atau file lainnya. Contohnya gini:
+
+```html
+<script>
+	let files = $state();
+
+    $inspect(files);
+</script>
+
+<label for="avatar">Upload a picture:</label>
+<input accept="image/png, image/jpeg" bind:files id="avatar" name="avatar" type="file" />
+```
+
+<img class="img-fluid" alt="bind-file" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/get-started-svelte/public/bind-files.png" />
+
+#### Reference Element `bind:this={value}`
+
+Binding ini digunakan untuk mengambil referensi dari suatu element tersebut. Misalnya Lo bikin input, nah kemudian Lo mau dia auto focus ketika Lo kil suatu button. Lo bisa pake binding ini. Contohnya gini:
+
+```html
+<script>
+  let inputEl = $state(null);
+
+  function focusInput() {
+    inputEl.focus();
+  }
+  
+</script>
+
+<input bind:this={inputEl} />
+<button onclick={focusInput}>Focus</button>
+```
+
+<img class="img-fluid" alt="bind-this" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/get-started-svelte/public/bind-this.png" />
+
+Ketika di klik input akan focus dan ketika Lo inspect ada element input dengan semua informasi nya. Sekilas ini mirip dengan DOM kalo Lo ambil element dengan `querySelector` atau `getElementById`. Jadi kalo kode tadi di convert ke avascript maka akan kaya gini:
+
+```js
+const inputEl = document.querySelector('input');
+
+function focusInput() {
+  inputEl.focus();
+}
+```
+
+Bedanya, ketika Lo punya beberapa tag input di suatu halaman, semua input tersebut akan diambil semua oleh DOM, cara agar itu tidak terjadi biasanya Lo perlu memberikan id atau class untuk menandai element masing - masing. Nah dengan `bind:this` Lo bisa menyesuaikan statenya mau dipakein ke element mana aja yang Lo mau.
+
+#### Rune `$bindable` sebagai props
+
+Sebelumnya pada materi Rune ada satu rune yang belum gue bahas yaitu `$bindable`. Ini mau gue bahas. Kenapa dibahas terpisah? Karena `$bindable` ini merupakan rune khusus untuk Two Way Binding dan juga hanya bisa digunakan sebagai props. Artinya untuk pake Lo harus punya parent dan child component.
+
+Okeh misalnya Lo ada study kasus buat bikin input auto complete dimana ketika Lo input akan muncul daftar List yang di pilih. Nah dari pada misalnya nantinya implement di tim codenya yang Lo bikin dan anggota tim lain beda. Nah Lo bisa bikin suau component input dengan props yang udah Lo sesuaikan agar perilakunya Two Way Binding. Contohnya gini:
+
+```html
+<!-- src/lib/AutoComplete.svelte -->
+<script>
+    let { value = $bindable(''), placeholder="", options = [] } = $props();
+</script>
+
+<input type="text" bind:value={value} placeholder={placeholder} list="autocomplete-options" />
+<datalist id="autocomplete-options">
+    {#each options as option}
+        <option value={option} />
+    {/each}
+</datalist>
+```
+
+```html
+<!-- src/lib/Bind.svelte -->
+<script>
+  import AutoComplete from "./AutoComplete.svelte";
+
+  let fruit = $state('');
+
+  $inspect("Selected Fruit: ", fruit);
+
+</script>
+
+<AutoComplete bind:value={fruit} options={[
+    "Apple",
+    "Banana",
+    "Cherry",
+    "Date",
+    "Elderberry",
+    "Fig",
+    "Grape",
+    "Honeydew"
+  ]} placeholder="Fruits"/>
+
+```
+
+<img class="img-fluid" alt="bindable" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/get-started-svelte/public/bindable.png" />
+
+Nah dengan begitu ketika ada anggota tim Lo yang ingin membuat input yang sama dengan data dan state berbeda tinggal pake component `AutoComplete` aja. Tanpa perlu membuat element baru.
+
+</details>
+
+<details open>
+
+<summary><h2>📌 Style & Animation</h2></summary>
 
 </details>
