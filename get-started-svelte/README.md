@@ -2096,6 +2096,8 @@ Di svelte ada beberapa cara buat styling meskipun hasilnya sama aja tapi untuk p
 
 ### Styling
 
+Membuat website Lo ga bakal lepas dari yang namanya styling atau CSS bro. Baik menggunakan teknologi apa aja website harus terlihat indah dan nyaman ketika dikunjungi. Svelte punya beberapa cara untuk memberikan styling pada suatu halaman.
+
 #### Local Style
 
 Local style ini default dari Svelte kenapa local style ? Karena style ini hanya akan berhalan di komponen dimana stylenya berada aja. Komponent lain tidak akan terpengaruh oleh style yang dibuat di component tersebut.
