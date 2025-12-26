@@ -8,7 +8,7 @@ Pada catatan kali ini gue mau berbagi tentang dasar - dasar Leptos dari yang gue
 Leptos itu reactive framework terinspirasi dari `SolidJS` katanya atau bisa di bilang Leptos itu Solid JS nya Rust. Jadi Leptos ini berjalan di Client atau sebagai User Interface (UI). Karena ditulis dengan Rust (Low Level Programming Language) Leptos ini akan di compile menjadi `Wasm` (Web Assembly) agar bisa berjalan di browser. Untuk lebih detailnya Lo bisa baca artikel gue tentang Wasm dan JS <a href="https://feri-irawansyah.my.id/catatan/frontend/antara-lo-web-assembly-dan-javascript-buat-frontend-web-application" target="_blank" rel="noopener noreferrer">di sini</a>.
 
 <details open>
-<summary><h2>📌 Dokumentasi Leptos</h2></summary>
+<summary><h2>Dokumentasi Leptos 📚</h2></summary>
 
 Sebelum mulai bikin app ada beberapa tempat keramat yang bisa Lo kunjungi bro.
 
@@ -39,7 +39,7 @@ Banyakan SSR ya sesajen-nya? Iya bro krna Leptos SSR perlu http server dan di ca
 </details>
 
 <details>
-<summary><h2>📌 Get Started Leptos</h2></summary>
+<summary><h2>Get Started Leptos 📚</h2></summary>
 
 Sebenarnya ada banyak cara untuk membuat CSR Leptos, namun cara paling mudah, simple dan rapi Lo bisa buat pake <a href="https://trunkrs.dev/" target="_blank" rel="noopener noreferrer">Trunk</a> ini mirip <a href="https://vitejs.dev/" target="_blank" rel="noopener noreferrer">Vite</a> kalau di Javascript tapi Rust punya.
 
@@ -309,7 +309,7 @@ Nah ini penting bro, Lo bikin UI pake rust dimana Lo ga bisa sembarang nulis cod
 
 
 <details>
-<summary><h2>📌 Component dan Props</h2></summary>
+<summary><h2>Component dan Props 📚</h2></summary>
 
 ### Component
 
@@ -564,7 +564,7 @@ Jadi harus banget di render secara iterasi karena lebih dari satu element.
 </details>
 
 <details>
-<summary><h2>📌 Data Rendering</h2></summary>
+<summary><h2>Data Rendering 📚</h2></summary>
 
 Sebelumnya Lo sudah menggunakan rendering data di element html namun itu untuk data yang static. Contoh pake data Object.
 

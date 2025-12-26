@@ -2093,6 +2093,8 @@ Di svelte ada beberapa cara buat styling meskipun hasilnya sama aja tapi untuk p
 
 ### Styling
 
+Membuat website Lo ga bakal lepas dari yang namanya styling atau CSS bro. Baik menggunakan teknologi apa aja website harus terlihat indah dan nyaman ketika dikunjungi. Svelte punya beberapa cara untuk memberikan styling pada suatu halaman.
+
 #### Local Style
 
 Local style ini default dari Svelte kenapa local style ? Karena style ini hanya akan berhalan di komponen dimana stylenya berada aja. Komponent lain tidak akan terpengaruh oleh style yang dibuat di component tersebut.
@@ -2250,11 +2252,70 @@ Misalnya ada study case Lo pingin bikin `h1` ini warnanya bisa Lo ganti - ganti 
 
 #### Class Binding
 
-Class binding ini sama kaya style binding bedanya ini menggunakan class. Jadi Lo bisa meletakkan class yang sudah memiliki style css tertentu di tag HTML. Cara ini paling umum digunakan karena di era modern ini banyak CSS Framework yang populer dan biasanya menggunakan class sebagai selector nya seperti TailwindCSS, Bootstrap, Bulma, Materialize, dan masih banyak lagi.
+Class binding ini sama kaya style binding bedanya ini menggunakan class. Jadi Lo bisa meletakkan class yang sudah memiliki style css tertentu di tag HTML. Cara ini paling umum digunakan karena di era modern ini banyak CSS Framework yang populer dan biasanya menggunakan class sebagai selector nya seperti TailwindCSS, Bootstrap, Bulma, Materialize, dan masih banyak lagi. Contohnya gini:
 
-#### Pre Processors
+```html
+<!-- src/lib/Hello2.svelte with TailwindCSS -->
+<h1 class="text-red-500">Ini H1</h1>
+
+<!-- src/lib/Hello2.svelte with Bootstrap -->
+<h1 class="text-danger">Ini H1</h1>
+
+<!-- src/lib/Hello2.svelte with Materialize -->
+<h1 class="red-text">Ini H1</h1>
+```
+
+Atau Lo bisa juga kaya gini:
+
+```html
+<!-- src/lib/Hello2.svelte with TailwindCSS -->
+<h1 class:text-red-500>Ini H1</h1>
+
+<!-- src/lib/Hello2.svelte with Bootstrap -->
+<h1 class:text-danger>Ini H1</h1>
+
+<!-- src/lib/Hello2.svelte with Materialize -->
+<h1 class:red-text>Ini H1</h1>
+```
+
+#### CSS Pre Processors
+
+Selain menggunakan CSS biasa, Lo juga bisa pake CSS Pre Processors seperti SASS, LESS, dan PostCSS. Cara menggunakannya adalah dengan cara menambahkan property `lang` di tag `<style></style>`. Contohnya gini:
+
+```html
+<!-- src/lib/Hello2.svelte with SCSS -->
+<style lang="scss">
+  h1 {
+    color: red;
+  }
+</style>
+
+<!-- src/lib/Hello2.svelte with LESS -->
+<style lang="less">
+  h1 {
+    color: red;
+  }
+</style>
+
+<!-- src/lib/Hello2.svelte with PostCSS -->
+<style lang="postcss">
+  h1 {
+    color: red;
+  }
+</style>
+```
 
 ### Transition
+
+Biasanya agar website terlihat lebih hidup dan nyaman ketika dikunjungi, Lo mesti akan menambahkan transisi pada suatu halaman atau elemen HTML agar ketika elemen muncul atau hilang ada semacam efek. Menggunakan CSS saja biasanya cukup untuk membuat transisi. Tapi Svelte juga punya binding untuk membuat transisi dengan mudah serta Lo juga bisa melakukan custom transition.
+
+#### Transition All `transition:name`
+
+Transition ini akan berlaku pada semua elemen HTML barik ketika elemen tersebut muncul atau hilang.
+
+#### Transition In `in:name`
+
+#### Transition Out `out:name`
 
 ### Animation
 

@@ -90,7 +90,7 @@ Jaman sekarang? Lo kalo mau bikin website atau jadi frontend dev banyak persyara
 Di artkel gue kali ini gue mau bahas antara CSR (Client Side Render) dengan SSR (Server Side Render).
 
 <details open>
-<summary><h2>📌 Apa itu CSR dan SSR</h2></summary>
+<summary><h2>Apa itu CSR dan SSR 📚</h2></summary>
 
 `CSR` atau `Client Side Render` itu artinya UI di render atau di bentuk di browser. Jadi ketika membuka website ada 1 atau lebih file html (umumnya 1) kemudian javascript akan membentuk UI nya sesuai dengan yang Lo suruh. Sedangkan `SSR` atau `Server Side Render` UI di render atau di bentuk dari server, jadi ketika Lo mengakses website server sudah mengirimkan halam berupa html yang udah lengkap.
 
@@ -98,7 +98,7 @@ Analoginya misal Lo minta mobil remote control ke bapak Lo nah karena emang bapa
 </details>
 
 <details open>
-<summary><h2>📌 Filosofi & Skalabilitas</h2></summary>
+<summary><h2>Filosofi & Skalabilitas 📚</h2></summary>
 
 <img src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/csr-vs-ssr/static/filosofi.png" class="img-fluid" alt="filosofi"/>
 
@@ -119,7 +119,7 @@ Aplikasi dengan data yang dinamis berubah setiap detiknya misalnya ada banyak ta
 </details>
 
 <details open>
-<summary><h2>📌 Performance & Biaya</h2></summary>
+<summary><h2>Performance & Biaya 📚</h2></summary>
 
 Soal performance gimana bro? Tergantung juga bro. Balik lagi ke use case nya gue kasih contoh website gue ini. Ini gue buat pake SSR kenapa? Karena suka - suka gue dong wkwkwk.
 
@@ -155,7 +155,7 @@ Karena rendering UI di lakukan di browser artinya server tidak perlu banyak beke
 
 
 <details open>
-<summary><h2>📌 Security</h2></summary>
+<summary><h2>Security 📚</h2></summary>
 
 Keamanan ? Kalo di lihat dari implementasinya SSR terasa lebih aman karena datanya tersentralisasi di server dan tidak ada data di browser. Gue breakdown beberapa masalah security CSR dan SSR.
 
@@ -251,7 +251,7 @@ Notes: Backend disini maksud gue itu `Optional` terpisah. Sveltekit SSR itu jala
 </details>
 
 <details open>
-<summary><h2>📌 Contoh Aplikasi CSR dan SSR</h2></summary>
+<summary><h2>Contoh Aplikasi CSR dan SSR 📚</h2></summary>
 
 Jadi ga semua aplikasi itu harus di pukul rata **POKOKNYA HARUS SSR** atau **POKOKNYA HARUS CSR** pakelah teknologi sesuai kebutuhan dan diskusi dengan tim untuk menentukan keputusan bersama. Mungkin kalo misal Lo bikin aplikasi sendiri itu terserah Lo bro, mau pake apa aja itu terserah Lo. Tapi kalo Lo kerja secara tim di perusahaan atau ada project dimana yang mengerjakan bukan Lo dan Ego Lo sendiri, itu harus dengan kesepakatan bersama.
 
@@ -508,7 +508,7 @@ Contohnya seperti `Stack Overflow`, `Quora`, `Reddit` dan sebagainya.
 </details>
 
 <details open>
-<summary><h2>📌 Developer Experience</h2></summary>
+<summary><h2>Developer Experience 📚</h2></summary>
 
 Ini adalah penghujung catatan CSR + SSR gue buat ini. Untuk Dev Exp atau pengalaman developer ini beda tools/framework beda cara. Tapi pada intinya disemua framework itu perlu skill dan mainset full-stack developer kalo mau bangun SSR app. Sedangkan untuk CSR app Lo cukup tau dasar - dasarnya seperti HTML, CSS, Javascript DOM, State, Routing, Fetch (Axios atau Fetch API) ini sudah cukup untuk membangun CSR app.
 
@@ -789,7 +789,7 @@ Nanti di browser devtools console akan tampil `count: 0` dan `count: 1` ketika k
 </details>
 
 <details open>
-<summary><h2>📌 Summary</h2></summary>
+<summary><h2>Summary 📚</h2></summary>
 
 CSR (Client Side Render) artinya Lo membuat aplikasi yang berjalan di browser, sedangkan SSR (Server Side Render) artinya Lo membuat aplikasi yang berjalan di server dan dikirim ke browser. 
 
