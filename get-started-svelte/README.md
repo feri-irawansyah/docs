@@ -6,10 +6,8 @@ Perlu gue akui 2 benda itu bagus 👍, modern technology 🤖 dan bisa buat full
 
 Dikutip dari <a href="https://en.wikipedia.org/wiki/Svelte" target="_blank">Wikipedia</a> Svelte ini dibuat oleh Bapak - Bapak yang namanya <a href="https://x.com/rich_harris" target="_blank">Rich Harris</a> dan Kroco - Krocony tentunya Svelte Team. Dan Svelte ini langsung di compile ke **JS DOM**, tanpa Runtime, Hasil Kompilasi **Mini Size** dan ga kaya **React** atau **Vue** yang pake Virtual DOM katanya. Serasa bikin murni javascript? Tapi Declarative? Dan tanpa cari-cari class atau id bahkan elemen?. Wow minimalis sekali tapi apakah sepowerfull itu? Okeh kita coba sekarang.
 
-<details class="accordion">
+<details>
 <summary><h2>Svelte Frontend Framework 📚</h2></summary>
-
-<div class="content">
 
 ### Kenapa Butuh Framework
 
@@ -80,7 +78,6 @@ Svelte mengembangkan ekosistemnya sendiri, berbeda dengan React dimana banyak pi
 Keuntungan Svelte yang memiliki ekosistem nya sendiri Lo gampang buat integrasi dengan dependensi yang Lo butuhin karena dibangun oleh tim yang sama. ga ada lagi drama-drama dependensi yang entrok karena versinya ga compatible atau deprecated.
 
 Kekurangannya ekosistemnya kecil. Karena hanya internal tim svelte yang mengambangkan tidak seesar React yang kalo Lo cari apa aja mesti ada.
-</div>
 
 </details>
 
@@ -2095,8 +2092,6 @@ Nah dengan begitu ketika ada anggota tim Lo yang ingin membuat input yang sama d
 Di svelte ada beberapa cara buat styling meskipun hasilnya sama aja tapi untuk penggunaannya aja yang berbeda tergantung kebutuhan Lo dan mempermudah hidup Lo juga.
 
 ### Styling
-
-Membuat website Lo ga bakal lepas dari yang namanya styling atau CSS bro. Baik menggunakan teknologi apa aja website harus terlihat indah dan nyaman ketika dikunjungi. Svelte punya beberapa cara untuk memberikan styling pada suatu halaman.
 
 #### Local Style
 
