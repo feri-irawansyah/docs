@@ -7,7 +7,7 @@ Perlu gue akui 2 benda itu bagus 👍, modern technology 🤖 dan bisa buat full
 Dikutip dari <a href="https://en.wikipedia.org/wiki/Svelte" target="_blank">Wikipedia</a> Svelte ini dibuat oleh Bapak - Bapak yang namanya <a href="https://x.com/rich_harris" target="_blank">Rich Harris</a> dan Kroco - Krocony tentunya Svelte Team. Dan Svelte ini langsung di compile ke **JS DOM**, tanpa Runtime, Hasil Kompilasi **Mini Size** dan ga kaya **React** atau **Vue** yang pake Virtual DOM katanya. Serasa bikin murni javascript? Tapi Declarative? Dan tanpa cari-cari class atau id bahkan elemen?. Wow minimalis sekali tapi apakah sepowerfull itu? Okeh kita coba sekarang.
 
 <details>
-<summary><h2>Svelte Frontend Framework 📌</h2></summary>
+<summary><h2>Svelte Frontend Framework 📚</h2></summary>
 
 ### Kenapa Butuh Framework
 
@@ -82,7 +82,7 @@ Kekurangannya ekosistemnya kecil. Karena hanya internal tim svelte yang mengamba
 </details>
 
 <details>
-<summary><h2>Get Started Svelte 📌</h2></summary>
+<summary><h2>Get Started Svelte 📚</h2></summary>
 
 Sebelum Lo mulai membuat Svete Project, Lo perlu beberapa hal yang harus dipenuhi dulu
 ### Pre Requisites
@@ -348,7 +348,7 @@ export default defineConfig({
 </details>
 
 <details>
-<summary><h2>Template HTML 📌</h2></summary>
+<summary><h2>Template HTML 📚</h2></summary>
 
 File Svelte atai `.svelte` sebenarnya sama seperti HTML biasa Lo bisa mmenuliskan tag html terserah Lo ga ada aturan harus di bungkus pake `<></>` atau ada component khusus seperti `<Fragment></Fragment>` engga bro, file Svelte sama kaya file HTML. Bedanya ada fitur - fitur tambahan buat mempermudah hidup Lo.
 
@@ -449,7 +449,7 @@ Di Svelte untuk Text Expression atau menampilkan suatu data di HTML ini sudah am
 </details>
 
 <details>
-<summary><h2>Rune 📌</h2></summary>
+<summary><h2>Rune 📚</h2></summary>
 
 `Rune` adalah suatu simbol atau keyword di Svelte yang akan mengontrol Svelte Compiler seperti di awal catatan bahwa Svelte akan melakukan kompilasi code nya ke Javascript DOM murni tanpa Runtime seperti Virtual DOM. Oleh karena itu Rune itu sangat penting untuk mengontrol Svelte Compiler saat menggunakan suatu data, state atau elemen.
 
@@ -1068,7 +1068,7 @@ Sebenarnya masih ada 2 Rune yang lagi yang belum gue bahas yaitu `$host` dan `$b
 
 <details>
 
-<summary><h2>Syntax Templating 📌</h2></summary>
+<summary><h2>Syntax Templating 📚</h2></summary>
 
 ### Control Flow Templating `{#if}...{/if}`
 
@@ -1587,7 +1587,7 @@ Masih ada beberapa lagi templating syntax di Svelte seperti `{@attach ...}` (nan
 </details>
 
 <details>
-<summary><h2>Event Handler 📌</h2></summary>
+<summary><h2>Event Handler 📚</h2></summary>
 
 ### Normal Event
 
@@ -1863,7 +1863,7 @@ Selain action yang akan dijalankan ketika ada event handler, svelte juga menyedi
 </details>
 
 <details>
-<summary><h2>Binding 📌</h2></summary>
+<summary><h2>Binding 📚</h2></summary>
 
 ### Two Way Binding
 
@@ -2087,7 +2087,7 @@ Nah dengan begitu ketika ada anggota tim Lo yang ingin membuat input yang sama d
 
 <details open>
 
-<summary><h2>Style & Animation 📌</h2></summary>
+<summary><h2>Style & Animation 📚</h2></summary>
 
 Di svelte ada beberapa cara buat styling meskipun hasilnya sama aja tapi untuk penggunaannya aja yang berbeda tergantung kebutuhan Lo dan mempermudah hidup Lo juga.
 
@@ -2249,6 +2249,8 @@ Misalnya ada study case Lo pingin bikin `h1` ini warnanya bisa Lo ganti - ganti 
 <img class="img-fluid" alt="inline-style" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/get-started-svelte/public/inline-style.png" />
 
 #### Class Binding
+
+Class binding ini sama kaya style binding bedanya ini menggunakan class. Jadi Lo bisa meletakkan class yang sudah memiliki style css tertentu di tag HTML. Cara ini paling umum digunakan karena di era modern ini banyak CSS Framework yang populer dan biasanya menggunakan class sebagai selector nya seperti TailwindCSS, Bootstrap, Bulma, Materialize, dan masih banyak lagi.
 
 #### Pre Processors
 
