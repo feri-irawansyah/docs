@@ -7,7 +7,7 @@ Perlu gue akui 2 benda itu bagus 👍, modern technology 🤖 dan bisa buat full
 Dikutip dari <a href="https://en.wikipedia.org/wiki/Svelte" target="_blank">Wikipedia</a> Svelte ini dibuat oleh Bapak - Bapak yang namanya <a href="https://x.com/rich_harris" target="_blank">Rich Harris</a> dan Kroco - Krocony tentunya Svelte Team. Dan Svelte ini langsung di compile ke **JS DOM**, tanpa Runtime, Hasil Kompilasi **Mini Size** dan ga kaya **React** atau **Vue** yang pake Virtual DOM katanya. Serasa bikin murni javascript? Tapi Declarative? Dan tanpa cari-cari class atau id bahkan elemen?. Wow minimalis sekali tapi apakah sepowerfull itu? Okeh kita coba sekarang.
 
 <details>
-<summary><h2>Svelte Frontend Framework</h2></summary>
+<summary><h2>Svelte Frontend Framework 📌</h2></summary>
 
 ### Kenapa Butuh Framework
 
@@ -82,7 +82,7 @@ Kekurangannya ekosistemnya kecil. Karena hanya internal tim svelte yang mengamba
 </details>
 
 <details>
-<summary><h2>Get Started Svelte</h2></summary>
+<summary><h2>Get Started Svelte 📌</h2></summary>
 
 Sebelum Lo mulai membuat Svete Project, Lo perlu beberapa hal yang harus dipenuhi dulu
 ### Pre Requisites
@@ -348,7 +348,7 @@ export default defineConfig({
 </details>
 
 <details>
-<summary><h2>Template HTML</h2></summary>
+<summary><h2>Template HTML 📌</h2></summary>
 
 File Svelte atai `.svelte` sebenarnya sama seperti HTML biasa Lo bisa mmenuliskan tag html terserah Lo ga ada aturan harus di bungkus pake `<></>` atau ada component khusus seperti `<Fragment></Fragment>` engga bro, file Svelte sama kaya file HTML. Bedanya ada fitur - fitur tambahan buat mempermudah hidup Lo.
 
@@ -449,7 +449,7 @@ Di Svelte untuk Text Expression atau menampilkan suatu data di HTML ini sudah am
 </details>
 
 <details>
-<summary><h2>Rune</h2></summary>
+<summary><h2>Rune 📌</h2></summary>
 
 `Rune` adalah suatu simbol atau keyword di Svelte yang akan mengontrol Svelte Compiler seperti di awal catatan bahwa Svelte akan melakukan kompilasi code nya ke Javascript DOM murni tanpa Runtime seperti Virtual DOM. Oleh karena itu Rune itu sangat penting untuk mengontrol Svelte Compiler saat menggunakan suatu data, state atau elemen.
 
@@ -1068,7 +1068,7 @@ Sebenarnya masih ada 2 Rune yang lagi yang belum gue bahas yaitu `$host` dan `$b
 
 <details>
 
-<summary><h2>Syntax Templating</h2></summary>
+<summary><h2>Syntax Templating 📌</h2></summary>
 
 ### Control Flow Templating `{#if}...{/if}`
 
@@ -1587,7 +1587,7 @@ Masih ada beberapa lagi templating syntax di Svelte seperti `{@attach ...}` (nan
 </details>
 
 <details>
-<summary><h2>Event Handler</h2></summary>
+<summary><h2>Event Handler 📌</h2></summary>
 
 ### Normal Event
 
@@ -1863,7 +1863,7 @@ Selain action yang akan dijalankan ketika ada event handler, svelte juga menyedi
 </details>
 
 <details>
-<summary><h2>Binding</h2></summary>
+<summary><h2>Binding 📌</h2></summary>
 
 ### Two Way Binding
 
@@ -2087,6 +2087,173 @@ Nah dengan begitu ketika ada anggota tim Lo yang ingin membuat input yang sama d
 
 <details open>
 
-<summary><h2>Style & Animation</h2></summary>
+<summary><h2>Style & Animation 📌</h2></summary>
+
+Di svelte ada beberapa cara buat styling meskipun hasilnya sama aja tapi untuk penggunaannya aja yang berbeda tergantung kebutuhan Lo dan mempermudah hidup Lo juga.
+
+### Styling
+
+#### Local Style
+
+Local style ini default dari Svelte kenapa local style ? Karena style ini hanya akan berhalan di komponen dimana stylenya berada aja. Komponent lain tidak akan terpengaruh oleh style yang dibuat di component tersebut.
+
+```html
+<!-- src/lib/Hello.svelte -->
+<script>
+  console.log("Hello World");
+</script>
+
+<h1>Ini H1</h1>
+
+<!-- Local Style -->
+<style>
+  h1 {
+    color: red;
+  }
+</style>
+```
+
+Style ini hanya akan berjalan di component `Hello` saja, misal Lo buat component lagi maka component Lo ga akan terpengaruh oleh style ini.
+
+Coba Lo buat component baru di folder `lib` dengan nama `Hello2.svelte` dan ubah code nya menjadi ini:
+
+```html
+<!-- src/lib/Hello2.svelte -->
+<h1>Ini H1</h1>
+```
+
+```html
+<!-- src/lib/Hello.svelte -->
+<script>
+  import Hello2 from "./Hello2.svelte";
+
+  console.log("Hello World");
+</script>
+
+<h1>Ini H1</h1>
+<Hello2/>
+
+<!-- Local Style -->
+<style>
+  h1 {
+    color: red;
+  }
+</style>
+```
+
+<img class="img-fluid" alt="local-style" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/get-started-svelte/public/local-style.png" />
+
+Atau kalo misalnya pngin beda warna juga bisa gini:
+
+```html
+<!-- src/lib/Hello2.svelte -->
+<h1>Ini H1</h1>
+
+<style>
+  h1 {
+    color: green;
+  }
+</style>
+```
+
+`h1` di component `Hello2` akan berwarna hijau dan di parent tidak akan terpengaruh.
+
+#### Global Style
+
+Di Svelte kalo Lo buat style di suatu component maka sifatnya akan terisolasi dari component lain. Nah tapi gimana kalo misalnya Lo pingin buat style di seluruh halaman? Di svelte ada fitur namanya Global Style `:global(...)`. Contohnya gini:
+
+```html
+<!-- src/lib/Hello2.svelte -->
+<h1>Ini H1</h1>
+<!-- Global Style -->
+<style>
+  :global(h1) {
+    color: green;
+  }
+</style>
+```
+
+Terus Lo hapus style di component `Hello`
+
+```html
+<!-- src/lib/Hello.svelte -->
+<script>
+  import Hello2 from "./Hello2.svelte";
+
+  console.log("Hello World");
+</script>
+
+<h1>Ini H1</h1>
+<Hello2/>
+```
+
+Ini akan membuat `h1` di component `Hello` dan `Hello2` akan berwarna hijau. Tapi harus hati-hati meskipun Lo bikin nya di child component semua component akan terpengaruh kecuali component tersebut punya style sendiri. 
+
+Coba Lo balikin style di component `Hello` dan ubah code nya menjadi ini:
+
+```html
+<!-- src/lib/Hello.svelte -->
+<style>
+  h1 {
+    color: red;
+  }
+</style>
+```
+
+Component `Hello` akan berwarna merah dan `Hello2` akan berwarna hijau. Karena component `Hello` punya style sendiri dan `specificity` nya lebih besar dari `Hello2` kecuali Lo paksain pake `!important` di style nya pada component `Hello2`. maka `Hello` akan berwarna hijau.
+
+<img class="img-fluid" alt="global-style" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/get-started-svelte/public/global-style.png" />
+
+Global style juga bisa dibuat dengan file terpisah khusus untuk css. Harusnya kalo Lo buat projectnya pake Vite maka akan ada file `app.css` di folder `src`. Itu juga termasuk global style, coba Lo cari bagian ini:
+
+```css
+/* src/app.css */
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+```
+
+Ini membuat semua `h1` diseluruh halaman akan memiliki ukuran font 3.2em dan line height 1.1. Makanya semua `h1` Lo ukurannya sama, kecuali Lo cutsom di component via local style atau global style.
+
+#### Inline Style
+
+Inline style ini sama kaya html yaitu Lo nyisipin property style di tag HTML. Contohnya gini:
+
+```html
+<!-- src/lib/Hello2.svelte -->
+<h1 style="color: green;">Ini H1</h1>
+```
+
+Atau kaya gini jua bisa jadi binding.
+
+```html
+<!-- src/lib/Hello2.svelte -->
+<h1 style:color="green">Ini H1</h1>
+```
+
+Dan Lo tau bro? Di Svelte kalo Lo pake inline style Lo bisa buat stylenya dinamis misal ada suatu kondisi tertentu stylenya akan berubah rasanya mirip kaya Lo pake tailwindcss atau css modules.
+
+Misalnya ada study case Lo pingin bikin `h1` ini warnanya bisa Lo ganti - ganti pake color picker. Coba Lo buat di component `Hello2` seperti ini:
+
+```html
+<!-- src/lib/Hello2.svelte -->
+<script>
+    let color = $state("green");
+</script>
+
+<input type="color" bind:value={color} />
+<h1 style:color>Ini H1</h1>
+```
+
+<img class="img-fluid" alt="inline-style" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/get-started-svelte/public/inline-style.png" />
+
+#### Class Binding
+
+#### Pre Processors
+
+### Transition
+
+### Animation
 
 </details>
