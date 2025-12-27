@@ -1064,6 +1064,33 @@ Dengan seperti ini code Lo jauh lebih simpel dan ga banyak boilerplate.
 
 Sebenarnya masih ada 2 Rune yang lagi yang belum gue bahas yaitu `$host` dan `$bindable` tapi 2 Rune ini lumayan compleks nanti gue bahas di bagian **binding** dan **event**.
 
+### Reactive Class
+
+Sebelumnya semua reactive state biasanya dibuat dalam variable seperti `let count = $state(0)` atau `const count = $state(0)`. Tapi bisa juga pake reactive class dan tetep reactive.
+
+```html
+<!-- src/lib/Counter.svelte -->
+<script>
+  class Counter {
+    count = $state(0);
+    interval = $state(1000);
+  }
+
+  const counter = new Counter();
+
+  $effect(() => {
+    const id = setInterval(() => {
+      counter.count++;
+    }, counter.interval);
+
+    return () => clearInterval(id);
+  });
+</script>
+
+<h1>{counter.count}</h1>
+<button onclick={() => counter.interval += 1000}>Change Interval to {counter.interval} ms</button>
+```
+
 </details>
 
 <details>
@@ -2085,7 +2112,7 @@ Nah dengan begitu ketika ada anggota tim Lo yang ingin membuat input yang sama d
 
 </details>
 
-<details open>
+<details>
 
 <summary><h2>Style & Animation 📚</h2></summary>
 
@@ -2311,12 +2338,109 @@ Biasanya agar website terlihat lebih hidup dan nyaman ketika dikunjungi, Lo mest
 
 #### Transition All `transition:name`
 
-Transition ini akan berlaku pada semua elemen HTML barik ketika elemen tersebut muncul atau hilang.
+Transition ini akan berlaku pada semua elemen HTML barik ketika elemen tersebut muncul atau hilang. Contohnya gini:
+
+```html
+<!-- src/lib/Hello2.svelte -->
+<script>
+  import { fade, slide } from "svelte/transition";
+
+  // Custom color picker state
+  let color = $state("green");
+</script>
+
+<input type="color" bind:value={color} />
+<h1 style:color transition:fade>Ini H1</h1>
+<h2 style:color transition:slide>Ini H2</h2>
+```
+
+Selain itu Lo juga bisa memberikan parameter untuk menyesuaikan transisi seperti delay, duration, dan easing. Contohnya gini:
+
+```html
+<h2 style:color transition:slide={{ duration: 1000, axis: "x" }}>Ini H2</h2>
+```
+
+Untuk slide defaultnya adalah axis `y` (vertical) jadi Kalo Lo pingin horizontal maka gunakan `x`. Tapi untuk transisi lainnya seperti fade tidak selalu memiliki parameter yang sama seperti slide. Untuk jenis transisinya ada beberapa Lo bisa liat di docs nya Svelte disini [https://svelte.dev/docs/svelte/svelte-transition](https://svelte.dev/docs/svelte/svelte-transition). 
 
 #### Transition In `in:name`
 
+Kalo sebelumnya Lo pake binding `transition:name` dan akan berlaku ketika element muncul dan hilang. Kalo Lo ingin hanya ketika element muncul saja maka Lo bisa pake binding `in:name`. Contohnya gini:
+
+```html
+<!-- src/lib/Hello2.svelte -->
+<script>
+    import { fade } from "svelte/transition";
+
+    let show = $state(false);
+</script>
+
+{#if show}
+    <p in:fade>Hello from Hello2.svelte!</p>
+{/if}
+
+<button onclick={() => show = !show}>
+    Click to show/hide message
+</button>
+```
+
+Ketika Lo klik button maka message akan memiliki efek transisi. Tapi ketika hide message maka tidak akan ada efek transisi.
+
 #### Transition Out `out:name`
 
+Untuk memberikan efek transisi ketika element hilang maka Lo bisa pake binding `out:name`. Kalo biar 2x efek kenapa ga pake `transition:name` aja? Kan bisa ada efek transisi ketika element muncul dan hilang. Nah masalahnya kalo Lo pake `transition:name` efek transisinya hanya satu aja. Sedangkan kalo pake `in` dan `out` Lo bisa memberikan efek transisi yang berbeda ketika element muncul dan hilang. Contohnya gini:
+
+```html
+<!-- src/lib/Hello2.svelte -->
+<script>
+    import { blur, fade } from "svelte/transition";
+
+    let show = $state(false);
+</script>
+
+{#if show}
+    <p in:fade out:blur>Hello from Hello2.svelte!</p>
+{/if}
+
+<button onclick={() => show = !show}>
+    Click to show/hide message
+</button>
+```
+
 ### Animation
+
+Selain transisi Lo juga bisa pake animation. Tapi sayangnya di Svelte 5 ini baru ada satu animation yaitu `flip` yaitu seperti menikar posisi element. Contohnya gini:
+
+```html
+<!-- src/lib/Hello2.svelte -->
+<script>
+  import { flip } from "svelte/animate";
+
+  let items = [
+    { id: 1, text: "A" },
+    { id: 2, text: "B" },
+    { id: 3, text: "C" }
+  ];
+
+  function shuffle() {
+    items = [...items].reverse();
+  }
+</script>
+
+<button on:click={shuffle}>Reverse</button>
+
+{#each items as item (item.id)}
+  <p animate:flip={{ duration: 1000 }}>
+    {item.text}
+  </p>
+{/each}
+```
+
+</details>
+
+<details open>
+
+<summary>Global State 📚</summary>
+
+Di Framework lain seperti React, Vue, atau Astro biasanya menggunakan state management dari luar seperti Redux, Zustand untuk react atau Pania kalo misalnya pake Vue.
 
 </details>
