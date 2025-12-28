@@ -2524,9 +2524,9 @@ Kita coba buat studi kasus dari `User.svelte` ceritanya kita akan membuat contac
   import UserRow from "./UserRow.svelte";
 
   let users = $state([
-    { id: 1, name: "Snake System", address: "Jakarta", age: 9 },
-    { id: 2, name: "Feri Irawansyah", address: "Semarang", age: 25 },
-    { id: 3, name: "Satria Baja Ringan", address: "Bandung", age: 34 },
+    { id: 1, name: "Snake System", address: "Jakarta", age: 19, phone: "08123456789" },
+    { id: 2, name: "Feri Irawansyah", address: "Semarang", age: 25, phone: "08987654321" },
+    { id: 3, name: "Satria Baja Ringan", address: "Bandung", age: 34, phone: "08123456789" },
   ]);
 
   function deleteUser(id) {
@@ -2560,6 +2560,7 @@ Kita coba buat studi kasus dari `User.svelte` ceritanya kita akan membuat contac
       <th>Name</th>
       <th>Address</th>
       <th>Age</th>
+      <th>Phone</th>
       <th>Action</th>
     </tr>
   </thead>
@@ -2570,6 +2571,7 @@ Kita coba buat studi kasus dari `User.svelte` ceritanya kita akan membuat contac
         <td>{user.name}</td>
         <td>{user.address}</td>
         <td>{user.age}</td>
+        <td>{user.phone}</td>
         <td>
           <button on:click={() => users.deleteUser(user.id)}>
             Delete
@@ -2607,6 +2609,265 @@ Kita coba buat studi kasus dari `User.svelte` ceritanya kita akan membuat contac
 </style>
 ```
 
-<img class="img-fluid" alt="context-book" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/get-started-svelte/public/context-book.png" />
+<img class="img-fluid" alt="contact-book" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/get-started-svelte/public/contact-book.png" />
+
+Sekarang kita coba tambahkan component baru untuk add user.
+
+```html
+<!-- src/lib/UserRow.svelte -->
+ <script>
+    const styleForm = `
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        margin-right: 10px;
+    `;
+</script>
+
+<form action="" style="display: flex;">
+    <div style={styleForm}>
+        <label for="name">Name</label>
+        <input type="text" placeholder="Name" id="name" />
+    </div>
+    <div style={styleForm}>
+        <label for="address">Address</label>
+        <input type="text" placeholder="Address" id="address" />
+    </div>
+    <div style={styleForm}>
+        <label for="age">Age</label>
+        <input type="number" placeholder="Age" id="age" />
+    </div>
+    <div style={styleForm}>
+        <label for="phone">Phone</label>
+        <input type="text" placeholder="Phone" id="phone" />
+    </div>
+    <button type="submit">Add User</button>
+</form>
+```
+
+Lalu tambahkan di `App.svelte`:
+
+```html
+<!-- src/App.svelte -->
+<h1>Contact Book</h1>
+<AddUser /> <!-- tambah disini, jgn lupa import -->
+<User />
+```
+
+Okeh sekarang gimana caranya kita bisa menambahkan user? Karena `setContext` di taro di `User.svelte`, jadi Lo ga bisa akses statenya coba console.log aja:
+
+```html
+<!-- src/lib/AddUser.svelte -->
+ <script>
+  import { getContext } from "svelte";
+
+    const styleForm = `
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        margin-right: 10px;
+    `;
+
+    const users = getContext("users");
+
+    console.log(users);
+</script>
+```
+
+<img class="img-fluid" alt="add-contact" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/get-started-svelte/public/add-contact.png" />
+
+### File `.svelte.js`
+
+Agar Lo bisa akses state nya sekarang Lo ga bisa pake `Context` lagi bro, sekarang Lo perlu pake Global State dengan cara bikin file dengan extension `.svelte.js`. Coba Lo bikin folder baru di `src` dengan nama `stores` lalu buat file `users.svelte.js`:
+
+```js
+// src/stores/users.svelte.js
+export const users = $state({
+    list: [
+        { id: 1, name: "Snake System", address: "Jakarta", age: 19, phone: "08123456789" },
+        { id: 2, name: "Feri Irawansyah", address: "Semarang", age: 25, phone: "08987654321" },
+        { id: 3, name: "Satria Baja Ringan", address: "Bandung", age: 34, phone: "08123456789" },
+    ],
+    remove: (id) => {
+        users.list = users.list.filter(user => user.id !== id);
+    }
+});
+```
+
+Terus Lo ubah code di `User.svelte` dan `UserRow.svelte`:
+
+```html
+<!-- src/lib/User.svelte -->
+ <script>
+  import UserRow from "./UserRow.svelte";
+</script>
+
+<UserRow />
+```
+
+```html
+<!-- src/lib/UserRow.svelte -->
+<script>
+  import { users } from "../stores/user.svelte";
+
+</script>
+
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Address</th>
+      <th>Age</th>
+      <th>Phone</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    {#each users.list as user}
+      <tr>
+        <td>{user.id}</td>
+        <td>{user.name}</td>
+        <td>{user.address}</td>
+        <td>{user.age}</td>
+        <td>{user.phone}</td>
+        <td>
+          <button on:click={() => users.remove(user.id)}>
+            Delete
+          </button>
+        </td>
+      </tr>
+    {/each}
+  </tbody>
+</table>
+
+<style>
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  th, td {
+    padding: 8px;
+  }
+
+  th {
+    text-align: left;
+  }
+
+  button {
+    padding: 5px 10px;
+    background-color: red;
+    border: none;
+    cursor: pointer;
+  }
+
+  button:hover {
+    background-color: darkred;
+  }
+</style>
+```
+
+Harusnya tampilannya masih sama, nah sekarang Lo bisa akses statenya di `AddUser.svelte`
+
+```html
+<!-- src/lib/AddUser.svelte -->
+ <script>
+    import { users } from "../stores/user.svelte";
+
+    const styleForm = `
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        margin-right: 10px;
+    `;
+
+    console.log(users);
+</script>
+```
+
+<img class="img-fluid" alt="svelte-js" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/get-started-svelte/public/svelte-js.png" />
+
+Sekarang Lo seperti punya controller untuk mengatur state dari user di file `user.svelte.js`. Coba sekarang tambahkan method untuk menambahkan user kaya gini:
+
+```js
+// src/stores/user.svelte.js
+export const users = $state({
+    // ... list dan remove
+    add: (user) => {
+        const nextId =
+            users.list.length === 0
+            ? 1
+            : Math.max(...users.list.map(u => u.id)) + 1;
+
+        users.list = [
+            ...users.list,
+            { ...user, id: nextId }
+        ];
+    }
+});
+```
+
+Sekarang Lo bisa pake method `add` di `AddUser.svelte`:
+
+```html
+<!-- src/lib/AddUser.svelte -->
+<script>
+    import { users } from "../stores/user.svelte";
+
+    let formData = $state({
+        name: "",
+        address: "",
+        age: "",
+        phone: ""
+    });
+
+    function handleSubmit(event) {
+        event.preventDefault();
+        const newUser = {
+            name: formData.name,
+            address: formData.address,
+            age: parseInt(formData.age),
+            phone: formData.phone
+        };
+        users.add(newUser);
+        formData = {
+            name: "",
+            address: "",
+            age: "",
+            phone: ""
+        };
+    }
+
+    const styleForm = `
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        margin-right: 10px;
+    `;
+</script>
+
+<form style="display: flex;" onsubmit={handleSubmit}>
+    <div style={styleForm}>
+        <label for="name">Name</label>
+        <input type="text" placeholder="Name" id="name" bind:value={formData.name} />
+    </div>
+    <div style={styleForm}>
+        <label for="address">Address</label>
+        <input type="text" placeholder="Address" id="address" bind:value={formData.address} />
+    </div>
+    <div style={styleForm}>
+        <label for="age">Age</label>
+        <input type="number" placeholder="Age" id="age" bind:value={formData.age} />
+    </div>
+    <div style={styleForm}>
+        <label for="phone">Phone</label>
+        <input type="text" placeholder="Phone" id="phone" bind:value={formData.phone} />
+    </div>
+    <button type="submit">Add User</button>
+</form>
+```
+
+<img class="img-fluid" alt="new-contact" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/get-started-svelte/public/new-contact.png" />
 
 </details>
