@@ -2439,8 +2439,174 @@ Selain transisi Lo juga bisa pake animation. Tapi sayangnya di Svelte 5 ini baru
 
 <details open>
 
-<summary>Global State 📚</summary>
+<summary><h2>State Management 📚</h2></summary>
 
-Di Framework lain seperti React, Vue, atau Astro biasanya menggunakan state management dari luar seperti Redux, Zustand untuk react atau Pania kalo misalnya pake Vue.
+Sebelumnya ketika Lo pake state dan component lain ingin menggunakan dan memanipulasi datanya maka Lo perlu mengirimkan state tersebut sebagai props. Tapi props itu satu arah, artinya hanya dikirim dari parent ke child. Jadi kalo Lo mau manipulasi data di parent tapi action nya ada di child Lo perlu membuat suatu function untuk menangkap data tersebut dan yang kita lakukan sebelumnya ada gini:
+
+```html
+<!-- src/lib/UserRow.svelte -->
+<script>
+  import { createEventDispatcher } from "svelte";
+
+  const { id, name, address, age } = $props();
+
+  const dispatch = createEventDispatcher();
+
+</script>
+
+<tr>
+  <td>{id}</td>
+  <td>{name}</td>
+  <td>{address}</td>
+  <td>
+    {#if age < 20}
+      Anak-anak
+    {:else if age < 30}
+      Remaja
+    {:else}
+      Dewasa
+    {/if}
+  </td>
+  <td><button type="button" onclick={() => dispatch("hapus")}>Hapus</button></td>
+</tr>
+```
+
+```html
+<!-- src/lib/User.svelte -->
+<tbody>
+  {#each users as user}
+    <UserRow {...user} on:hapus={() => remove(user.id)}/>
+  {/each}
+</tbody>
+```
+
+Selain itu jika Lo misalnya punya 5 component yang bersarang, component parent punya suatu data dan component ke 2 dan ke 4 membutuhkan data dari parent. Maka yang terjadi data harus di kirimkan ke semua component. Padahal component child ke 1,3 dan 4 tidak membutuhkan datanya. Kondisi ini di sebut `props drilling`
+
+<img class="img-fluid" alt="props-drilling" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/get-started-svelte/public/props-drilling.png" />
+
+Untuk menangani beberapa kasus tersebut Svelte menyediakan state management bawaan. Ouh iya tidak seperti React yang menggunakan Redux atau Zustand dan Vue yang menggunakan Pania. Tim Svelte membuat state management langsung di dalam Svelte itu sendiri tanpa memerlukan dependency tambahan atau dari external.
+
+### Context `getContext` & `setContext`
+
+State management pertama di Svelte adalah `Context`. Context ini punya fitur `getContext` untuk getter dan `setContext` untuk setter. Tapi ada beberapa hal yang perlu perhatiin.
+
+1. State pada context punya lifecycle satu arah.
+
+Berjalan satu arah artinya state hanya bisa digunakan di scope component dimana Lo pake `setContext`. Misalnya di component `ParentA` Lo `setContext` maka state hanya bisa digunakan di Child nya misal `ChildA1` dan `ChildA2` saja. Kalo ada component yang setara dengan `ParentA` misal `ParentB` maka state nya ga bisa dipake di `ParentB` dan semua child dari `ParentB`.
+
+2. Context state tidak bisa dipake di grand parent.
+
+Meskipun berjalan satu arah tapi context state tidak bisa dipake di grand parent. Maksudnya misalnya `ParentA` punya parent lagi misalnya `GrandParentA` melakukan `getContext` maka context state juga ga bisa dipake.
+
+3. Letakkan `setContext` di pada component paling atas.
+
+Karena state hanya berlaku di parent dan child, maka untuk `setContext` harus dilakukan di component paling atas agar semua child nya bisa menggunakan `getContext` nya.
+
+State management `Context` ini merupakan state manager paling aman. Kenapa? Karena data hanya akan di pake di scope tertentu aja. Jadi tidak dipake di seluruh website Lo. Tapi minusnya Lo harus `setContext` di component paling atas dan mungkin kalo ada banyak parent component teratas bisa memiliki banyak logic di dalamnya.
+
+Kita coba buat studi kasus dari `User.svelte` ceritanya kita akan membuat contact book app. 
+
+```html
+<!-- src/App.svelte -->
+ <script>
+  import User from "./lib/User.svelte";
+
+</script>
+
+<h1>Contact Book</h1>
+<User />
+```
+
+```html
+<!-- src/lib/User.svelte -->
+<script>
+  import { setContext } from "svelte";
+  import UserRow from "./UserRow.svelte";
+
+  let users = $state([
+    { id: 1, name: "Snake System", address: "Jakarta", age: 9 },
+    { id: 2, name: "Feri Irawansyah", address: "Semarang", age: 25 },
+    { id: 3, name: "Satria Baja Ringan", address: "Bandung", age: 34 },
+  ]);
+
+  function deleteUser(id) {
+    users = users.filter(u => u.id !== id);
+  }
+
+  setContext("users", {
+    get list() {
+      return users;
+    },
+    deleteUser
+  });
+</script>
+
+<UserRow />
+```
+
+```html
+<!-- src/lib/UserRow.svelte -->
+<script>
+  import { getContext } from "svelte";
+
+  const users = getContext("users");
+
+</script>
+
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Address</th>
+      <th>Age</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    {#each users.list as user}
+      <tr>
+        <td>{user.id}</td>
+        <td>{user.name}</td>
+        <td>{user.address}</td>
+        <td>{user.age}</td>
+        <td>
+          <button on:click={() => users.deleteUser(user.id)}>
+            Delete
+          </button>
+        </td>
+      </tr>
+    {/each}
+  </tbody>
+</table>
+
+<style>
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  th, td {
+    padding: 8px;
+  }
+
+  th {
+    text-align: left;
+  }
+
+  button {
+    padding: 5px 10px;
+    background-color: red;
+    border: none;
+    cursor: pointer;
+  }
+
+  button:hover {
+    background-color: darkred;
+  }
+</style>
+```
+
+<img class="img-fluid" alt="context-book" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/get-started-svelte/public/context-book.png" />
 
 </details>
