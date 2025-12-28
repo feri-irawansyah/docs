@@ -12,7 +12,7 @@ Perlu gue akui 2 benda itu bagus 👍, modern technology 🤖 dan bisa buat full
 
 <img class="img-fluid" alt="image" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/get-started-svelte/public/svelte-wiki-1.png" />
 
-Dikutip dari <a href="https://en.wikipedia.org/wiki/Svelte" target="_blank">Wikipedia</a> Svelte ini dibuat oleh Bapak - Bapak yang namanya <a href="https://x.com/rich_harris" target="_blank">Rich Harris</a> dan Kroco - Krocony tentunya Svelte Team. Dan Svelte ini langsung di compile ke **JS DOM**, tanpa Runtime, Hasil Kompilasi **Mini Size** dan ga kaya **React** atau **Vue** yang pake Virtual DOM katanya. Serasa bikin murni javascript? Tapi Declarative? Dan tanpa cari-cari class atau id bahkan elemen?. Wow minimalis sekali tapi apakah sepowerfull itu? Okeh kita coba sekarang.
+Dikutip dari <a href="https://en.wikipedia.org/wiki/Svelte" target="_blank">Wikipedia</a> Svelte ini dibuat oleh Bapak - Bapak yang namanya <a href="https://x.com/rich_harris" target="_blank">Rich Harris</a> dan Kroco - Kroconya tentunya Svelte Team. Dan Svelte ini langsung di compile ke **JS DOM**, tanpa Runtime, Hasil Kompilasi **Mini Size** dan ga kaya **React** atau **Vue** yang pake Virtual DOM katanya. Serasa bikin murni javascript? Tapi Declarative? Dan tanpa cari-cari class atau id bahkan elemen?. Wow minimalis sekali tapi apakah sepowerfull itu? Okeh kita coba sekarang.
 
 <details>
 <summary><h2>Svelte Frontend Framework 📚</h2></summary>
@@ -27,6 +27,8 @@ Di dunia frontend banyak sekali framework populer kaya React, Vue, Angular, Svel
 - Kalopun beneran pake vanila js, harus ada 1 atau 2 orang yang bikin arsitektur nya dan anggota lain mau ga mau harus mengikuti aturan yang di buat.
 
 Nah dengan adanya Framework tim Lo bakal terorganisir bro ada aturan tertentu dalam membuat code dan aturannya sudah dibuatkan oleh si pembuat Frameworknya dan udah menjadi standarisasi di dunia.
+
+Tapi sebenernya Svelte ini bukan framework melainkan library. Sama seperti React, Vue, Angular, dll. mereka adalah library. Untuk frameworknya biasanya punya masing - masing seperti NextJs atau Astro untuk React. Nuxt untuk Vue.
 
 ### Dokumentasi Svelte
 
@@ -2447,6 +2449,108 @@ Selain transisi Lo juga bisa pake animation. Tapi sayangnya di Svelte 5 ini baru
 
 <details>
 
+<summary><h2>Reactivity 📚</h2></summary>
+
+Reactivity adalah kemampuan Svelte untuk memantau perubahan data dan mengubah UI secara otomatis ketika data tersebut berubah. Seperti contohnya memantau perubahan layar, perubahan data Date, Map, Set, dan lainnya.
+
+### MediaQuery
+
+Untuk memantau perubahan layar bisa pake `window.matchMedia`. Contohnya gini:
+
+```html
+<script>
+	import { MediaQuery } from 'svelte/reactivity';
+
+	const large = new MediaQuery('min-width: 800px');
+</script>
+
+<h1>{large.current ? 'large screen' : 'small screen'}</h1>
+```
+
+Coba Lo kecilin browser nya terus lebarin sampe diatas 800px dan di bawah 800px nanti `h1` akan berubah content nya kalo misal sudah mencapai titik batas yang di tentuin. Dan ini reactive.
+
+### SvelteDate
+
+Untuk memantau perubahan data `Date` pada suatu device bisa pake `SvelteDate`. Contohnya gini:
+
+```html
+<script>
+  import { SvelteDate } from 'svelte/reactivity';
+
+  const now = new SvelteDate();
+
+  $effect(() => {
+    const i = setInterval(() => {
+      now.setTime(Date.now());
+    }, 1000);
+
+    return () => clearInterval(i);
+  });
+</script>
+
+<p>{now.toLocaleTimeString()}</p>
+```
+
+Ini waktunya akan terus bertambah karena reactive buat ui nya. Beda cerita kalo Lo pake `Date` biasa bawaan dari Javascript.
+
+```html
+<script>
+  let now = new Date();
+
+  $effect(() => {
+    const i = setInterval(() => {
+      now.setTime(Date.now()); // ❌ UI TIDAK UPDATE
+    }, 1000);
+
+    return () => clearInterval(i);
+  });
+</script>
+
+<p>{now.toLocaleTimeString()}</p>
+```
+
+### SvelteMap
+
+Untuk memantau perubahan data `Map` bisa pake `SvelteMap`. Yaitu untuk membuat data collection di Javascript. Bedanya kalo Lo pake `SvelteMap` ini akan reactive. Kalo Lo pake `Map` biasa bawaan dari Javascript ini tidak akan reactive. Contohnya gini:
+
+```html
+<script>
+  let users = new Map();
+
+  function addUser() {
+    users.set(1, { name: 'Feri' });
+  }
+</script>
+
+<button onclick={addUser}>Add</button>
+
+<p>{users.size}</p>
+```
+
+Ini kalo Lo klik, tampilannya ga akan berubah, size akan tetap 0. Kalo Lo pake `SvelteMap` akan seperti ini:
+
+```html
+<script>
+  import { SvelteMap } from 'svelte/reactivity';
+
+  const users = new SvelteMap();
+
+  function addUser() {
+    users.set(1, { name: 'Feri' });
+  }
+</script>
+
+<button onclick={addUser}>Add</button>
+
+<p>Total users: {users.size}</p>
+```
+
+Ini akan berubah menjadi angka 1 kalo Lo klik.
+
+</details>
+
+<details>
+
 <summary><h2>State Management 📚</h2></summary>
 
 Sebelumnya ketika Lo pake state dan component lain ingin menggunakan dan memanipulasi datanya maka Lo perlu mengirimkan state tersebut sebagai props. Tapi props itu satu arah, artinya hanya dikirim dari parent ke child. Jadi kalo Lo mau manipulasi data di parent tapi action nya ada di child Lo perlu membuat suatu function untuk menangkap data tersebut dan yang kita lakukan sebelumnya ada gini:
@@ -2878,7 +2982,7 @@ Sekarang Lo bisa pake method `add` di `AddUser.svelte`:
 
 <img class="img-fluid" alt="new-contact" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/get-started-svelte/public/new-contact.png" />
 
-### Svelte Stores `writable`, `readable` & `derived`
+### Svelte Stores `writable`
 
 Global state dengan menggunakan file `.svelte.js` + rune `$state()` ini memang powerfull dan simple tapi menggunakannya sebagai state management di App besar itu kurang direkomendasikan.
 
@@ -2894,7 +2998,7 @@ Pada aplikasi dengan SSR, UI dirender di server untuk setiap request user. Masal
 
 Karena state berada di level module tidak ada mekanisme otomatis untuk reset, tidak tahu kapan halaman sudah tidak digunakan. Jadi Lo perlu membuat logic reset sendiri atau mengosongkan state secara explicit.
 
-Alternatif dari `.svelte.js` + rune `$state()`, Svelte juga menyediakan Store (`writable`, `readable`, `derived`) sebagai solusi state management yang lebih terstruktur dan aman untuk aplikasi berskala besar. Store ini sudah ada sejak svelte 3 dan masih compatible dan recomended untuk aplikasi besar kenapa?
+Alternatif dari `.svelte.js` + rune `$state()`, Svelte juga menyediakan Store (`writable`) sebagai solusi state management yang lebih terstruktur dan aman untuk aplikasi berskala besar. Store ini sudah ada sejak svelte 3 dan masih compatible dan recomended untuk aplikasi besar kenapa?
 
 1. State Masih Global, tapi Lebih Terkontrol
 
@@ -3100,9 +3204,11 @@ Terus di `EditUser.svelte`:
     </div>
 </div>
 
+Sebenarnya masih ada banyak lagi untuk store di Svelte tapi yang paling sering dipake adalah `writable` untuk membuat state management. Untuk lebih jelasnya bisa lihat di [https://svelte.dev/docs/svelte/svelte-store](https://svelte.dev/docs/svelte/svelte-store).
+
 </details>
 
-<details open>
+<details>
 <summary><h2>Lifecycle Hooks (Alur Hidup Component) 📚</h2></summary>
 
 Ini adalah topik pembahasan terakhir di catatan Svelte ini yaitu tentang alur hidup component. Ketika Lo panggil component misalnya `<User/>` artinya apapun code yang di dalamnya itu akan di init dan di render. Misalnya Lo panggil tag `<script></script>` maka code di dalamnya akan di init dan di render.
@@ -3126,7 +3232,7 @@ Ini jalan, tapi perilakunya beda karena fetch ini dijalankan saat component seda
 
 Untuk lebih jelasnya bisa lihat di [https://svelte.dev/docs/svelte/lifecycle-hooks](https://svelte.dev/docs/svelte/lifecycle-hooks).
 
-### Mounted `onMount`
+### Mounted Component `onMount`
 
 Lifecycle hooks pertama yang bakal gue bahas yaitu `onMount`. `onMount` ini dipanggil ketika component selesai di init dan siap di render di browser. Nah inilah yang cocok ketika Lo pingin ambil data dari api. Kalo error bisa Lo kasih message dan success bisa Lo tampilin datanya dilayar.
 
@@ -3192,4 +3298,113 @@ Buat lifecycle hooks `onMount` di `src/lib/UserRow.svelte` seperti berikut:
 </script>
 ```
 
+### Unmounted Component `onDestroy`
+
+Tadi ketika mount sekarang adalah ketika unmount. Ketika component di unmount maka lifecycle hooks `onDestroy` akan dijalankan. Kalo Lo pingin kasih message ketika component di unmount bisa Lo kasih di sini. Sebelumnya Lo punya component `AddUser.svelte` dan `EditUser.svelte` yang mana ketika Lo klik tombol Update maka component `AddUser` akan di unmount dan component `EditUser` akan di mount.
+
+```html
+<!-- src/lib/AddUser.svelte -->
+ <script>
+    import { getContext, onDestroy } from "svelte";
+    
+    // ... seperti code sebelumnya
+
+    const onEdit = getContext("on-edit");
+
+    onDestroy(() => {
+        onEdit.message = "Edit sedang berlangsung, tambahkan user diblokir.";
+    });
+</script>
+```
+
+Lalu taro messagenya di edit user seperti berikut:
+
+```html
+<!-- src/lib/EditUser.svelte -->
+</script>
+
+<p>{onEdit.message}</p> <!-- Letakkan di sini -->
+
+<form style="display: flex;" onsubmit={handleSubmit}>
+```
+
+<img class="img-fluid" alt="destroy" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/get-started-svelte/public/destroy.png" />
+
+### DOM Updated `tick`
+
+Sebelumnya di Svelte 3/4 ada yang namanya `beforeUpdate` dan `afterUpdate`. Ini digunakan ketika suatu component mengalami perubahan. `beforeUpdate` akan dijalankan ketika component sedang di render dan `afterUpdate` akan dijalankan ketika component selesai di render. Tapi sekarang udah deprecated wkwkwk. Di Svelte 5 ada yang namanya `tick`. `tick` ini tidak menggantikan 100% tapi juga punya fitur dari keduanya + ada fitur sakti dimana bisa Lo pakein asyncronous operation di `tick` untuk memantau DOM bener - bener sudah update.
+
+```html
+<script>
+	import { tick } from 'svelte';
+
+	$effect.pre(() => {
+		console.log('the component is about to update');
+		tick().then(() => {
+				console.log('the component just updated');
+		});
+	});
+</script>
+```
+
+Untuk contoh update DOM tanpa tick kaya gini
+
+```html
+<script>
+  let open = false;
+
+  function show() {
+    open = true;
+    console.log(document.querySelector('.panel'));
+  }
+</script>
+
+{#if open}
+  <div class="panel">Hello</div>
+{/if}
+
+<button onclick={show}>Show</button>
+```
+
+<img class="img-fluid" alt="no-tick" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/get-started-svelte/public/no-tick.png" />
+
+Kalo Lo klik maka di console akan `null`. Kenapa bisa terjadi? Karena DOM nya belum update. Untuk memantau DOM sudah update bisa Lo pakein `tick` seperti berikut:
+
+```html
+<script>
+  import { tick } from "svelte";
+
+  let open = false;
+
+  async function show() {
+    open = true;
+    await tick(); // ⏳ tunggu DOM update
+    console.log(document.querySelector(".panel"));
+  }
+</script>
+
+{#if open}
+  <div class="panel">Hello</div>
+{/if}
+<button onclick={show}>Show</button>
+```
+
+<img class="img-fluid" alt="tick" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/get-started-svelte/public/tick.png" />
+
 </details>
+
+<details>
+<summary><h2>Referensi 📚</h2></summary>
+
+Catatannya udah nyampe sini, sebenarnya masih ada beberapa yang belum gue bahas tentang Svelte. Tapi casenya lebih advance dan jarang digunakan. Di catatan ini hanya fokus ke fitur yang ada di Svelte 5 yang sering digunakan. Kalo Lo pingin lebih detail bisa lihat di referensi ini.
+
+- [Svelte](https://svelte.dev/)
+- [Wiki Svelte](https://en.wikipedia.org/wiki/Svelte)
+
+</details>
+
+---
+
+<div class="d-flex flex-row justify-content-center align-items-center">Regards <a href="https://feri-irawansyah.my.id"><img witdh="1rem" src="https://feri-irawansyah.my.id/favicon.ico" alt="Feri Irawansyah"> Feri Irawansyah</a></div>
+
+---
