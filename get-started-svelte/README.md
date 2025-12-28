@@ -2445,7 +2445,7 @@ Selain transisi Lo juga bisa pake animation. Tapi sayangnya di Svelte 5 ini baru
 
 </details>
 
-<details open>
+<details>
 
 <summary><h2>State Management 📚</h2></summary>
 
@@ -3099,5 +3099,97 @@ Terus di `EditUser.svelte`:
         <img class="img-fluid" alt="edit-contact-2" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/get-started-svelte/public/edit-contact-2.png" />
     </div>
 </div>
+
+</details>
+
+<details open>
+<summary><h2>Lifecycle Hooks (Alur Hidup Component) 📚</h2></summary>
+
+Ini adalah topik pembahasan terakhir di catatan Svelte ini yaitu tentang alur hidup component. Ketika Lo panggil component misalnya `<User/>` artinya apapun code yang di dalamnya itu akan di init dan di render. Misalnya Lo panggil tag `<script></script>` maka code di dalamnya akan di init dan di render.
+
+Misalnya Lo ambil data dari api mungkin dalam pikiran Lo bakal buat async function di dalam `<script></script>` kemudian langsung panggil juga functionnya kaya gini.
+
+```html
+<!-- Example -->
+<script>
+  async function getData() {
+    const response = await fetch('https://api.example.com/data');
+    const data = await response.json();
+    return data;
+  }
+
+  const data = await getData();
+</script>
+```
+
+Ini jalan, tapi perilakunya beda karena fetch ini dijalankan saat component sedang di init. Kalo terjadi error saat call api component tidak akan muncul di layar dan akan error di console. Cara yang valid adalah fetch dijalankan ketika component selsai di init => call api => render. Cara ini disebut **lifecycle hooks**.
+
+Untuk lebih jelasnya bisa lihat di [https://svelte.dev/docs/svelte/lifecycle-hooks](https://svelte.dev/docs/svelte/lifecycle-hooks).
+
+### Mounted `onMount`
+
+Lifecycle hooks pertama yang bakal gue bahas yaitu `onMount`. `onMount` ini dipanggil ketika component selesai di init dan siap di render di browser. Nah inilah yang cocok ketika Lo pingin ambil data dari api. Kalo error bisa Lo kasih message dan success bisa Lo tampilin datanya dilayar.
+
+```html
+<!-- Example -->
+<script>
+  onMount(async () => {
+    try {
+      const response = await fetch('https://api.example.com/data');
+      const data = await response.json();
+      // Do something with the data
+    } catch (error) {
+      console.error(error);
+    }
+  });
+</script>
+```
+
+Sebelumnya data pada kasus Contact Book di tulis manual di code. Nah sekarang ceritanya Lo pura - pura ambil dari api dengan cara bikin file `user.json` di folder `public`.
+
+```json
+// public/user.json
+{
+    "users": [
+        { "id": 1, "name": "Snake System", "address": "Jakarta", "age": 9, "phone": "08123456789" },
+        { "id": 2, "name": "Feri Irawansyah", "address": "Semarang", "age": 25, "phone": "08123456789" },
+        { "id": 3, "name": "Satria Baja Ringan", "address": "Bandung", "age": 34, "phone": "08123456789" }
+    ]
+}
+```
+
+Aktifkan set di `src/stores/users.js`
+
+```js
+// src/stores/users.js
+const createUserStore = () => {
+    const { subscribe, set, update } = writable([]);
+
+    return {
+        subscribe,
+        set,
+        // ...
+    };
+};
+```
+
+Buat lifecycle hooks `onMount` di `src/lib/UserRow.svelte` seperti berikut:
+
+```html
+<!-- src/lib/UserRow.svelte -->
+ <script>
+  import { getContext, onMount } from "svelte";
+  import { users } from "../stores/user";
+
+  onMount(async () => {
+    const response = await fetch("/user.json");
+    const result = await response.json();
+    users.set(result.users);
+  })
+
+  const onEdit = getContext("on-edit");
+
+</script>
+```
 
 </details>
