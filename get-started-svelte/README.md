@@ -2451,7 +2451,7 @@ Selain transisi Lo juga bisa pake animation. Tapi sayangnya di Svelte 5 ini baru
 
 <summary><h2>Reactivity 📚</h2></summary>
 
-Reactivity adalah kemampuan Svelte untuk memantau perubahan data dan mengubah UI secara otomatis ketika data tersebut berubah. Seperti contohnya memantau perubahan layar, perubahan data Date, Map, Set, dan lainnya.
+Reactivity adalah kemampuan Svelte untuk memantau perubahan data dan mengubah UI secara otomatis ketika data tersebut berubah. Seperti contohnya memantau perubahan layar, perubahan data Date, Map, Set, dan lainnya. [https://svelte.dev/docs/svelte/svelte-reactivity](https://svelte.dev/docs/svelte/svelte-reactivity)
 
 ### MediaQuery
 
@@ -3405,6 +3405,6 @@ Catatannya udah nyampe sini, sebenarnya masih ada beberapa yang belum gue bahas 
 
 ---
 
-<div class="d-flex flex-row justify-content-center align-items-center">Regards <a href="https://feri-irawansyah.my.id"><img witdh="1rem" src="https://feri-irawansyah.my.id/favicon.ico" alt="Feri Irawansyah"> Feri Irawansyah</a></div>
+<div class="d-flex flex-row justify-content-center align-items-center">Regards <a href="https://feri-irawansyah.my.id"><img style="width: 1rem; height: 1rem;" src="https://feri-irawansyah.my.id/favicon.ico" alt="Feri Irawansyah"> Feri Irawansyah</a></div>
 
 ---
