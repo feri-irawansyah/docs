@@ -1,3 +1,11 @@
+<style>
+  @media screen and (min-width: 768px) {
+    img[alt="props-drilling"], img[alt="image"], img[alt="svelte-vite"], img[alt="hello-world"] {
+      width: 50% !important;
+    }
+  }
+</style>
+
 Woi bro..., Gue tau yang ada di benak lo, pas lo mau bikin tampilan web yang bagus, dinamis, dan banyak populer mesti lo bakal milih **React**. Dan kalo lo pingin yang mudah dipahami oleh programmer yang baru nyemplung tapi pingin cepet - cepet bikin **Web Application Using Frontend Framework** lo mesti bakal nyletuk, gue mau pake **Vue** aja ah....
 
 Perlu gue akui 2 benda itu bagus 👍, modern technology 🤖 dan bisa buat fullstack application bro. Okeh gue mau minggir dulu sebentar mau bahas Frontend Framework yang ASING, JARANG DIPAKE, MINIMALIS, CURANG, SERASA KAYA NGOPLOS HTML + JS. Iyaaa, kita bakal bahas Svelte.
@@ -2869,5 +2877,227 @@ Sekarang Lo bisa pake method `add` di `AddUser.svelte`:
 ```
 
 <img class="img-fluid" alt="new-contact" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/get-started-svelte/public/new-contact.png" />
+
+### Svelte Stores `writable`, `readable` & `derived`
+
+Global state dengan menggunakan file `.svelte.js` + rune `$state()` ini memang powerfull dan simple tapi menggunakannya sebagai state management di App besar itu kurang direkomendasikan.
+
+1. State benar-benar global
+
+State ini benar - benar bisa diakses semua component di seluruh aplikasi. Kalo Lo sering bikin global state data akan terus aktif meskipun component atau DOM nya sudah hilang karena `file.svelte.js` adalah file module yang di-load sekali (singleton).
+
+2. Kurang recommended untuk SSR (Server-Side Rendering)
+
+Pada aplikasi dengan SSR, UI dirender di server untuk setiap request user. Masalahnya, module state (.svelte.js) akan hidup di server dan dibagi antar request ini bahaya bro state bisa leak, terjadi race condition dan bug juga susah di lacak.
+
+3. Tidak Ada Lifecycle Otomatis untuk Reset State
+
+Karena state berada di level module tidak ada mekanisme otomatis untuk reset, tidak tahu kapan halaman sudah tidak digunakan. Jadi Lo perlu membuat logic reset sendiri atau mengosongkan state secara explicit.
+
+Alternatif dari `.svelte.js` + rune `$state()`, Svelte juga menyediakan Store (`writable`, `readable`, `derived`) sebagai solusi state management yang lebih terstruktur dan aman untuk aplikasi berskala besar. Store ini sudah ada sejak svelte 3 dan masih compatible dan recomended untuk aplikasi besar kenapa?
+
+1. State Masih Global, tapi Lebih Terkontrol
+
+Store pada dasarnya juga bersifat global, namun berbeda dengan module state, store memiliki mekanisme subscription. State hanya aktif ketika ada component yang subscribe, component bisa unsubscribe ketika di-unmount dan Lo punya kontrol lebih terhadap lifecycle statenya.
+
+2. Lebih Aman untuk SSR
+
+Store lebih direkomendasikan untuk SSR dibanding .svelte.js + $state() karena store bisa dibuat sebagai factory, state bisa diinisialisasi per request dan tidak harus berbagi state antar user
+
+3. Lifecycle Lebih Jelas dan Mudah di Reset
+
+Store menyediakan API eksplisit seperti `set`, `update`, `subscribe` dan `unsubscribe`. Ini yang bikin Lo punya control penuh dan jelas jadi ga bisa asal mengubah statenya. Kalo state dengan `.svelte.js` + rune `$state()` Lo bisa melakukan apa aja, data user bisa Lo tiban dengan data lain.
+
+4. Cocok untuk Logic Kompleks dan Async
+
+Store dirancang untuk menangani data async, streaming data, event eksternal dan side-effect ini membuat store lebih cocok digunakan pada aplikasi besar, banyak user, banyak interaksi dan state yang sering berubah.
+
+Sekarang Lo coba ubah dari pake `.svelte.js` + rune `$state()` ke store, pertama Lo coba bikin file `user.js`:
+
+```js
+// src/stores/user.js
+import { writable } from "svelte/store";
+
+const createUserStore = () => {
+    const { subscribe, set, update } = writable([
+        { id: 1, name: "Snake System", address: "Jakarta", age: 19, phone: "08123456789" },
+        { id: 2, name: "Feri Irawansyah", address: "Semarang", age: 25, phone: "08987654321" },
+        { id: 3, name: "Satria Baja Ringan", address: "Bandung", age: 34, phone: "08123456789" },
+    ]);
+
+    return {
+        subscribe,
+        add: (user) => update((users) => [...users, user]),
+        remove: (id) => update((users) => users.filter((user) => user.id !== id)),
+    };
+};
+
+export const users = createUserStore();
+```
+
+Lalu di component `UserRow.svelte`:
+
+```html
+<!-- src/lib/UserRow.svelte -->
+<script>
+  import { users } from "../stores/user";
+
+</script>
+
+<table>
+  <thead>
+    <!-- ... -->
+  </thead>
+  <tbody>
+    {#each $users as user} <!-- $users cara subscribe -->
+      <tr>
+        <td>{user.id}</td>
+        <td>{user.name}</td>
+        <td>{user.address}</td>
+        <td>{user.age}</td>
+        <td>{user.phone}</td>
+        <td>
+          <button on:click={() => users.remove(user.id)}>
+            Delete
+          </button>
+        </td>
+      </tr>
+    {/each}
+  </tbody>
+</table>
+```
+
+```html
+<!-- src/lib/AddUser.svelte -->
+<script>
+  import { users } from "../stores/user";
+  // import { users } from "../stores/user.svelte"; ❌ hapus bagian ini
+</script>
+```
+
+Biar lebih kerasa sekalian coba Lo tambahin buat edit data, scenarionya ada tombol action baru ketika di click formnya akan berubah jadi component `EditUser.svelte` dan udah di isi datanya.
+
+```js
+// src/lib/EditUser.svelte
+const createUserStore = () => {
+    const { subscribe, set, update } = writable([
+        // ...
+    ]);
+
+    return {
+        // subscribe, add, remove
+        update: (id, updatedUser) => update((users) => users.map((user) => (user.id === id ? updatedUser : user))),
+    };
+};
+```
+
+Ada perubahan di `App.svelte` tambahin `setContext` untuk control flow `EditUser.svelte` dan `AddUser.svelte`:
+
+```html
+<!-- src/App.svelte -->
+ <script>
+    import { setContext } from "svelte";
+    import AddUser from "./lib/AddUser.svelte";
+    import User from "./lib/User.svelte";
+    import EditUser from "./lib/EditUser.svelte";
+
+    let onEdit = $state({
+      edit: false,
+      id: null
+    });
+
+    setContext("on-edit", onEdit);
+
+</script>
+
+<h1>Contact Book</h1>
+{#if onEdit.edit}
+    <EditUser id={onEdit.id} />
+{:else}
+  <AddUser />
+{/if}
+<User />
+```
+
+Ambil state context nya di `UserRow.svelte` buat dipake di tombol update:
+
+```html
+<!-- src/lib/UserRow.svelte -->
+<script>
+  // ....
+  const onEdit = getContext("on-edit");
+
+</script>
+
+<table>
+  <thead>
+    <!-- ... -->
+  </thead>
+  <tbody>
+    {#each $users as user (user.id)}
+      <tr>
+        <!-- ... -->
+        <td>
+          <button onclick={() => users.remove(user.id)}>
+            Delete
+          </button>
+          <button style="background-color: green;" onclick={() => {
+            onEdit.edit = true;
+            onEdit.id = user.id;
+          }}>
+            Update
+          </button>
+        </td>
+      </tr>
+    {/each}
+  </tbody>
+</table>
+```
+
+Terus di `EditUser.svelte`:
+
+```html
+<!-- src/lib/EditUser.svelte -->
+ <script>
+    import { getContext } from "svelte";
+    const { id } = $props();
+    import { users } from "../stores/user";
+
+    const onEdit = getContext("on-edit");
+    
+    // const styleForm = `...`;
+
+    let formData = $state({
+        name: $users.find(u => u.id === id)?.name || "",
+        address: $users.find(u => u.id === id)?.address || "",
+        age: $users.find(u => u.id === id)?.age || 0,
+        phone: $users.find(u => u.id === id)?.phone || ""
+    });
+
+    function handleSubmit(event) {
+        event.preventDefault();
+        const updatedUser = {
+            id: id,
+            // ... sama seperti AddUser
+        };
+        users.update(id, updatedUser);
+        onEdit.edit = false;
+        onEdit.id = null;
+    }
+</script>
+
+<form style="display: flex;" onsubmit={handleSubmit}>
+    <!-- ... sama seperti AddUser -->
+</form>
+```
+
+<div class="row">
+    <div class="col-md-6">
+        <img class="img-fluid" alt="edit-contact-1" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/get-started-svelte/public/edit-contact-1.png" />
+    </div>
+    <div class="col-md-6">
+        <img class="img-fluid" alt="edit-contact-2" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/get-started-svelte/public/edit-contact-2.png" />
+    </div>
+</div>
 
 </details>
