@@ -26,7 +26,7 @@ Di dunia frontend banyak sekali framework populer kaya React, Vue, Angular, Svel
 - Tidak ada aturan dalam gaya penulisan code
 - Kalopun beneran pake vanila js, harus ada 1 atau 2 orang yang bikin arsitektur nya dan anggota lain mau ga mau harus mengikuti aturan yang di buat.
 
-Nah dengan adanya Framework tim Lo bakal terorganisir bro ada aturan tertentu dalam membuat code dan aturannya sudah dibuatkan oleh si pembuat Frameworknya dan udah menjadi standarisasi di dunia.
+Nah dengan adanya Framework tim Lo bakal terorganisir bro ada aturan tertentu dalam membuat code dan aturannya sudah dibuatkan oleh si pembuat Frameworknya dan udah menjadi standarisasi di dunia. Framework itu perlu banget kalo Lo kerja secara tim, biar ga ada yang asal nulisin kode - kode nuklir yang bisa bikin aplikasi Lo meledak dan bug jadi numpuk kaya utang Lo
 
 Tapi sebenernya Svelte ini bukan framework melainkan library. Sama seperti React, Vue, Angular, dll. mereka adalah library. Untuk frameworknya biasanya punya masing - masing seperti NextJs atau Astro untuk React. Nuxt untuk Vue.
 
