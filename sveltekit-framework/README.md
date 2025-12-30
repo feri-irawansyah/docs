@@ -160,10 +160,192 @@ Karena Sveltekit ini bisa bikin fullstack web, jadi Sveltekit sudah lengkap untu
 
 </details>
 
-<details open>
+<details>
 
 <summary><h2>Get Started Sveltekit 📚</h2></summary>
 
 Lo udah capek belum baca pembukaan gue yang panjang ? Sama gue juga capek. Jadi yaudah ngoding langsung aja deh dari pada nanti makin banyak typo. Btw gue pake nodejs dengan versi 22 jadi Lo boleh nyesuaiin versinya biar kalo ada konfigurasi bisa sesuai sama catatan ini.
+
+Untuk membuat project Sveltekit Lo cukup buka terminal dan arahkan ke folder mana Lo pingin nyimpen aplikasi dan ketikkan
+
+```bash
+npx sv create sveltekit-app
+```
+
+1. Nanti Lo bakal ada wizard CLI buat memilih konfigurasi project Sveltekit Lo.
+
+```bash
+F:\project>npx sv create sveltekit-app
+
+T  Welcome to the Svelte CLI! (v0.11.1)
+|
+*  Which template would you like?
+|  > SvelteKit minimal (barebones scaffolding for your new app)
+|    SvelteKit demo
+|    Svelte library
+—
+```	
+
+2. Kemudian bakal dikasih pilihan mau pake bahasa apa.
+
+```bash
+*  Add type checking with TypeScript?
+|    Yes, using TypeScript syntax
+|    Yes, using JavaScript with JSDoc comments
+|  > No
+—
+```
+
+3. Disini ada beberapa konfigurasi yang bisa Lo pilih.
+
+```bash
+*  What would you like to add to your project? (use arrow keys / space bar)
+|  [•] prettier (formatter - https://prettier.io)
+|  [ ] eslint
+|  [ ] vitest
+|  [ ] playwright
+|  [+] tailwindcss
+|  [ ] sveltekit-adapter
+|  [ ] devtools-json
+|  [ ] drizzle
+|  [ ] lucia
+|  [ ] mdsvex
+|  [ ] paraglide
+|  [ ] storybook
+|  [ ] mcp
+—
+```
+
+Kalo gue cuma ada pake <a href="https://tailwindcss.com/" target="_blank" rel="noopener noreferrer">Tailwind CSS</a> untuk styleling biar ga ribet nulisin CSS dan tinggal pake utility nya.
+
+4. Kalo Lo pilih tailwind nanti akan ada pilihan gini gue pilih semua
+
+```bash
+*  Which plugins would you like to add?
+|  [+] typography (@tailwindcss/typography)
+|  [+] forms
+—
+```
+
+5. Project berhasil dibuat dan menambahkan tailwindcss sekarang tinggal pilih package manager dan mau dibuat diatas runtime apa, karena Sveltekit ini adalah framework fullstack. Disini gue pilih npm artinya gue pake runtime nodejs.
+
+```bash
+*  Project created
+|
+*  Successfully setup add-ons: tailwindcss
+|
+*  Which package manager do you want to install dependencies with?
+|    None
+|  > npm
+|    yarn
+|    pnpm
+|    bun
+|    deno
+—
+```
+
+6. Selamat project Sveltekit Lo udah jadi
+
+```bash
+*  Successfully installed dependencies with npm
+|
+o  What's next? -------------------------------+
+|                                              |
+|  📁 Project steps                            |
+|                                              |
+|    1: cd sveltekit-app                       |
+|    2: npm run dev -- --open                  |
+|                                              |
+|  To close the dev server, hit Ctrl-C         |
+|                                              |
+|  Stuck? Visit us at https://svelte.dev/chat  |
+|                                              |
++----------------------------------------------+
+|
+—  You're all set!
+```
+
+Kalo udah tinggal masuk ke foldernya lalu jalanin `npm run dev -- --open` lalu ketikkan `localhost:5173` di browser. Nanti akan tampil halaman awal Sveltekit.
+
+<img class="img-fluid" alt="svelte-app" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/sveltekit-framework/public/sveltekit-app.png" />
+
+</details>
+
+<details open>
+
+<summary><h2>Routing 📚</h2></summary>
+
+Kalo Lo pilih yang Sveltekit minimal nanti Lo akan dikasih folder `src/routes` yang didalamnya ada file `+layout.svelte` dan file `+page.svelte`. Sedangkan `layout.css` ini buat naro directive Tailwind CSS.
+
+```css
+@import 'tailwindcss';
+@plugin '@tailwindcss/forms';
+@plugin '@tailwindcss/typography';
+```	
+
+### Pages (Halaman)
+
+Di Sveltekit untuk membuat routing ini menggunakan filesystem-based router. Artinya path atau url akan dipetakkan dalam filesystem. Misalnya Lo pingin bikin halaman About `localhost:5173/about` maka Lo perlu membuat folder `about` lalu bikin file `+page.svelte` didalamnya.
+
+```html
+<!-- src/routes/about/+page.svelte -->
+<h1>About</h1>
+```
+
+<img class="img-fluid" alt="about" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/sveltekit-framework/public/about.png" />
+
+Begitu juga untuk halaman Home `localhost:5173/` artinya folder `routes adalah main page` dan file `+page.svelte` didalamnya. Misalnya Lo pingin membuat halaman Home `localhost:5173/about/profile` maka Lo perlu bikin folder `profile` lalu bikin file `+page.svelte` didalam folder `about`.
+
+### Navigation
+
+Ketika pertama kalo path atau URL diakses via browser, maka Sveltekit akan melakukan SSR (Server Side Render). Tapi pas Lo pindah halaman Sveltekit akan melakukan CSR (Client Side Render). Artinya ketika Lo pindah halaman browser ga akan reload.
+
+Sveltekit ini ga pake component khusus buat navigasi antar halaman, Lo bisa tetep pake element ancor `<a>`. Kalo misalnya Lo pake React (NextJs) atau Vue (Nuxt) maka biar dapet efek navigasi CSR Lo perlu pake component `<Link />`.
+
+```html
+<!-- src/routes/+layout.svelte -->
+<h1 class="text-3xl font-bold">Home</h1>
+<a class="underline text-blue-500" href="/about">About</a>
+```
+
+```html
+<!-- src/routes/about/+page.svelte -->
+<h1 class="text-3xl font-bold">About</h1>
+<a class="underline text-blue-500" href="/">Home</a>
+```
+
+### Layout
+
+Sebelumnya pas Lo bikin project Sveltekit Lo dikasih file `+layout.svelte` ini buat apa? Ini adalah layout parent. Misal nih Lo pingin ada halaman Home, About, Contact. Nah yang seelumnya Lo lakuin adalah membuat tag `<a>` di setiap halaman. Kalo Lo makin banyak halaman artinya Lo bakal maintain navigation. Disinilah Layout akan sangat membantu.
+
+Coba sekarang tag `<a>` dihapus lalu pindahkan ke file `+layout.svelte` ini:
+
+```html
+<!-- src/routes/+layout.svelte -->
+<h1 class="text-3xl font-bold">Home</h1>
+```
+
+```html
+<!-- src/routes/about/+page.svelte -->
+<h1 class="text-3xl font-bold">About</h1>
+```
+
+```html
+<!-- src/routes/+layout.svelte -->
+<script>
+	import './layout.css';
+	import favicon from '$lib/assets/favicon.svg';
+
+	let { children } = $props();
+</script>
+
+<svelte:head><link rel="icon" href={favicon} /></svelte:head>
+<a class="underline text-blue-500" href="/">Home</a>
+<a class="underline text-blue-500" href="/about">About</a>
+
+{@render children()}
+```
+
+Saat membuat file `+layout.svelte` secara default Sveltekit akan membuat halaman nya dalam `snippet` ernama `children`. Jadi Lo waji anget menggunakan `@render children()`. agar Lo isa me-render semua halaman yang ada di bawahnya.
 
 </details>
