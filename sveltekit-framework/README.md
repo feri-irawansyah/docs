@@ -271,17 +271,11 @@ Kalo udah tinggal masuk ke foldernya lalu jalanin `npm run dev -- --open` lalu k
 
 </details>
 
-<details open>
+<details>
 
 <summary><h2>Routing 📚</h2></summary>
 
-Kalo Lo pilih yang Sveltekit minimal nanti Lo akan dikasih folder `src/routes` yang didalamnya ada file `+layout.svelte` dan file `+page.svelte`. Sedangkan `layout.css` ini buat naro directive Tailwind CSS.
-
-```css
-@import 'tailwindcss';
-@plugin '@tailwindcss/forms';
-@plugin '@tailwindcss/typography';
-```	
+Kalo Lo pilih yang Sveltekit minimal nanti Lo akan dikasih folder `src/routes` yang didalamnya ada file `+layout.svelte` dan file `+page.svelte`. Sedangkan `layout.css` ini buat naro directive Tailwind CSS biarin aja jangan diubah. Dan Lo tau bro folder `routes` ini adalah folder keramat, sakral dan paling penting. Disilah Sveltekit bakal menyediakan ritual - ritual sakti yang bisa bikin Lo kena pelet karena simplifynya.
 
 ### Pages (Halaman)
 
@@ -385,5 +379,105 @@ Lo bisa bikin layout dimana aja sesuai kebutuhan Lo. Misalnya di halaman About L
 		<img class="img-fluid" alt="about-page" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/sveltekit-framework/public/about-page.png" />
 	</div>
 </div>
+
+### Load Data
+
+#### Page Load Data
+
+Sebelumnya di Svelte kalo Lo mau ambil data Lo perlu melakukan `onMount` nah tapi ini perilakunya akan dijalankan setelah component di mount. Kalo untuk halaman mungkin kebutuhan Lo beda. yang Lo butuhin harusnya data diload dulu sebelum halaman tampil. Di Sveltekit ada fitur `load` yang akan dijalankan sebelum halaman dirender.
+
+Function `load` hanya bisa Lo buat di Page dan Layout aja tapi bukan `.svelte` tapi `.js`. Jadi misalnya Lo mau load data artinya Lo harus bikin file baru `+page.js` (Jika sifatnya hanya untuk page itu aja) dan file baru `+layout.js` (Maka data bisa dipake di semua halaman di layout itu).
+
+```js
+// src/routes/about/profile/+page.js
+export const load = () => {
+    return {
+        username: 'Feri Irawansyah',
+        email: 'feryirawansyah@gmail.com',
+        phone: '082323443535',
+        address: 'Jl. Raya Mataram No. 11, Mataram, Nusa Tenggara Barat, Indonesia'
+    };
+};
+```
+
+Untuk mengakses datanya Lo bisa ambil dengan parameter data pada `$props`
+
+```html
+<!-- src/routes/about/profile/+page.svelte -->
+<script>
+    const { data } = $props();
+</script>
+
+<h1 class="text-3xl font-bold">Profile</h1>
+
+<ul>
+    <li>Name: {data.username}</li>
+    <li>Email: {data.email}</li>
+    <li>Phone: {data.phone}</li>
+    <li>Address: {data.address}</li>
+</ul>
+```
+
+<img class="img-fluid" alt="load-page" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/sveltekit-framework/public/load-page.png" />
+
+#### Layout Load Data
+
+Sekarang kita coba yang Load data di Layout. Tapi ada beberapa yang perlu Lo perhatiin bro.
+
+- Jika Load data di Layout maka data akan dipake di semua halaman di dalamnya. Artinya jika data sangat besar tidak direkomendasikan karena data akan tetap hidup selama halaman - halaman dan layout tersebut aktif.
+- Jika didalam layout terdapat `+page.js` dan memiliki atribut pada object yang sama maka data pada Layout bisa di timpa oleh data pada Page.
+
+```js
+// src/routes/about/+layout.js
+export const load = () => {
+    return {
+        username: 'Snake System',
+    };
+};
+```
+
+```html
+<!-- src/routes/about/+layout.svelte -->
+ <script>
+    const { children, data } = $props();
+</script>
+
+<h1 class="text-3xl font-bold">Halo {data.username}</h1>
+{@render children()}
+<a href="/about/profile" class="text-blue-500 undeline">Profile</a>
+<a href="/about/wallet" class="text-blue-500 undeline">Wallet</a>
+```
+
+<img class="img-fluid" alt="load-layout" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/sveltekit-framework/public/load-layout.png" />
+
+Ketika berada di `/about/profile` username Snake System ditimpa oleh username Feri Irawansyah. Tapi Kalo Lo pindah ke halaman `/about/wallet` harusnya username tetap Snake System. Karena di halaman `/about/wallet` tidak ada `+page.js` maka akan menggunakan data dari Layout.
+
+### Page Information
+
+Karena routing ini dibuat dengan filesystem Sveltekit menyediakan helper untuk mengambil informasi yang ada di halaman yang sedang aktif bernama `page` didalam `$app/state`. Lo bisa kunjungi dokumentasi nya di <a href="https://svelte.dev/docs/kit/$app-state#page" target="_blank" rel="noopener noreferrer">https://svelte.dev/docs/kit/$app-state#page</a>. Lo bisa memanggilnya di file `+page.svelte` atau `+layout.svelte`. 
+
+```html
+<!-- src/routes/about/+layout.svelte -->
+<script>
+    import { page } from '$app/state'; // import page
+
+    const { children, data } = $props();
+
+    $inspect(page); // inspect page
+</script>
+
+<h1 class="text-3xl font-bold">Halo {data.username}</h1>
+{@render children()}
+<a href="/about/profile" class="text-blue-500 undeline">Profile</a>
+<a href="/about/wallet" class="text-blue-500 undeline">Wallet</a>
+```
+
+<img class="img-fluid" alt="page-information" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/sveltekit-framework/public/page-information.png" />
+
+</details>
+
+<details open>
+
+<summary><h2>Load Parameter 📚</h2></summary>
 
 </details>
