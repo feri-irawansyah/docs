@@ -37,7 +37,7 @@ my-project/
 ├ src/
 │ ├ lib/
 │ │ ├ server/
-│ │ │ └ [code server side Lo (bisa backend)]
+│ │ │ └ [code server biasanya buat db]
 │ │ └ [Bisa Lo taro component - componentnya disini]
 │ ├ params/
 │ │ └ [Parameter dari URL]
@@ -307,6 +307,11 @@ Sveltekit ini ga pake component khusus buat navigasi antar halaman, Lo bisa tete
 <h1 class="text-3xl font-bold">About</h1>
 <a class="underline text-blue-500" href="/">Home</a>
 ```
+
+Selain itu Sveltekit juga menyediakan function untuk redirect mirip kaya windows.location.href. Namanya adalah `goto` atau `redirect`.
+
+- `goto('/about')` ini dipake di CSR
+- `redirect('/about')` ini dipake di SSR
 
 ### Layout
 
@@ -700,7 +705,7 @@ Begitu juga kalo Lo klik buku - buku yang lainnya.
 
 ### Fetch Request
 
-Di List Book yang udah Lo bikin fetch api di lakukan pake `onMount` artinya fetch dilakukan setelah component dirender. Nah kenapa ga dilakuin di load function aja? Bisa banget dan itu lebih recomended. Tapi karenaload function ini dijalankan di mode SSR kemudian datanya baru di CSR, maka ini akan error.
+Di List Book yang udah Lo bikin fetch api di lakukan pake `onMount` artinya fetch dilakukan setelah component dirender. Nah kenapa ga dilakuin di load function aja? Bisa banget dan itu lebih recomended. Tapi karena load function ini dijalankan di mode SSR kemudian datanya baru di CSR, maka ini akan error.
 
 Karena fetch itu adalah `Ajax Request` dan hanya jalan di browser bukan di server. Okeh kita coba dulu. **gue buat pake layout agar datanya bisa diakses sama dynamic page**.
 
@@ -794,5 +799,114 @@ Kenapa parent perlu await? Karena parent ini typenya promise, tapi Lo bisa aja p
     </div>
 </div>
 ```
+
+</details>
+
+<details>
+
+<summary><h2>Server Load Parameter 📚</h2></summary>
+
+Server Load Parameter ini mirip - mirip dengan Load Parameter bedanya jika Load parameter meskipun dia dijalankan dimode SSR tapi dia tetep bisa diakses di Client karena akan diteruskan di mode CSR. Sedangkan Server Load Function bener - bener dijalankan di Server Side dan data hanya datanya aja yang di berikan ke client.
+
+Oleh karena itu Server Load Function ini memiliki beberapa perbedaan parameter seperti cookies, setHeader dll. Lebih lengkapnya Lo bisa kunjungi dokumentasi <a href="https://svelte.dev/docs/kit/@sveltejs-kit#RequestEvent" target="_blank" rel="noopener noreferrer">https://svelte.dev/docs/kit/@sveltejs-kit#RequestEvent</a>.
+
+Perbedaan lainnya adalah pada nama filenya. Server Load Function menggunakan nama file `.server.js` sedangkan Load Function menggunakan nama file `.js` aja. Okeh ceritanya gue mau bikin halaman dashboard dimana halaman itu hanya bisa diakses oleh user yang sudah login.
+
+1. Pertama buat halaman baru /login
+
+```html
+<!-- src/routes/login/+page.svelte -->
+<form action="/login" method="GET" class="max-w-sm mx-auto p-6 bg-zinc-900 rounded-xl shadow-md space-y-4">
+    <h1 class="text-2xl font-semibold text-center text-gray-800 dark:text-gray-100">
+        Login
+    </h1>
+
+    <input
+        type="text"
+        name="username"
+        placeholder="Username"
+        class="w-full px-4 py-2 border rounded-lg
+               border-gray-300 focus:ring-2 focus:ring-blue-500 focus:outline-none
+               dark:bg-zinc-800 dark:border-zinc-700 dark:text-white"
+    />
+
+    <button
+        type="submit"
+        class="w-full py-2 rounded-lg bg-blue-600 text-white font-medium
+               hover:bg-blue-700 transition"
+    >
+        Login
+    </button>
+</form>
+```
+
+2. Buat Load Server Function di halaman /login
+
+```js
+// src/routes/login/+page.server.js
+import { redirect } from '@sveltejs/kit';
+
+export async function load({ cookies, url }) {
+    const username = url.searchParams.get('username');
+    if (username) {
+        cookies.set('username', username, { path: '/' });
+        redirect(303, '/dashboard');
+    }
+
+    if(cookies.get('username')) redirect(303, '/dashboard');
+
+    return {};
+}
+```
+
+3. Buat halaman dashboard
+
+```html
+<!-- src/routes/dashboard/+page.svelte -->
+ <script>
+    const { data } = $props();
+</script>
+
+<h1 class="text-3xl font-bold">Hello {data.username}</h1>
+
+<a href="/dashboard?logout=true">Logout</a>
+```
+
+4. Buat Load Server Function di halaman /dashboard
+
+```js
+// src/routes/dashboard/+page.server.js
+import { redirect } from '@sveltejs/kit';
+
+export async function load({ cookies, url }) {
+    
+    if (url.searchParams.get('logout')) {
+        cookies.delete('username', username, { path: '/' });
+        redirect(303, '/login');
+    }
+
+    if(!cookies.get('username')) redirect(303, '/login');
+
+    return {
+        username: cookies.get('username')
+    };
+}
+```
+
+Ini gue set pake method `GET` dulu gpp karena kita masih coba buat pake load server function, nanti kalo udah bakal pake `POST` kalo udah di materi server action. Kalo udah coba Lo ketik `/dashboard` di address bar harusnya nanti langsung redirect ke halaman Login lagi. Karena di Devtools belum ada cookies dengan key username.
+
+<img class="img-fluid" alt="login" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/sveltekit-framework/public/login.png" />
+
+Coba Lo isikan username lalu enter atau klik login. Nanti Lo akan langsung redirect ke halaman dashboard dan kalo Lo cek devtools => cookies nanti ada key username yang isinya adalah yang Lo masukin.
+
+<img class="img-fluid" alt="dashboard" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/sveltekit-framework/public/dashboard.png" />
+
+Sekarang coba Lo pindah halaman ke `/login` harsunya Lo akan di redirect ke `/dashboard` lagi karena cookies sudah ada. Kalo Lo mau ke halaman login Lo harus logout dulu.
+
+</details>
+
+<details open>
+
+<summary><h2>REST API Route 📚</h2></summary>
 
 </details>
