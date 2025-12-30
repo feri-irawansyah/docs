@@ -316,7 +316,9 @@ Sveltekit ini ga pake component khusus buat navigasi antar halaman, Lo bisa tete
 
 ### Layout
 
-Sebelumnya pas Lo bikin project Sveltekit Lo dikasih file `+layout.svelte` ini buat apa? Ini adalah layout parent. Misal nih Lo pingin ada halaman Home, About, Contact. Nah yang seelumnya Lo lakuin adalah membuat tag `<a>` di setiap halaman. Kalo Lo makin banyak halaman artinya Lo bakal maintain navigation. Disinilah Layout akan sangat membantu.
+#### Layout === Parent
+
+Sebelumnya pas Lo bikin project Sveltekit Lo dikasih file `+layout.svelte` ini buat apa? Ini adalah layout suatu template yang akan membungkus halaman Lo. Misal nih Lo pingin ada halaman Home, About, Contact. Nah yang seelumnya Lo lakuin adalah membuat tag `<a>` di setiap halaman. Kalo Lo makin banyak halaman artinya Lo bakal maintain navigation. Disinilah Layout akan sangat membantu.
 
 Coba sekarang tag `<a>` dihapus lalu pindahkan ke file `+layout.svelte` ini:
 
@@ -347,5 +349,41 @@ Coba sekarang tag `<a>` dihapus lalu pindahkan ke file `+layout.svelte` ini:
 ```
 
 Saat membuat file `+layout.svelte` secara default Sveltekit akan membuat halaman nya dalam `snippet` ernama `children`. Jadi Lo waji anget menggunakan `@render children()`. agar Lo isa me-render semua halaman yang ada di bawahnya.
+
+<img class="img-fluid" alt="layout" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/sveltekit-framework/public/layout.png" />
+
+#### Nested Layout
+
+Lo bisa bikin layout dimana aja sesuai kebutuhan Lo. Misalnya di halaman About Lo pingin ada 2 halaman lagi yaitu `/about/profile` dan `/about/wallet`. Maka di folder `about` Lo bisa bikin file baru `+layout.svelte` artinya nanti Layout dari halaman About akan membungkus halaman profile dan wallet dan ada di dalam Layout root juga.
+
+```html
+<!-- src/routes/about/+layout.svelte -->
+ <script>
+    const { children } = $props();
+</script>
+
+{@render children()}
+<a href="/about/profile" class="text-blue-500 undeline">Profile</a>
+<a href="/about/wallet" class="text-blue-500 undeline">Wallet</a>
+```
+
+```html
+<!-- src/routes/about/profile/+page.svelte -->
+<h1 class="text-3xl font-bold">Profile</h1>
+```
+
+```html
+<!-- src/routes/about/wallet/+page.svelte -->
+<h1 class="text-3xl font-bold">Wallet</h1>
+```
+
+<div class="row">
+    <div class="col-md-6">
+		<img class="img-fluid" alt="nested-layout" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/sveltekit-framework/public/nested-layout.png" />
+	</div>
+    <div class="col-md-6">
+		<img class="img-fluid" alt="about-page" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/sveltekit-framework/public/about-page.png" />
+	</div>
+</div>
 
 </details>
