@@ -474,10 +474,59 @@ Karena routing ini dibuat dengan filesystem Sveltekit menyediakan helper untuk m
 
 <img class="img-fluid" alt="page-information" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/sveltekit-framework/public/page-information.png" />
 
+Page information ini sifatnya reactive. Jadi ketika Lo pindah halaman maka akan berubah. Nah Sekalian coba kita kasih style tailwind agar lebih enak dilihat dan gue mau navigasinya akan memiliki border bawah jika sedang active.
+
+```html
+<!-- src/routes/+layout.svelte -->
+<script>
+	import './layout.css';
+	import favicon from '$lib/assets/favicon.svg';
+	import { page } from '$app/state';
+
+	let { children } = $props();
+
+	const isAactive = (path) => page.url.pathname === path
+
+</script>
+
+<svelte:head>
+	<link rel="icon" href={favicon} />
+	<title>{page.url.pathname.replace('/', '') ? page.url.pathname.replace('/', '').toLocaleUpperCase() : 'HOME'}</title>
+</svelte:head>
+
+<div class="dark min-h-screen bg-gray-800 text-gray-100">
+	<nav class="p-4 flex gap-4 border-b border-gray-500 justify-center">
+		<a class="text-slate-100 {isAactive('/') ? 'border-b border-blue-400' : ''}" href="/">Home</a>
+		<a class="text-slate-100 {isAactive('/about') ? 'border-b border-blue-400' : ''}" href="/about">About</a>
+	</nav>
+
+	<main class="p-4">
+		{@render children()}
+	</main>
+</div>
+```
+
+<img class="img-fluid" alt="active-navigation" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/sveltekit-framework/public/active-navigation.png" />
+
 </details>
 
 <details open>
 
 <summary><h2>Load Parameter 📚</h2></summary>
 
+Function load itu function special bro di routing Sveltekit. Karena selain dijalankan sebelum halaman tampil, dia juga punya banyak fitur lain seperti URL parameter, fetch, cookies dll. Semuanya bisa Lo akses menambahkan parameter di function `load` seperti berikut.
+
+```js
+// src/routes/about/+layout.js
+export const load = (params) => {
+    console.log(params);
+    return {
+        username: 'Snake System',
+    };
+};
+```
+
+Params ini bentuknya Object isinya kaya gini
+
+<img class="img-fluid" alt="load-parameter" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/sveltekit-framework/public/load-parameter.png">
 </details>
