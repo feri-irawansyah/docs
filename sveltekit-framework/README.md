@@ -800,6 +800,40 @@ Kenapa parent perlu await? Karena parent ini typenya promise, tapi Lo bisa aja p
 </div>
 ```
 
+### Error Page
+
+Lo ngeh ga bro misalnya load function ada error atau halaman error Sveltekit langsung ngasih halaman error tergantung errornya. Misal halaman ga ada langsung dikasih 404, atau load function ada error langsung dikasih 500. 
+
+Tapi Itu kan punya Sveltekit kadang di lapangan tim design bakal ngasih halaman khusus buat error. Nah di Sveltekit Lo juga bisa custom error pagenya biar errornya ga ambil lagi halaman error default punya Sveltekit.
+
+Cara membuatnya dengan cara membuat file bernama `+error.svelte`. Kalo Lo naronya di folder yang sejajar dengan layout, maka url di bawahnya akan menggunakan halaman error itu. Tapi Lo juga bisa custom perpage agar setiap page punya halaman error sendiri tapi ini hanya berlaku untuk server side.
+
+Kalo Lo mau ngehandle error di client side seperti error load function `+page.js` atau `+layout.js` Lo hanya di perbolehkan bikin 1 file error saja di `routes/+error.svelte`
+
+```html
+<!-- routes/+error.svelte -->
+ <script>
+	import { page } from '$app/state';
+</script>
+
+<h1 class="text-center text-4xl text-red-500">{page.error.message}</h1>
+```
+
+Coba Lo typoin bagian `const res = await fetch('/api/book.json')` di file `routes/book/+layout.js` dan buka halaman `/book`
+
+```js
+export const load = async ({ fetch }) => {
+    // const res = await fetch('/api/book.json')
+    const res = await fetch('/api/boo.json')
+    const books = await res.json()
+    return {
+        books
+    }
+}
+```
+
+<img class="img-fluid" alt="error-page" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/sveltekit-framework/public/error-page.png" />
+
 </details>
 
 <details>
@@ -893,7 +927,7 @@ export async function load({ cookies, url }) {
 }
 ```
 
-Ini gue set pake method `GET` dulu gpp karena kita masih coba buat pake load server function, nanti kalo udah bakal pake `POST` kalo udah di materi server action. Kalo udah coba Lo ketik `/dashboard` di address bar harusnya nanti langsung redirect ke halaman Login lagi. Karena di Devtools belum ada cookies dengan key username.
+Ini gue set pake method `GET` dulu gpp karena kita masih coba buat pake load server function, nanti kita perbaiki sambil jalan. Kalo udah coba Lo ketik `/dashboard` di address bar harusnya nanti langsung redirect ke halaman Login lagi. Karena di Devtools belum ada cookies dengan key username.
 
 <img class="img-fluid" alt="login" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/sveltekit-framework/public/login.png" />
 
@@ -908,5 +942,16 @@ Sekarang coba Lo pindah halaman ke `/login` harsunya Lo akan di redirect ke `/da
 <details open>
 
 <summary><h2>REST API Route 📚</h2></summary>
+
+Type default Sveltekit adalah SSR (Server Side Render), artinya halaman akan di render di Server. Jadi Lo juga bisa bikin REST Api di Svelte. Cara membuatnya masih tetep di folder `routes`
+
+- Syarat membuat API di Sveltekit harus menggunakan file `+server.js`.
+- Untuk endpointnya menggunakan nama folder dimana file `+server.js` itu berada.
+- Nama function ditentukan dengan jenis Http Method yang digunakan, misal GET, POST, PUT, PATCH, DELETE, OPTIONS dan HEAD
+- Parameter tetap menggunakan `RequestEvent` <a href="https://svelte.dev/docs/kit/@sveltejs-kit#RequestEvent" target="_blank" rel="noopener noreferrer">https://svelte.dev/docs/kit/@sveltejs-kit#RequestEvent</a>
+- Response sesuai dengan standarisasi REST Api <a href="https://developer.mozilla.org/en-US/docs/Web/API/Response" target="_blank" rel="noopener noreferrer">https://developer.mozilla.org/en-US/docs/Web/API/Response</a>
+- Api Route berjalan di Server bukan di client. jadi kalo Lo buat SPA (Single Page Application) api ga bisa jalan.
+
+Buat studi kasus
 
 </details>
