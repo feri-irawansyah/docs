@@ -452,6 +452,56 @@ export const load = () => {
 
 Ketika berada di `/about/profile` username Snake System ditimpa oleh username Feri Irawansyah. Tapi Kalo Lo pindah ke halaman `/about/wallet` harusnya username tetap Snake System. Karena di halaman `/about/wallet` tidak ada `+page.js` maka akan menggunakan data dari Layout.
 
+#### Invalidate
+
+Svelte secara default akan melakukan cache data Load Function yang sudah dikunjungi. Kaya sebelumnya misal Lo dari home, pergi ke halaman `/about`, nah di about Lo pergi ke `/about/profile` terus pergi ke `about/wallet` dan Lo balik lagi ke `/about/profile`. Karena kedua page itu pake Layout yang sama load function tidak akan di panggil ulang karena Sveltekit mengangkap tidak ada perubahan di layout itu contoh gini. COba Lo tambahin waktu `routes/about/+layout.js`:
+
+```js
+// src/routes/about/+layout.js
+export const load = (params) => {
+    return {
+        username: 'Snake System',
+        date: new Date()
+    };
+};
+```
+
+Render datenya di `routes/about/+layout.svelte`:
+
+```html
+<p>Date: {data.date}</p>
+```
+
+Harusnya ketika Lo pindah - pindah antara `/about`, `/about/profile` dan `/about/wallet` `Date` nya ga akan berubah nilainya. Kalo Lo ga mau kaya gitu Lo bisa pake `invalidate` atau `invalidateAll` dari `$app/navigation`.
+
+- `invalidate` Kalo Lo ingin menjalankan kembali semua Load Function yang tergantung ke parameter url di halaman yang sedang aktif  misal `invalidate('/about/profile')`. <a href="https://svelte.dev/docs/kit/$app-navigation#invalidate" target="_blank" rel="noopener noreferrer">https://svelte.dev/docs/kit/$app-navigation#invalidate</a>
+- `invalidateAll` akan dijalankan di semua halaman yang aktif dimana `invalidateAll` dijalankan. <a href="https://svelte.dev/docs/kit/$app-navigation#invalidateAll" target="_blank" rel="noopener noreferrer">https://svelte.dev/docs/kit/$app-navigation#invalidateAll</a>
+
+<div class="row">
+    <div class="col-md-6">
+		<img class="img-fluid" alt="invalidate-1" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/sveltekit-framework/public/invalidate-1.png" />
+	</div>
+    <div class="col-md-6">
+		<img class="img-fluid" alt="invalidate-2" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/sveltekit-framework/public/invalidate-2.png" />
+	</div>
+</div>
+
+```html
+<!-- src/routes/about/wallet/+page.svelte -->
+ <script>
+  import { invalidateAll } from '$app/navigation';
+  import { onMount } from 'svelte';
+
+    const { data } = $props();
+
+    onMount(() => {
+        invalidateAll();
+    })
+</script>
+
+<h1 class="text-3xl font-bold">Wallet {data.username}</h1>
+```
+
 ### Page Information
 
 Karena routing ini dibuat dengan filesystem Sveltekit menyediakan helper untuk mengambil informasi yang ada di halaman yang sedang aktif bernama `page` didalam `$app/state`. Lo bisa kunjungi dokumentasi nya di <a href="https://svelte.dev/docs/kit/$app-state#page" target="_blank" rel="noopener noreferrer">https://svelte.dev/docs/kit/$app-state#page</a>. Lo bisa memanggilnya di file `+page.svelte` atau `+layout.svelte`. 
@@ -510,7 +560,7 @@ Page information ini sifatnya reactive. Jadi ketika Lo pindah halaman maka akan 
 
 </details>
 
-<details open>
+<details>
 
 <summary><h2>Load Parameter 📚</h2></summary>
 
@@ -526,7 +576,223 @@ export const load = (params) => {
 };
 ```
 
-Params ini bentuknya Object isinya kaya gini
-
 <img class="img-fluid" alt="load-parameter" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/sveltekit-framework/public/load-parameter.png">
+
+Isinya kayanya gini, atau Lo bisa kunjungi dokumentasinya disini <a href="https://svelte.dev/docs/kit/@sveltejs-kit#RequestEvent" target="_blank" rel="noopener noreferrer">https://svelte.dev/docs/kit/@sveltejs-kit#RequestEvent</a>. Di load function Lo juga bisa ambil informasi dari halaman yang sedang di kunjungi pake `params.url` ini sama kaya `page.url` dari `$app/state`. 
+
+Tapi hati - hati kalo misalnya di load function Lo ada naro request ke api dan Lo panggil `params.url` nanti ketika ada perubahan url load function akan melakukan request lagi ketika Lo pindah halaman. Jadi direkomendarikan kalo hanya untuk memberukan informasi dari halaman yang sedang di kunjungi pake `page.url` saja. `params.url` bisa Lo pake jika ada halaman yang perlu validasi ke backend seperti role permission dan sebagainya.
+
+### Dynamic Parameter
+
+Biasanya ketika Lo bikin website mesti Lo ada bikin url yang dinamis misal nya dihalaman admin dashboard website kampung Lo bikin url `/user/123` atau `/user/rahmat` dimana urlnya bisa di isi id atau username. Di Sveltekit kalo mau bikin fitur itu dengan cara bikil folder `[nama-folder]` misalnya nanti gue mau bikin `/book/[id]` maka Lo bikin folder `book` lalu folder `[id]` kemudian Lo bikin file `+page.svelte` kaya gini.
+
+Untuk mengambilnya Lo bisa ambil dari `params.params` pada parameter di load funtcion. Nah biar ga bingung Lo bisa langsung ditructuring `{params}` di parameter load function. Sekarang coba Lo bikin folder baru namanya book dan folder `[id]`. Ceritanya gue mau bikin halaman untuk menampilkan informasi buku. Dantambahkan navigasinya juga di `routes/+layout.svelte`. Jadi coba Lo buat beberapa file ini.
+
+- Buat folder `book`
+- Buat folder `[id]` didalam folder `book`
+- Buat file `+page.svelte` didalam folder `book`
+- Buat file `+page.svelte` didalam folder `[id]`
+- buat file `+page.js` didalam folder `[id]`
+- Buat file `book.json` di folder `static/api` ceritanya ini api.
+
+Sebelum itu ubah style tag `main` di `routes/+layout.svelte`
+
+```html
+<!-- src/routes/+layout.svelte -->
+<main class="p-4 max-w-2xl mx-auto border border-gray-500 rounded-2xl my-3">
+	{@render children()}
+</main>
+```
+
+```json
+// static/book.json
+[
+    {
+        "id": 1,
+        "title": "Pemrograman PHP",
+        "author": "Feri Irawansyah",
+        "description": "Belajar dasar - dasar bahasa pemrograman PHP",
+        "year": 1954
+    },
+    {
+        "id": 2,
+        "title": "Linux dasar",
+        "author": "Dede Sukron",
+        "description": "Belajar dasar - dasar operating system Linux",
+        "year": 1937
+    },
+    {
+        "id": 3,
+        "title": "Tutorial React JS",
+        "author": "Dede Sukron",
+        "description": "Belajar dasar - dasar library React JS",
+        "year": 1977
+    }
+]
+```
+
+```html
+<!-- src/routes/book/+page.svelte -->
+ <script>
+  import { onMount } from "svelte";
+
+    let books = $state([]);
+
+    onMount(async () => {
+        const response = await fetch('/api/book.json');
+        books = await response.json();
+    })
+
+</script>
+
+<h1 class="text-3xl font-bold text-center">List of Books</h1>
+
+<div class="grid grid-cols-3 gap-6">
+    {#each books as book}
+        <a href="/book/{book.id}" class="rounded-xl bg-gray-800 text-white p-4 shadow">
+            <img src="https://picsum.photos/seed/{book.id}/200/300"
+                class="rounded-lg mb-3 w-full object-cover" alt=""/>
+            <h3 class="text-lg font-semibold">{book.title}</h3>
+            <p class="text-xs text-gray-500 border-b border-gray-700 py-2">{book.author} ({book.year})</p>
+            <p class="text-sm text-gray-300 line-clamp-3">
+                {book.description}
+            </p>
+        </a>
+    {/each}
+</div>
+```
+
+Untuk halaman List Book kaya gini
+
+<img class="img-fluid" alt="book-list" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/sveltekit-framework/public/book-list.png" />
+
+Sela jutnya 
+
+```js
+// src/routes/book/[id]/+page.js
+export const load = ({ params }) => {
+
+    const id = params.id
+
+    return {
+        id
+    };
+};
+```
+
+```html
+<!-- src/routes/book/[id]/+page.svelte -->
+<script>
+	export let id;
+</script>
+<script>
+    const { data } = $props();
+</script>
+
+<h1 class="text-3xl font-bold text-center">Book detail {data.id}</h1>
+```
+
+Coba Lo klik salah satu buku di List Book. Nanti di Book Detail bakal kaya gini
+
+<img class="img-fluid" alt="book-1" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/sveltekit-framework/public/book-1.png" />
+
+Begitu juga kalo Lo klik buku - buku yang lainnya.
+
+### Fetch Request
+
+Di List Book yang udah Lo bikin fetch api di lakukan pake `onMount` artinya fetch dilakukan setelah component dirender. Nah kenapa ga dilakuin di load function aja? Bisa banget dan itu lebih recomended. Tapi karenaload function ini dijalankan di mode SSR kemudian datanya baru di CSR, maka ini akan error.
+
+Karena fetch itu adalah `Ajax Request` dan hanya jalan di browser bukan di server. Okeh kita coba dulu. **gue buat pake layout agar datanya bisa diakses sama dynamic page**.
+
+```js
+// src/routes/book/+layout.js
+export const load = async () => {
+    const res = await fetch('/api/book.json')
+    const data = await res.json()
+    return {
+        data
+    }
+}
+```
+
+```html
+<!-- src/routes/book/+page.svelte -->
+<script>
+    const { data } = $props();
+</script>
+
+<h1 class="text-3xl font-bold text-center">List of Books</h1>
+
+<div class="grid grid-cols-3 gap-6">
+    {#each data.books as book}
+        <a href="/book/{book.id}" class="rounded-xl bg-gray-800 text-white p-4 shadow">
+            <img src="https://picsum.photos/seed/{book.id}/200/300"
+                class="rounded-lg mb-3 w-full object-cover" alt=""/>
+            <h3 class="text-lg font-semibold">{book.title}</h3>
+            <p class="text-xs text-gray-500 border-b border-gray-700 py-2">{book.author} ({book.year})</p>
+            <p class="text-sm text-gray-300 line-clamp-3">
+                {book.description}
+            </p>
+        </a>
+    {/each}
+</div>
+```
+
+<img class="img-fluid" alt="error-fetch" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/sveltekit-framework/public/error-fetch.png" />
+
+Langsung dapet surat cinta dari Sveltekit. Katanya <span class="text-danger">Cannot call `fetch` eagerly during server-side rendering with relative URL (/api/book.json) — put your `fetch` calls inside `onMount` or a `load` function instead</span> ga boleh call fetch di server-side, Lo cuma bolef fetch pake onMount. Terus gimna?
+
+Sveltekit punya fetch http call sendiri sama kaya fetch biasa tapi Lo ambil dari parameter si load function.
+
+```js
+// src/routes/book/+layout.js
+export const load = async ({ fetch }) => {
+    const res = await fetch('/api/book.json')
+    const books = await res.json()
+    return {
+        books
+    }
+}
+```
+
+### Parent Data
+
+Coba Lo buka pake detail book bro, harusnya tampilannya baru heading dan ada id. Nah terus gimana cara mengambil single datanya?. Mesti dalam bayangan Lo Lo bikin load function terus fetch, tapi gimana cara dapet datanya? apakah perlu fetch ulang? Atau pake onMount aja kan datanya bisa di ambil dari props. Itu bisa - bisa aja. Tapi ada cara yang lebih recomended.
+
+Lo bisa pake `parent` parameter. Jadi data dari layout itu bisa diambil dengan cara menggunakan parameter `parent`. 
+
+```js
+// src/routes/book/[id]/+page.js
+export const load = async ({ params, parent }) => {
+    const id = params.id
+    const books = await parent();
+    const book = books.books.find(book => book.id == id);
+
+    return {
+        id,
+        book
+    };
+};
+```
+
+Kenapa parent perlu await? Karena parent ini typenya promise, tapi Lo bisa aja pake method `then` dan `catch`.
+
+```html
+<!-- src/routes/book/[id]/+page.svelte -->
+ <script>
+    const { data } = $props();
+</script>
+
+<div class="flex flex-col">
+    <h1 class="text-3xl font-bold text-center">{data.book.title}</h1>
+    <p class="text-xs text-gray-500 border-b border-gray-700 py-2 text-center">{data.book.author} ({data.book.year})</p>
+    <p class="text-sm text-gray-300 line-clamp-3 text-center">{data.book.description}</p>
+
+    <div class="flex items-center justify-evenly mt-5">
+        <a class="bg-slate-500 w-1/6 rounded-md text-center p-1" href="/book">Kembali</a>
+        <a href={null} class="cursor-pointer bg-blue-500 w-1/6 rounded-md text-center p-1" onclick={alert("Belum ada bukunya")}>Baca</a>
+    </div>
+</div>
+```
+
 </details>
