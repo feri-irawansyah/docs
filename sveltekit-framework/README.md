@@ -952,6 +952,331 @@ Type default Sveltekit adalah SSR (Server Side Render), artinya halaman akan di 
 - Response sesuai dengan standarisasi REST Api <a href="https://developer.mozilla.org/en-US/docs/Web/API/Response" target="_blank" rel="noopener noreferrer">https://developer.mozilla.org/en-US/docs/Web/API/Response</a>
 - Api Route berjalan di Server bukan di client. jadi kalo Lo buat SPA (Single Page Application) api ga bisa jalan.
 
-Buat studi kasus
+Sebelumnya untuk login masih menggunakan query parameter dan mpake http GET buat melakukan request. Lo mesti tau lah ya ini bahaya karena Lo bisa input dari url. Nah sebelum itu gue mau setup DB di Sveltekit. Gue mau pake PostgreSQL buat studi kasus Perpustakaan Online. Kalo Lo mau pake DBMS lain juga bisa bro atau kalo Lo mau ngikutin dan belum ada PostgreSQL Lo bisa baca catatan gue yang ini [Postgres SQL Playground: Bermain bersama Query dan Kawan - kawan](https://feri-irawansyah.my.id/catatan/backend/postgres-sql-playground-bermain-bersama-query-dan-kawan-kawan).
+
+### Server Only Modules
+
+Sebelumnya di architecture Sveltekit ada folder khusus yang hanya jalan diserver yaitu folder `lib/server`. Lebih lengkapnya Lo bisa baca dokumentasi <a href="https://svelte.dev/docs/kit/server-only-modules" target="_blank" rel="noopener noreferrer">https://svelte.dev/docs/kit/server-only-modules</a>. Sekarang coba Lo buat folder server di folder lib dan buat file `connection.js`.
+
+#### Create Connection Pool
+
+Untuk membuat koneksi ke postgres perlu menambahkan dependencies. Disini gue pake `pg` lebih lengkapnya Lo  bisa baca dokumentasinya <a href="https://www.npmjs.com/package/pg" target="_blank" rel="noopener noreferrer">https://www.npmjs.com/package/pg</a>.
+
+```bash
+npm install pg
+```
+
+Gue anggep Lo udah punya dan udah jago lah ya soal DBMS nah gue ada bikin database namanya books. Buat table users nya ini kaya gini schemanya.
+
+```sql
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    username VARCHAR(255) NOT NULL,
+    fullname VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+INSERT INTO users (username, fullname, password, email) VALUES
+    ('admin', 'Admin', 'password', 'admin@example.com');
+```
+
+Ini file `connection.js` ini.
+
+```js
+// src/lib/server/connection.js
+import { Pool } from 'pg';
+
+const connection = new Pool({
+    connectionString: "postgres://postgres:postgress@localhost:5432/books", 
+    max: 20, 
+    idleTimeoutMillis: 30000, 
+});
+
+export const connectToDb = () => connection.connect();
+
+export default connection;
+```
+
+#### Test Connection
+
+Coba Lo tes koneksinya dulu, coba aja di file `routes/login/+page.server.js` masukin kode ini.
+
+```js
+// src/routes/login/+page.server.js
+import connection from '$lib/server/connection.js';
+import { redirect } from '@sveltejs/kit';
+
+export async function load({ cookies, url }) {
+    
+    const username = url.searchParams.get('username');
+    if (username) {
+        cookies.set('username', username, { path: '/' });
+        redirect(303, '/dashboard');
+    }
+
+    if(cookies.get('username')) redirect(303, '/dashboard');
+
+    // Test koneksinya
+    try {
+        const result = await connection.query('SELECT * FROM users;');
+        console.log(result.rows);
+    } catch (error) {
+        console.error('Database error:', error);
+    }
+
+    return {};
+}
+```
+
+```bash
+  ➜  Local:   http://localhost:5173/
+  ➜  Network: use --host to expose
+  ➜  press h + enter to show help
+[
+  {
+    id: 1,
+    username: 'admin',
+    fullname: 'Admin',
+    password: 'password',
+    email: 'admin@example.com',
+    created_at: 2025-12-31T00:47:45.964Z
+  }
+]
+```
+
+Harusnya meskipun pake console.log tapi outputnya ga akan tampil do browser. Tapi ada di command line dimana Lo jalanin Sveltekit nya. Ini karena file `connection.js` dan `+page.server.js` itu jalan di server, bukan di client. Jadi ini aman.
+
+#### Private environment variables
+
+Connection String di tulis atau di hardcode di file `connection.js`, ini tidak direkomendasikan malah kalo menurut pribadi gue ini ga boleh. Karena kalo Lo misalnya nanti dishare ke github, maka koneksinya bakal bocor. Cara paling baik adalah dengan menyimpannya di file yang hanya bisa diakses dalam server dan environtment dimana aplikasi berjalan. Seperti file `.env`, `appsettings.json`, `config.toml`, dll.
+
+Sveltekit punya env private dari `$env/dynamic/private` & env public dari `$env/dynamic/public` environtment variables. Private hanya bisa diakses oleh server side only sedangkan public bisa diakses oleh client side dan server side.
+
+- Private env <a href="https://svelte.dev/docs/kit/$env-dynamic-private" target="_blank" rel="noopener noreferrer">https://svelte.dev/docs/kit/$env-dynamic-private</a>
+- Public env <a href="https://svelte.dev/docs/kit/$env-dynamic-public" target="_blank" rel="noopener noreferrer">https://svelte.dev/docs/kit/$env-dynamic-public</a>
+
+Jadi coba Lo perbaiki file `connection.js` ini. Buat file `.env` di root project. Isi datanya seperti ini.
+
+```bash
+DATABASE_URL=postgres://postgres:postgress@localhost:5432/books
+```
+
+Lalu Lo tinggal ganti file `connection.js` ini.
+
+```js
+// src/lib/server/connection.js
+import { env } from '$env/dynamic/private';
+import { Pool } from 'pg';
+
+const connection = new Pool({
+    connectionString: env.DATABASE_URL, 
+    max: 20, 
+    idleTimeoutMillis: 30000, 
+});
+
+export const connectToDb = () => connection.connect();
+
+export default connection;
+```
+
+### API Route
+
+Sekarang tinggal bikin endpoint API nya. Coba Lo buat folder `api` di folder `routes` ini untuk nyimpen semua api route.
+
+- Buat file `+server.js` didalam folder `api/auth/login`
+- Buat file `+server.js` didalam folder `api/auth/session`
+- Buat file `+server.js` didalam folder `api/auth/logout`
+
+```js
+// src/routes/api/auth/login/+server.js
+import connection from '$lib/server/connection';
+
+export const POST = async ({ request, cookies }) => {
+    const body = await request.json();
+    
+    const rows = await connection.query(`SELECT * FROM users WHERE username = '${body.username}' AND password = '${body.password}'`);
+    if (rows.rowCount > 0) {
+        const users = rows.rows[0];
+        cookies.set('users', JSON.stringify(users), { path: '/' });
+        return new Response(JSON.stringify(users), { 
+            status: 200,
+            headers: {
+                "content-type": "application/json"
+            }
+         });
+    } else {
+        return new Response(JSON.stringify({ error: 'Invalid username or password' }), {
+            status: 401,
+            headers: {
+                "content-type": "application/json"
+            }
+         });
+    }
+}
+```
+
+```js
+// src/routes/api/auth/session/+server.js
+export const GET = async ({ cookies }) => {
+    const users = cookies.get('users');
+    if (users) {
+        return new Response(users, { 
+            status: 200,
+            headers: {
+                "content-type": "application/json"
+            }
+         });
+    } else {
+        return new Response(JSON.stringify({ error: 'Unauthorized' }), { 
+            status: 401,
+            headers: {
+                "content-type": "application/json"
+            }
+         });
+    }
+}
+```
+
+```js
+// src/routes/api/auth/logout/+server.js
+export const DELETE = async ({ cookies }) => {
+    cookies.delete('users', { path: '/' })
+    return new Response(null, { status: 200 })
+}
+```
+
+Sekarang Lo coba call lewat postman atau http client lain kaya Talent API kalo via browser.
+
+- Api Login
+
+<img class="img-fluid" alt="api-login" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/sveltekit-framework/public/api-login.png" />
+
+- Api Session
+
+<img class="img-fluid" alt="api-session" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/sveltekit-framework/public/api-session.png" />
+
+- Api Logout
+
+<img class="img-fluid" alt="api-logout" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/sveltekit-framework/public/api-logout.png" />
+
+Harusnya Lo juga aman ya bro, nah sekarang coba kita implementasikan di website kita. Pertama mungkin Lo bisa hapus file `routes/login/+page.server.js` dan `routes/dashboard/+page.server.js` karena akan pake api route.
+
+```html
+<!-- src/routes/login/+page.svelte -->
+ <script>
+    import { goto } from "$app/navigation";
+
+    let user = $state({
+        username: '',
+        password: ''
+    });
+
+    async function login(e) {
+        e.preventDefault();
+        const response = await fetch('/api/auth/login', {
+            method: 'POST',
+            body: JSON.stringify(user)
+        });
+
+        if(response.ok) {
+            await goto('/dashboard');
+        }
+    }
+
+</script>
+
+<form onsubmit={login} class="max-w-sm mx-auto p-6 bg-zinc-900 rounded-xl shadow-md space-y-4">
+    <h1 class="text-2xl font-semibold text-center text-gray-800 dark:text-gray-100">
+        Login
+    </h1>
+
+    <input
+        type="text"
+        name="username"
+        bind:value={user.username}
+        placeholder="Username"
+        class="w-full px-4 py-2 border rounded-lg
+               border-gray-300 focus:ring-2 focus:ring-blue-500 focus:outline-none
+               dark:bg-zinc-800 dark:border-zinc-700 dark:text-white"
+    />
+
+    <input
+        type="password"
+        name="password"
+        bind:value={user.password}
+        placeholder="Password"
+        class="w-full px-4 py-2 border rounded-lg
+               border-gray-300 focus:ring-2 focus:ring-blue-500 focus:outline-none
+               dark:bg-zinc-800 dark:border-zinc-700 dark:text-white"
+    />
+
+    <button
+        type="submit"
+        class="w-full py-2 rounded-lg bg-blue-600 text-white font-medium
+               hover:bg-blue-700 transition"
+    >
+        Login
+    </button>
+</form>
+```
+
+Sekarang Lo hapus bagian action dan method di form nya, jadi sekarang Lo akan request ke api `/api/auth/login` untuk login.
+
+<img class="img-fluid" alt="login-api" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/sveltekit-framework/public/login-api.png" />
+
+Untuk halaman dashboardnya sekarang gini.
+
+```html
+<script>
+    import { goto } from "$app/navigation";
+
+    async function session() {
+        const response = await fetch('/api/auth/session');
+        if(response.ok) {
+            const data = await response.json();
+            return data;
+        } else {
+            await goto('/login');
+        }
+    }
+
+    async function logout() {
+        const response = await fetch('/api/auth/logout', {
+            method: 'DELETE'
+        });
+        if(response.ok) {
+            await goto('/login');
+        }
+    }
+</script>
+
+{#await session()}
+    <p class="text-center text-white bg-amber-400">Loading ...</p>
+{:then data} 
+    <h1 class="text-2xl font-bold">Hello {data.username}</h1>
+    <a href={null} class="cursor-pointer" onclick={logout}>Logout</a>
+{/await}
+```
+
+- Pertama coba Lo ganti urlnya jadi `/dashboard` harusnya akan redirect ke login lagi. Karena Lo belum login.
+- Tapi sekarang jadi kaya ada screen sebentar halaman dashboard dulu sebelum redirect ke login. Nanti kita perbaiki setelah masuk ke Server Action.
+- Kalo Lo udah login nanti harsusnya akan tampil username dan tombol logout.
+
+kalo Lo mau repiin dikit stylenya boleh
+
+```html
+<div class="w-full flex flex-col items-center">
+    {#await session()}
+        <p class="text-center text-white bg-amber-400">Loading ...</p>
+    {:then data} 
+        <h1 class="text-2xl font-bold border-b">Hello {data.username}</h1>
+        <a href={null} class="cursor-pointer" onclick={logout}>Logout</a>
+    {/await}
+</div>
+```
+
+<img class="img-fluid" alt="dashboard-api" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/sveltekit-framework/public/dashboard-api.png" />
 
 </details>
