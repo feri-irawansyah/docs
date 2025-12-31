@@ -1,7 +1,7 @@
 <style>
     @media screen and (min-width: 768px) {
         img[alt="ssr-dashboard"] {
-        width: 50% !important;
+        width: 70% !important;
         }
     }
 </style>
@@ -1422,7 +1422,7 @@ INSERT INTO books (title, description, year, author) VALUES
 Sebelumnya gue mau perbaiki beberapa di halaman dashboard.
 
 - Get session akan gue pindah ke file `routes/dashboard/+page.server.js`.
-- Ceritanya gue mau bikin monolith jadi semua logic didashboard akan di taro di file `routes/dashboard/+page.server.js`.
+- Gue buat pake .server karena ini akan dipake buat nampilin list buku.
 - Untuk halaman dashboard ada ada update tampilan.
 
 ```html
@@ -1495,5 +1495,137 @@ export const load = async ({ fetch }) => {
 Tampilannya akan kaya gini.
 
 <img class="img-fluid" alt="ssr-dashboard" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/sveltekit-framework/public/ssr-dashboard.png" />
+
+### Default Method
+
+Form action harusnya punya action properti para tag form. Di Sveltekit kalo Lo ga menambahkan action properti, maka Sveltekit akan otomatis menggunakan method `default` pada Form Actions parameter. Jadi coba Lo buat halaman baru namanya add dan buat file `+page.svelte` dan `+page.server.js`.
+
+```html
+<form method="post">
+    <div class="flex flex-col mb-3">
+        <label for="title">Title</label>
+            <input
+                id="title"
+                type="text"
+                name="title"
+                placeholder="Book Title"
+                class="w-full px-4 py-2 border rounded-lg
+                    border-gray-300 focus:ring-2 focus:ring-blue-500 focus:outline-none
+                    dark:bg-zinc-800 dark:border-zinc-700 dark:text-white"
+        />
+    </div>
+    <div class="flex flex-col mb-3">
+        <label for="author">Author</label>
+            <input
+                id="author"
+                type="text"
+                name="author"
+                placeholder="Author Name"
+                class="w-full px-4 py-2 border rounded-lg
+                    border-gray-300 focus:ring-2 focus:ring-blue-500 focus:outline-none
+                    dark:bg-zinc-800 dark:border-zinc-700 dark:text-white"
+        />
+    </div>
+    <div class="flex flex-col mb-3">
+        <label for="description">Description</label>
+            <input
+            id="description"
+            type="text"
+            name="description"
+            placeholder="Book Description"
+            class="w-full px-4 py-2 border rounded-lg
+                border-gray-300 focus:ring-2 focus:ring-blue-500 focus:outline-none
+                dark:bg-zinc-800 dark:border-zinc-700 dark:text-white"
+        />
+    </div>
+    <button type="submit" class="w-full border border-teal-300 bg-teal-700 rounded">Submit</button>
+</form>
+```
+
+```js
+// src/routes/dashboard/add/+page.server.js
+import connection from '$lib/server/connection.js';
+import { redirect } from '@sveltejs/kit';
+
+export const actions = {
+    default: async ({ request }) => { // default method
+        const data = await request.formData(); // cara ambil form data
+        
+        const body = {
+            title: data.get('title'), // ambil dari name
+            author: data.get('author'),
+            description: data.get('description')
+        }
+
+        const response = await connection.query(`
+            INSERT INTO books (title, author, description, year) 
+            VALUES ('${body.title}', '${body.author}', '${body.description}', ${new Date().getFullYear()})    
+        `);
+
+        if (response.rowCount > 0) {
+            redirect(303, '/dashboard');
+        } else {
+            throw new Error('Failed to add book');
+        }
+    }
+};
+```
+
+<img class="img-fluid" alt="ssr-add" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/sveltekit-framework/public/ssr-add.png" />
+
+Untuk SSR (Server Side Render) di Sveltekit + Server Action Lo udah ga perlu lagi pake binding karena `actions` akan mengambilnya sebagai name dari input. Sama kaya SSR form web application.
+
+<img class="img-fluid" alt="ssr-list" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/sveltekit-framework/public/ssr-list.png" />
+
+### Name Action
+
+Kadang-kadang, dalam satu URL path, kita ingin bisa menerima lebih dari satu jenis Form Action. Sveltekit mendukung ini dengan cara membuat method selain default() method. Jadi nanti Lo bisa menambahkan action ?/namaMethod di tag form. Nah kalo misalnya di satu URL path itu terdapat lebih dari satu. Lo malah udah ga bisa lagi pake default. Harus semuanya di rename dalam actions.
+
+Misalnya gue mau aktifik tombol delete tapi gue bakal rename nama methodnya jadi `remove`. Tapi pertama Lo harus ubah dulu button hapus menjadi sebuah form. Karen namanya aja form action, jadi bisa jalan di form doang.
+
+```html
+<!-- <button type="button" class="border border-red-200 px-3 rounded-2xl bg-red-500 cursor-pointer">Hapus</button> -->
+
+<form method="post" action="?/remove">
+    <input type="hidden" name="id" value={book.id} />
+
+    <button
+        type="submit"
+        name="action"
+        value="delete"
+        class="border border-red-200 px-3 rounded-2xl bg-red-500 text-white"
+    >
+        Hapus
+    </button>
+</form>
+```
+
+Difile `routes/dashboard/+page.server.js` Lo bisa tamahin ini di paling bawah
+
+```js
+// src/routes/dashboard/+page.server.js
+
+// ......
+export const actions = {
+    remove: async ({ request }) => {
+        const data = await request.formData();
+        const id = data.get('id');
+        console.log(id);
+        const rows = await connection.query(`DELETE FROM books WHERE id = ${id}`);
+
+        console.log(rows);
+    }
+};
+```
+
+Sekarang coba Lo klik tomol deletenya harusnya akan terhapus sesuai id yang Lo klik.
+
+<img class="img-fluid" alt="ssr-delete" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/sveltekit-framework/public/ssr-delete.png" />
+
+### Enhance Function
+
+Lo ngerasa ga bro pas Lo klik delete atau input halaman akan di reload? Itulah ciri - ciri SSR bro karena setiap ada action maka halaman akan reload. Selain itu ketika Lo delete 1 data nanti di url akan ada `/dashboard?remove=true` itu juga sama karena ada action di form dan itu bukan bug. Di Sveltekit ada cara biar kedua hal itu ga terjadi yaotu dengan menggunakan `enhance` function dari `$app/forms`.
+
+Caranya Lo import `import { enhance } from '$app/forms';` lalu Lo pake di form dengan `use:enhance` dan Lo tinggal pake `action` di formnya. Harusnya pas Lo jalanin lagi ga akan reload dan urlnya akan tetep `/dashboard` saja.
 
 </details>
