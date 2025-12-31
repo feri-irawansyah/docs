@@ -1,3 +1,11 @@
+<style>
+    @media screen and (min-width: 768px) {
+        img[alt="ssr-dashboard"] {
+        width: 50% !important;
+        }
+    }
+</style>
+
 Di jaman modern sekarang banyak framework untuk membuat aplikasi khusuanya website. Kalo Lo pasukan king PHP ada Laravel + Livewire, kalo Lo pasukan Java ada Springboot atau kalo Lo pasukan kepiting yang demen di omelin compiler ada Leptos dan masih banyak lagi. 
 
 Di catatan gue kali ini gue mau bahas tentang salah satu framework didunia Java Script yaitu pasukan anak yang hype, egie dan frameworker yang tiap hari kek ada aja gitu. Framework yang akan gue bahas yaitu `Sveltekit`. Catatan ini adalah lanjutan dari [Catatan Ini Tentang Svelte Frontend Library Yang Minimalis](https://feri-irawansyah.my.id/catatan/frontend/catatan-ringan-ini-tentang-svelte-frontend-framework-yang-minimalis). Dimana sekarang Lo bakal baca tulisan gue yang suka typo ini yang membahas tentang Framework dari Svelte. Karena di catatan sebelumnya pernah gue bahas **Framework itu perlu banget kalo Lo kerja secara tim, biar ga ada yang asal nulisin kode - kode nuklir yang bisa bikin aplikasi Lo meledak dan bug jadi numpuk kaya utang Lo**. Lo Bisa kunjungi documentasinya Sveltekit disini
@@ -939,7 +947,7 @@ Sekarang coba Lo pindah halaman ke `/login` harsunya Lo akan di redirect ke `/da
 
 </details>
 
-<details open>
+<details>
 
 <summary><h2>REST API Route 📚</h2></summary>
 
@@ -1261,7 +1269,7 @@ Untuk halaman dashboardnya sekarang gini.
 ```
 
 - Pertama coba Lo ganti urlnya jadi `/dashboard` harusnya akan redirect ke login lagi. Karena Lo belum login.
-- Tapi sekarang jadi kaya ada screen sebentar halaman dashboard dulu sebelum redirect ke login. Nanti kita perbaiki setelah masuk ke Server Action.
+- Tapi sekarang jadi kaya ada screen sebentar halaman dashboard dulu sebelum redirect ke login. Nanti kita perbaiki.
 - Kalo Lo udah login nanti harsusnya akan tampil username dan tombol logout.
 
 kalo Lo mau repiin dikit stylenya boleh
@@ -1278,5 +1286,214 @@ kalo Lo mau repiin dikit stylenya boleh
 ```
 
 <img class="img-fluid" alt="dashboard-api" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/sveltekit-framework/public/dashboard-api.png" />
+
+Kalo misalnya Lo belum login terus mencoba akses ke dashboard yang terjadi adalah halaman dashboard tampil dulu terus redirect ke halaman login. Nah kalo kaya gitu user bisa lohat dashboard meskipun hanya sebentar. Caranya benerinnya pake `+page.js`, coba Lo buat file nya di dashboard.
+
+```js
+// src/routes/dashboard/+page.js
+import { redirect } from '@sveltejs/kit';
+
+export async function load({ fetch }) {
+    const response = await fetch('/api/auth/session');
+    if(!response.ok) {
+        redirect(303, '/login');
+    }
+
+    const user = await response.json();
+    return {
+        user
+    };
+}
+```
+
+```html
+<!-- src/routes/dashboard/+page.svelte -->
+ <script>
+    import { goto } from "$app/navigation";
+    const { data } = $props();
+
+    async function logout() {
+        const response = await fetch('/api/auth/logout', {
+            method: 'DELETE'
+        });
+        if(response.ok) {
+            await goto('/login');
+        }
+    }
+</script>
+
+<div class="w-full flex flex-col items-center">
+    <h1 class="text-2xl font-bold border-b">Hello {data.user.fullname}</h1>
+    <a href={null} class="cursor-pointer" onclick={logout}>Logout</a>
+</div>
+```
+
+Harusnya sekarang udah ga bakal keliatan lagi halaman dashboardnya kalo session nya belum ada.
+
+</details>
+
+<details open>
+
+<summary><h2>Form Action 📚</h2></summary>
+
+Form action adalah fitur bawaan dari web application secara fungsi sebenernya sama aja kaya Lo misalnya pake fetch api pake http POST. Toh intinya yang penting data ke kirim ke server terus dapat response entah error atau success. Tapi ada beberapa perbedaan bro kurang leih kaya gini.
+
+<div class="table-responsive">
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Aspect</th>
+        <th scope="col">Form Action</th>
+        <th scope="col">fetch POST</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th scope="row">1</th>
+        <td>SSR</td>
+        <td>✅ native</td>
+        <td>❌ manual</td>
+      </tr>
+      <tr>
+        <th scope="row">2</th>
+        <td>Progressive</td>
+        <td>✅ Yoi</td>
+        <td>❌ Tidak</td>
+      </tr>
+      <tr>
+        <th scope="row">3</th>
+        <td>Redirect</td>
+        <td>✅ auto</td>
+        <td>❌ manual (page goto)</td>
+      </tr>
+      <tr>
+        <th scope="row">4</th>
+        <td>Cookie/session</td>
+        <td>✅ otomatis</td>
+        <td>⚠️ hati-hati (kadang perlu credentials)</td>
+      </tr>
+      <tr>
+        <th scope="row">5</th>
+        <td>JS mati</td>
+        <td>✅ tetap jalan karena document</td>
+        <td>❌ mati karena runtime</td>
+      </tr>
+      <tr>
+        <th scope="row">6</th>
+        <td>UX SPA</td>
+        <td>⚠️ Statis</td>
+        <td>✅ Bisa smooth</td>
+      </tr>
+      <tr>
+        <th scope="row">7</th>
+        <td>Sveltekit SSR</td>
+        <td>⭐⭐⭐⭐⭐</td>
+        <td>⭐⭐⭐</td>
+      </tr>
+      <tr>
+        <th scope="row">9</th>
+        <td>Security lebih raw</td>
+        <td>✅ Aman</td>
+        <td>⚠️ Harus di validasi</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+Tapi form action di Sveltekit ini hanya bisa dipake di mode SSR, ga isa dipake di mode CSR. Jadi Lo harus hati - hati buat implementasinya. Buat studi kasusnya ceritanya di halaman dashboard kita akan melakukan CRUD untuk list buku.
+
+- Untuk schema tablenya kaya gini
+
+```sql
+CREATE TABLE books (
+    id INT NOT NULL AUTO_INCREMENT,
+    title VARCHAR(255) NOT NULL,
+    description TEXT NOT NULL,
+    year INT NOT NULL,
+    author VARCHAR(255) NOT NULL,
+    PRIMARY KEY (id)
+);
+
+INSERT INTO books (title, description, year, author) VALUES
+    ('Pemrograman PHP', 'Belajar pemrograman PHP', 2024, 'Feri Irawansyah');
+```
+
+Sebelumnya gue mau perbaiki beberapa di halaman dashboard.
+
+- Get session akan gue pindah ke file `routes/dashboard/+page.server.js`.
+- Ceritanya gue mau bikin monolith jadi semua logic didashboard akan di taro di file `routes/dashboard/+page.server.js`.
+- Untuk halaman dashboard ada ada update tampilan.
+
+```html
+<!-- src/routes/dashboard/+page.svelte -->
+ <script>
+    import { goto } from '$app/navigation';
+
+    const { data } = $props();
+
+    async function logout() {
+        const response = await fetch('/api/auth/logout', {
+            method: 'DELETE'
+        });
+        if(response.ok) {
+            await goto('/login');
+        }
+    }
+</script>
+
+<div class="flex justify-between w-full">
+    <h1 class="text-2xl font-bold">Hello {data.user.fullname}</h1>
+    <a href={null} class="cursor-pointer border border-pink-500 px-3 rounded-2xl bg-pink-700" onclick={logout}>Logout</a>
+</div>
+
+<h1 class="text-3xl font-bold text-center my-5">List of Books</h1>
+<button type="button" class="border border-sky-300 px-3 mb-3 rounded-2xl bg-sky-700 cursor-pointer">Tambah Buku +</button>
+
+<div class="grid grid-cols-3 gap-6">
+    {#each data.books as book}
+        <div class="rounded-xl border bg-gray-800 text-white p-4 shadow">
+            <img src="https://picsum.photos/seed/{book.id}/200/300"
+                class="rounded-lg mb-3 w-full object-cover" alt=""/>
+            <h3 class="text-lg font-semibold">{book.title}</h3>
+            <p class="text-xs text-gray-500 border-b border-gray-700 py-2">{book.author} ({book.year})</p>
+            <p class="text-sm text-gray-300 line-clamp-3">
+                {book.description}
+            </p>
+
+            <div class="flex justify-center gap-3 mt-5">
+                <button type="button" class="border border-amber-200 px-3 rounded-2xl bg-amber-500 cursor-pointer">Edit</button>
+                <button type="button" class="border border-red-200 px-3 rounded-2xl bg-red-500 cursor-pointer">Hapus</button>
+            </div>
+        </div>
+    {/each}
+</div>
+```
+
+```js
+// src/routes/dashboard/+page.server.js
+import connection from '$lib/server/connection'
+import { redirect } from '@sveltejs/kit';
+
+export const load = async ({ fetch }) => {
+    const rows = await connection.query(`SELECT * FROM books`);
+
+    const response = await fetch('/api/auth/session');
+    if(!response.ok) {
+        redirect(303, '/login');
+    }
+
+    const user = await response.json();
+
+    return {
+        books: rows.rowCount > 0 ? rows.rows : [],
+        user
+    }
+}
+```
+
+Tampilannya akan kaya gini.
+
+<img class="img-fluid" alt="ssr-dashboard" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/sveltekit-framework/public/ssr-dashboard.png" />
 
 </details>
