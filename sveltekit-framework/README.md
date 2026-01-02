@@ -2048,8 +2048,117 @@ export const reroute = async ({url}) => {
 
 </details>
 
-</details open>
+<details>
 
 <summary><h2>Deployment 📚</h2></summary>
 
+Ini adalah materi terakhir tentang Sveltekit di catatan gue ini yaitu tentang deployment. Setelah Lo ngoding, gelut sama error, terus serasa udah ga abar pen pamer ke orang - orang. Nah deployment ini adalah ritual yang paling sakral kalo Lo mau lakuin hal - hal yang Lo mau itu.
+
+Buat melakukan deployment Lo cukup ketikkan `npm run build`. Nanti tunggu sampe kelar dan selamat web Lo udah jadi. Tapi realitanya ga semudah itu wkwkwk. 
+
+- Perlu diperhatikan, saat proses build ini, semua kode di page dan layout, server maupun client akan di load oleh SvelteKit untuk melakukan analisis.
+- Jika ada kode yang seharusnya tidak di load pada waktu build, itu harus Lo tandain contoh misal Lo nambahin perintah load ke database di Load Function nah mending jangan di jalankan pas build.
+- Pastiin ga ada error dan code udah okeh.
+
+Atau Lo bisa kunjungi dokumentasi <a href="https://svelte.dev/docs/kit/$app-environment#building" target="_blank" rel="noopener noreferrer">https://svelte.dev/docs/kit/$app-environment#building</a>.
+
+### Pre-rendering
+
+Pre-rendering adalah teknik melakukan render dulu sebelum ada request. Jadi Lo bakal memaksa Sveltekit bikinin file HTML dulu di server, jadi pas ada user yang request ke halaman itu Sveltekit ga akan bikin halaman tapi Sveltekit langsung ngasih file HTML.
+
+Untuk membuat pre-rendering Lo bisa tambahin ini di `routes/*.js`:
+
+```js
+export const prerender = true;
+```
+
+Coba Lu tambahin prerender di `routes/(guest)/book/+layout.js`:
+
+```js
+// src/routes/(guest)/book/+layout.js
+export const prerender = true;
+
+export const load = async ({ fetch }) => {
+    const res = await fetch('/api/book.json')
+    const books = await res.json()
+    return {
+        books
+    }
+}
+```
+
+Jadi pas nanti Lo jalanin `npm run build` maka halaman akan di buat dulu di server, jadi pas ada user yang request ke halaman itu Sveltekit langsung ngasih file HTML.
+
+</img class="img-fluid" alt="prerender" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/sveltekit-framework/public/prerender.png">
+
+Sekarang coba Lo jalanin `npm run preview` ini untuk menjalankan aplikasi Sveltekit Lo dalam mode production.
+
+### Adapter
+
+Karena aplikasi Lo udah di build tinggal di deploy. Nah tapi kalo di server Lo jangan pake `npm run preview`. Karena itu bakal di jalanin oleh Vite, sedangkan vite itu bukan runtime tapi build tool. jadi performance aplikasi Lo ga akan maksimal dan bisa jadi lambat.
+
+Disinilah Lo perlu yang namanya adapter. Sveltekit menyediakan beberapa adapter tergantung Lo mau deploy dimana dan sebagai apa. Lo bisa kunjungi documentasi <a href="https://svelte.dev/docs/kit/adapters" target="_blank" rel="noopener noreferrer">https://svelte.dev/docs/kit/adapters</a> buat liat ada macam adapter apa saja.
+
+### Node Server
+
+Karena aplikasi di catatan ini di buat pake nodejs dan typenya SSR, maka runtime yang paling tepat adalah pake NodeJS itu sendiri. Sveltekit punya adapter yang namanya [Adapter Node](https://svelte.dev/docs/kit/adapter-node). Pertama Lo perlu install dulu.
+
+```bash
+npm i -D @sveltejs/adapter-node
+```
+
+Terus Lo buka file `svelte.config.js`:
+
+```js
+// import adapter from '@sveltejs/adapter-auto'; // ganti ini
+import adapter from '@sveltejs/adapter-node'; // jadi ini
+
+/** @type {import('@sveltejs/kit').Config} */
+const config = {
+	kit: {
+		// adapter-auto only supports some environments, see https://svelte.dev/docs/kit/adapter-auto for a list.
+		// If your environment is not supported, or you settled on a specific environment, switch out the adapter.
+		// See https://svelte.dev/docs/kit/adapters for more information about adapters.
+		adapter: adapter()
+	}
+};
+
+export default config;
+```
+
+<img class="img-fluid" alt="adapter-node" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/sveltekit-framework/public/adapter-node.png">
+
+Sekarang warning yang sebelumnya udah ga ada. Dan aplikasi Lo tetep di tempat yang sama yaitu `.svelte-kit/output` dengan `server/index.js` sebagai entry point nya. Tapi Lo belum bisa jalanin pake node. Karena Lo harus konfigurasi sendiri dan perlu seluruh source ini. Agar menjadi 1 folder bundle Lo perlu tamahin parameter `out` di adapter node:
+
+```js
+adapter({
+    out: 'build'
+})
+```
+
+<img class="img-fluid" alt="build" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/sveltekit-framework/public/build.png">
+
+jadi sekarang Lo bisa jalanin gini:
+
+```bash
+node build/index.js
+
+Migration running...
+Listening on http://0.0.0.0:3000
+```
+
+<img class="img-fluid" alt="image" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/sveltekit-framework/public/image.png">
+
+### Single Page Application (SPA/CSR)
+
+Selain Lo bikin jadi mode Server Side Render, Lo bisa juga bikin jadi Single Page Application. Tapi syaratnya ga boleh ada code server seperti file `page.server.js`, folder `lib/server`, file `hooks.server.js` dan configurasi server side lain. Lebih lengkapnya Lo bisa kunjungi dokumentasi <a href="https://svelte.dev/docs/kit/single-page-apps" target="_blank" rel="noopener noreferrer">https://svelte.dev/docs/kit/single-page-apps</a>.
+
 </details>
+
+Lumayan capek juga nulisnya. Udah dulu ya gaes kalo ada pertanyaan atau saran Lo bisa contact gue atau buat form diskusi di [Coffee Room](https://feri-irawansyah.my.id/coffee-room). Terima kasih.
+
+---
+
+<div class="d-flex flex-row justify-content-center align-items-center">Regards <a href="https://feri-irawansyah.my.id"><img style="width: 1rem; height: 1rem;" src="https://feri-irawansyah.my.id/favicon.ico" alt="Feri Irawansyah"> Feri Irawansyah</a></div>
+
+---
