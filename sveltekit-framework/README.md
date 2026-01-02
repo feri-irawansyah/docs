@@ -777,9 +777,9 @@ Lo bisa pake `parent` parameter. Jadi data dari layout itu bisa diambil dengan c
 ```js
 // src/routes/book/[id]/+page.js
 export const load = async ({ params, parent }) => {
-    const id = params.id
+    const id = Number(params.id)
     const books = await parent();
-    const book = books.books.find(book => book.id == id);
+    const book = books.books.find(book => book.id === id);
 
     return {
         id,
@@ -816,6 +816,10 @@ Tapi Itu kan punya Sveltekit kadang di lapangan tim design bakal ngasih halaman 
 
 Cara membuatnya dengan cara membuat file bernama `+error.svelte`. Kalo Lo naronya di folder yang sejajar dengan layout, maka url di bawahnya akan menggunakan halaman error itu. Tapi Lo juga bisa custom perpage agar setiap page punya halaman error sendiri tapi ini hanya berlaku untuk server side.
 
+#### Unexpected Error
+
+Secara default Sveltekit akan menampilkan halaman error 500. Tapi bisa pake file `+error.svelte` untuk custom error page. Ini yang disebut Unexpected error, yaitu error yang terjadi karena ada kesalahan logic atau error code. Sveltekit akan langsung melakukan `throw error(500, message)` ketika terjadi error.
+
 Kalo Lo mau ngehandle error di client side seperti error load function `+page.js` atau `+layout.js` Lo hanya di perbolehkan bikin 1 file error saja di `routes/+error.svelte`
 
 ```html
@@ -841,6 +845,10 @@ export const load = async ({ fetch }) => {
 ```
 
 <img class="img-fluid" alt="error-page" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/sveltekit-framework/public/error-page.png" />
+
+#### Expected Error
+
+Tapi Lo juga bisa custom errornya misalnya ketika Lo melakukan render data tapi datanya tidak ditemukan Lo bisa `thow error(404, message)` di file `+page.js` atau `+page.server.js`. Caranya masih sama dengan sebelumnya dimana Lo tinggal pake component `+error.svelte` dan diisi dengan message errornya.
 
 </details>
 
@@ -1002,8 +1010,6 @@ const connection = new Pool({
     idleTimeoutMillis: 30000, 
 });
 
-export const connectToDb = () => connection.connect();
-
 export default connection;
 ```
 
@@ -1083,8 +1089,6 @@ const connection = new Pool({
     max: 20, 
     idleTimeoutMillis: 30000, 
 });
-
-export const connectToDb = () => connection.connect();
 
 export default connection;
 ```
@@ -1332,7 +1336,7 @@ Harusnya sekarang udah ga bakal keliatan lagi halaman dashboardnya kalo session 
 
 </details>
 
-<details open>
+<details>
 
 <summary><h2>Form Action 📚</h2></summary>
 
@@ -1627,5 +1631,425 @@ Sekarang coba Lo klik tomol deletenya harusnya akan terhapus sesuai id yang Lo k
 Lo ngerasa ga bro pas Lo klik delete atau input halaman akan di reload? Itulah ciri - ciri SSR bro karena setiap ada action maka halaman akan reload. Selain itu ketika Lo delete 1 data nanti di url akan ada `/dashboard?remove=true` itu juga sama karena ada action di form dan itu bukan bug. Di Sveltekit ada cara biar kedua hal itu ga terjadi yaotu dengan menggunakan `enhance` function dari `$app/forms`.
 
 Caranya Lo import `import { enhance } from '$app/forms';` lalu Lo pake di form dengan `use:enhance` dan Lo tinggal pake `action` di formnya. Harusnya pas Lo jalanin lagi ga akan reload dan urlnya akan tetep `/dashboard` saja.
+
+### Validation
+
+Membuat website yang akan menerima request dari user apalagi berkaitan dengan database validasi itu mahal. NBayangin Lo melakukan insert ke table nah Lo ga melakukan validasi pada data yang di input oleh user. Jika ternyata user yang melakukan adalah seorang hacker bisa aja dia menginputkan suatu script ke dalam website Lo ini yang namanya XSS.
+
+Jadi implementasi validation itu penting banget baik itu di client side atau di server side. Pada kasus Sveltekit SSR artinya hlaman akan dirender di server dan form akan do handle oleh valiable `actions` di `page.server.js` jadi gmna cara Lo ambil messagenya?.
+
+Sveltekit memberikan sebuat variable parameter bernama `form` pada props di page yang menggunakan form action. Cara mengirmkannya dengan menggunakan function `fail` dari `@sveltejs/kit`. `fail` punya 2 parameter yaitu `status` dan `data`. Jadi misal `fail(400, { message: 'Error message' })`, nanti akan ke kirim statusnya dan data yang Lo masukin. Lebih lengkapny Lo bisa kunjungi dokumentasinya disini <a href="https://svelte.dev/docs/kit/@sveltejs-kit#fail" target="_blank" rel="noopener noreferrer">https://svelte.dev/docs/kit/@sveltejs-kit#fail</a>.
+
+```js
+// src/routes/dashboard/add/+page.server.js
+import connection from '$lib/server/connection.js';
+import { fail, redirect } from '@sveltejs/kit';
+
+export const actions = {
+    default: async ({ request }) => {
+        const data = await request.formData();
+        
+        const body = {
+            title: data.get('title'),
+            author: data.get('author'),
+            description: data.get('description')
+        }
+
+        if(body.title.length === 0) {
+            return fail(400, { message: 'Title is required' });
+        }
+
+        if(body.author.length === 0) {
+            return fail(400, { message: 'Author is required' });
+        }
+
+        if(body.description.length === 0) {
+            return fail(400, { message: 'Description is required' });
+        }
+
+        const response = await connection.query(`
+            INSERT INTO books (title, author, description, year) 
+            VALUES ('${body.title}', '${body.author}', '${body.description}', ${new Date().getFullYear()})    
+        `);
+
+        if (response.rowCount > 0) {
+            redirect(303, '/dashboard');
+        } else {
+            throw new Error('Failed to add book');
+        }
+    }
+};
+```
+
+Jadi di `page.svelte` Lo bisa ambil error dengan mengunakan `form` dari `$props`
+
+```html
+<!-- src/routes/dashboard/add/+page.svelte -->
+ <script>
+    const { form } = $props();
+</script>
+
+<p class="text-red-500">{form?.message}</p>
+
+<!-- ..... <form... -->
+```
+
+<img class="img-fluid" alt="ssr-validation" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/sveltekit-framework/public/ssr-validation.png" />
+
+</details>
+
+<details>
+
+<summary><h2>Advance Routing 📚</h2></summary>
+
+### Route Grouping
+
+Karena fitur filesystem route di Sveltekit terlalu sakti Lo mesti bingung buat memetakan route berdasarkan groupnya. Misalnya halaman Home, Login, About, Books adalah public dan sedangkan halaman Dashboard adalah private. Tapi layoutnya sama aja. Harusnya layout nya beda. Nah gmna cara membuatnya?.
+
+- Buat ngatasin itu Lo bisa pake cara yang namanya groupng route / options route
+- Caranya dengan menambahkan () pada folder routenya.
+- Folder/route yang memiliki () tidak akan dianggap page oleh Sveltekit dia hanya akan menganggap layoutnya aja.
+- Karena tidak dianggap page. Maka Lo ga boleh bikin halaman yang sejajar dengan groupnya.
+- Misalkan Lo bikin `routes/(guest)/+page.svelte` dan Lo juga punya `routes/+page.svelte` maka ini akan bentrok. Karena Sveltekit menganggapnya adalah satu url.
+
+Untuk lebih lengkapnya Lo bisa kunjungi dokumentasi <a href="https://svelte.dev/docs/kit/page-options" target="_blank" rel="noopener noreferrer">https://svelte.dev/docs/kit/page-options</a>.
+
+Okeh di kasus kita gue mau bikin kaya gini.
+
+- Halaman Home, About, Books adalah guest page. Atau halaman public.
+
+Ini adalah layout utama untuk semua page.
+
+```html
+<!-- src/routes/+layout.svelte -->
+<script>
+	import './layout.css';
+	import favicon from '$lib/assets/favicon.svg';
+	import { page } from '$app/state';
+
+	let { children } = $props();
+
+</script>
+
+<svelte:head>
+	<link rel="icon" href={favicon} />
+	<title>{page.url.pathname.replace('/', '') ? page.url.pathname.replace('/', '').toLocaleUpperCase() : 'HOME'}</title>
+</svelte:head>
+
+<div class="dark min-h-screen bg-gray-800 text-gray-100">
+	{@render children()}
+</div>
+```
+
+```html
+<!-- src/routes/(guest)/+layout.svelte -->
+ <script>
+    import { page } from '$app/state';
+
+    const { children } = $props();
+    const isAactive = (path) => page.url.pathname === path
+</script>
+
+<nav class="p-4 flex gap-4 border-b border-gray-500 justify-center">
+    <a class="text-slate-100 {isAactive('/') ? 'border-b border-blue-400' : ''}" href="/">Home</a>
+    <a class="text-slate-100 {isAactive('/about') ? 'border-b border-blue-400' : ''}" href="/about">About</a>
+    <a class="text-slate-100 {isAactive('/book') ? 'border-b border-blue-400' : ''}" href="/book">Books</a>
+</nav>
+
+<main class="p-4 max-w-2xl mx-auto border border-gray-500 rounded-2xl my-3">
+    {@render children()}
+</main>
+```
+
+<img class="img-fluid" alt="guest-layout" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/sveltekit-framework/public/guest-layout.png" />
+
+- Halaman Login public juga tapi punya layout berbeda
+
+```html
+<!-- src/routes/(auth)/+layout.svelte -->
+ <script>
+    const { children } = $props();
+</script>
+
+<div class="min-h-screen flex flex-col items-center justify-center">
+    {@render children()}
+</div>
+```
+
+<img class="img-fluid" alt="auth-layout" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/sveltekit-framework/public/auth-layout.png" />
+
+- Halaman Dashboard adalah private.
+
+```html
+<!-- src/routes/(private)/+layout.svelte -->
+<script>
+    const { children } = $props();
+</script>
+
+<div class="w-full flex flex-col items-center p-4">
+    {@render children()}
+</div>
+```
+
+<img class="img-fluid" alt="private-layout" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/sveltekit-framework/public/private-layout.png" />
+
+jadi folder `routes` akan menjadi kaya gini.
+
+```bash
+routes/
+├── (auth)/
+|   └── login/
+|       └── +page.svelte
+│   └── +layout.svelte
+├── (guest)/
+│   └── about/
+│   └── book/
+│   └── +layout.svelte
+│   └── +page.svelte
+├── (private)/
+│   └── dashboard/
+│       └── add/
+│           └── +page.svelte
+│           └── +page.server.js
+│       └── +page.svelte
+│       └── +page.server.js
+│   └── +layout.svelte
+├── api/
+└── +error.svelte
+├── +layout.svelte
+├── layout.css
+```
+
+Dengan begini layout tiap halaman akan berbeda sesuai dengan groupnya.
+
+### Hierarchy Route
+
+Kadang Lo mesti pernah ngalamin gini. Misalnya Lo punya template layout pake layout A, nah Lo pingin bikin halaman tapi dia masuknya ke group B, jadi mau ga mau Lo harus pake layoutnya B. Sah-sah aja misalnya Lo masukin page B ke layout A. Tapi kan kan jadi aneh aja kok halaman yang harusnya masuk group ini jadi masuk ke folder lain?
+
+Sveltekit punya fitur yang namanya hierarhy route. Hierarchy route akan membuat halaman Lo bisa pake layout halaman lain. Misalnya Lo pngin bikin halaman contact. Nah masuknya ke guest group kan, tapi tim design ngasihnya layout utama. 
+
+- Sekarang coba Lo buat folder `contact` di guest group untuk filenya namain `+page@.svelte`.
+- `@` inilah yang akan mengambil layout tertentu. Defaultnya mengambil layout utama paling luar. `routes/+layout.svelte`.
+- Lo juga bisa ambil layout lain tapi dengan syarat masih satu group / siblings.
+- Misalnya Lo mau pake layout (auth) itu ga bisa, karena diluar dari group.
+- Karena Lo pake layout lain, maka page itu ga akan pake layout nya sendiri. Misal di cpntact Lo bikin `+layout.svelte` maka itu ga akan dipake.
+
+<img class="img-fluid" alt="hierarchy" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/sveltekit-framework/public/hierarchy.png">
+
+Selain untuk page, Lo juga bisa pake di layout. Jadi layout itu akan mengikuti layout lain.
+
+Sebelumnya contact punya `+layout.svelte` tapi masih kosong. Nah gue mau gue isi kaya gini.
+
+```html
+<!-- src/routes/(guest)/contact/+layout.svelte -->
+ <script>
+    const { children } = $props();
+</script>
+
+<main class="p-4 max-w-2xl mx-auto border bg-red-500 border-gray-500 rounded-2xl my-3">
+    {@render children()}
+</main>
+```
+
+Nah di dalem contact gue mau bikin halaman payment dan layout nya juga. Tapi layoutnya gue mau pake layout punya contact.
+
+```html
+<!-- src/routes/(guest)/contact/payment/+layout@contact.svelte -->
+<script>
+    const { children } = $props();
+</script>
+
+<div class="w-full flex flex-col items-center">
+    {@render children()}
+</div>
+```
+
+<img class="img-fluid" alt="hierarchy-layout" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/sveltekit-framework/public/hierarchy-layout.png">
+
+### Optional Parameter
+
+Sebelumnya membuat parameter di suatu halaman adalah dengan menggunakan `[nama folder]`. Tapi halaman itu harus memiliki parameter di urlnya misalnya `/book/1`. Kalo Lo ga ngasih parameter maka akan kembali ke parent nya. Atau kalo halaman tanpa parent maka akan error. Tapi di Sveltekit Lo juga bisa bikin halaman dengan parameter tapi optional. Artinya Lo bisa akses halaman tanpa parameter.
+
+- Cara membuatnya dengan membungkus folder dengan `[[nama folder]]`.
+- Dengan begini parameter boleh kosong.
+- Tapi harus hati-hati. Misalnya gue bikin `+page.svelte` di profile. Maka nanti akan error karena akan conflic.
+
+<img class="img-fluid" alt="conflic" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/sveltekit-framework/public/conflic.png">
+
+Coba Lo buat kaya di gambar gue terus isi `+page.svelte` nya kaya gini.
+
+```html
+<!-- src/routes/profile/[[id]]/+page.svelte -->
+<script>
+    import { page } from "$app/state";
+</script>
+
+<h1>Profile {page.params.id}</h1>
+```
+
+<div class="row">
+    <div class="col-md-6">
+		<img class="img-fluid" alt="ops-params-1" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/sveltekit-framework/public/ops-params-1.png" />
+	</div>
+    <div class="col-md-6">
+		<img class="img-fluid" alt="ops-params-2" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/sveltekit-framework/public/ops-params-2.png" />
+	</div>
+</div>
+
+### Rest Parameter
+
+Lo merti pernah nemuin website yang punya halaman /parameter/parameter/parameter/parameter panjang intinya parameternya. Misalnya kaya google drive atau aplikasi file management lain kaya onedrive web. Kebayang ga bro misalnya Lo buat pake framework yang filesystem routing. Artinya Lo bahal bikin halaman `routes/[file]/[file]/[file]/[file]` akan kaya gini.
+
+Ini akan merepotkan bro. Untunganya Sveltekit punya cara buat nanganin itu. Caranya sama kaya bikin route parameter cuma nama foldernya di spread jadi `[...file]. COba Lo buat route baru do private aja.
+
+```html
+<!-- src/routes/(private)/files/[...file]/+page.svelte -->
+<script>
+    const { data } = $props();
+</script>
+
+<p>File: {data.file}</p>
+```
+
+```js
+// src/routes/(private)/files/[...file]/+page.js
+export const load = async ({params}) => {
+    return {
+        file: params.file
+    };
+}
+```
+
+<img class="img-fluid" alt="spread-route" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/sveltekit-framework/public/spread-route.png" />
+
+### Match Parameter
+
+Sekarang coba Lo ke halaman book dan disitu Lo isi parameternya bebas itu karena default parameter emng gitu, Lo bisa masukin apa aja misal kaya gini.
+
+<img class="img-fluid" alt="nomatch-param" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/sveltekit-framework/public/nomatch-param.png">
+
+Akan error karena null tidak ditemukan. Dan harusnya isinya adalah angka atau number aja ga boleh karakter. Sveltekit punya folder special lain agar Lo bisa kontrol parameter yang di kirimkan di url. Namanya adalah folder `params`. Kalo Lo inget di awal catatan ini ada architecture Sveltekit dimana ada folder `src/params/`. Disinilah Lo bisa lakuin Match Parameter.
+
+- Di folder ini Lo bisa bikin file.js dengan nama sesuai parameter yang Lo punya. Misalnya book/id artinya namanya `id.js`.
+- Di dalem sini Lo dikasih 1 function namanya `match` dan punya parameter dimana isinya adalah url parameter Lo
+- Lo harus melakukan initialisasi ke folder `[id]` Lo = `id.js` kaya gini `[id=id]`
+
+```js
+// src/params/id.js
+export function match(param) {
+  return /^\d+$/.test(param);
+}
+```
+
+Ganti folder `[id]` jadi `[id=id]`.
+
+<img class="img-fluid" alt="match-param" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/sveltekit-framework/public/match-param.png">
+
+Dengan gini maka messagenya akan Not Found atau 404 ini yang bener karena params nya ga menyediakan data itu.
+ 
+</details>
+
+<details>
+
+<summary><h2>Hooks 📚</h2></summary>
+
+Hooks adalah fitur di Sveltekit yang akan dieksekusi ketika ada suatu kejadian. Hooks adalah middleware di Sveltekit dimana dia bisa di set jalan paling awal dan tanpa harus ke url tertentu. Sebelumnya seperti page atau layout fungsi di dalamnya hanya akan jalan ketika Lo mengakses nya aja.
+
+Hooks punya 3 hooks
+
+- Server Hooks `hooks.server.js` hook ini hanya bisa dipake di SSR
+- Client Hooks `hooks.client.js` hook ini hanya bisa dipake di CSR
+- Universal Hooks `hooks.js` hook yang mau jalan di dua sisi
+
+### Server Hooks
+
+Server Hooks akan dijalankan setiap SvelteKit menerima request, baik itu ketika aplikasi berjalan, ataupun ketika prerender. Jadi server hooks ini bisa Lo pake misalnya ketika awal buka website Lo mau bikin Otorisasi atau Otektikasi biar user Lo ga bisa masuk sembarangan.
+
+Cara bikin server hooks Lo tinggal bikin file `hooks.server.js` dan bikin function `handle(request)`, dimana parameter request merupakan object berisi attribute event dan resolve. Terus Lo bisa lakuin apapun atau ubah response dengan mengembalikan object `Response`, atau jika ingin meneruskan request ke aplikasi, kita bisa menggunakan attribute resolve pada request. jadi ada 4 function yang di miliki hooks.
+
+- `handle(request)` dipanggil setiap request. Isi parameter adalah `({event, resolve})`
+- `handleError(request, error)` dipanggil ketika ada error. Isi parameter adalah `({event, resolve})`
+- `handleFetch(request)` dipanggil setiap request tapi untuk menjalankan http call. Isi parameter adalah `({event, resolve, fetch})`
+- `init()` dipanggil sekali saat SvelteKit dimulai.
+
+Tapi Lo ga bisa bikin fetch atau http call, soalnya server hooks ga punya parameter fetch. Tapi Lo bisa pake function `handleFetch(request)`. Kalo buat error Lo bisa pake function `handleError(request, error)`. Ini function perilakukan langsung http call jadi ati-ati kalo mau pake. Biasanya server hooks ini dipake buat kaya gini.
+
+- Buat Otorisasi
+- Buat Otektikasi
+- Logging request
+- Rate limiting
+- Security headers
+
+Okeh sekarang coba Lo buat file `hooks.server.js` di `src`, ceritanya gue mau bikin logging untuk setiap request masuk.
+
+```js
+// src/hooks.server.js
+export const handle = async ({ event, resolve }) => {
+    console.log('request ke:', event.url.href);
+
+    return resolve(event);
+};
+
+export const handleError = ({ error, event }) => {
+    console.error('Error di:', event.url.pathname);
+    console.error(error);
+
+    return {
+        message: 'Terjadi kesalahan'
+    };
+};
+
+export const init = async () => {
+    console.log("Migration running...");
+}
+```
+
+<img class="img-fluid" alt="hooks-server" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/sveltekit-framework/public/hooks-server.png">
+
+Ketika ada error maka akan dijalankan
+
+<img class="img-fluid" alt="hooks-server-error" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/sveltekit-framework/public/hooks-server-error.png">
+
+Ketika Sveltekit jalan pertama kali maka akan dijalankan
+
+<img class="img-fluid" alt="hooks-server-init" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/sveltekit-framework/public/hooks-server-init.png">
+
+### Client Hooks
+
+Jika server hooks hanya bisa jalan di server maka client hooks hanya bisa jalan di client aja. Jadi client hooks hanya bisa akses window dan cuma cocok buat UI concern seperti global toast, atau handler error secara UI biar tidak membosankan. 
+
+```js
+// src/hooks.client.js
+export const init = async () => {
+    console.log("Client running...");
+};
+
+export const handleError = async ({ error }) => {
+    console.error("Ups: ", error);
+};
+```
+
+<img class="img-fluid" alt="hooks-client" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/sveltekit-framework/public/hooks-client.png">
+
+### Universal Hooks
+
+Hooks ini bisa dipake di server dan client. Jadi bisa dipake buat akses cookie, akses db, akses window, localstorage dll. Tapi Universal ini kurang direkomendasikan, karena meskipun bisa dipake di kedua sisi biasanya ketika mengakses server Universal hooks akan gagal akses window. Jadi bisa error. 
+
+Universal hook ini recomended kalo Lo misalnya mau buat mengubah url misalnya Lo punya halaman / Lo ganti jadi /home, tapi foldernya tetep mengakses ke `+page.svelte` paling luar. Untuk melakukan itu Lo bisa pake function yang namanya `reroute` ini hanya ada di Universal hooks.
+
+```js
+// src/hooks.js
+export const reroute = async ({url}) => {
+    if(url.pathname === "/") {
+        return "/home";
+    }
+};
+```
+
+</details>
+
+</details open>
+
+<summary><h2>Deployment 📚</h2></summary>
 
 </details>
