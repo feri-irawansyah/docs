@@ -27,13 +27,13 @@ Vue JS engga bro, timnya bikin ekosistemnya sendiri, jadi buat jangka panjang am
 
 Hampir semua frontend library/framework modern semuanya pake Component Base. Apa tuh? Component adalah suatu bagian, element atau unit `mandiri` artinya terisolasi dari component lain dimana didalamnya bisa berisi suatu fungsi, design atau data.
 
-Gambarannya gini Lo bikin web pake component, artinya website Lo itu di buat dari pretelan - pretelan block lego, nah terus pretelan itu Lo susun sampe jadi pretelan yang lebih gede sampe jadi suatu halaman. Kalo Lo bandingan pake native js, Lo kaya lagi bikin patung pake tanah liat cok, Lo basahin, poles - poles, basahin lagi, bentuk anuan sampe jadi, tapi itu kek dewa bisa jadi malah bentuknya kaya jombie.
+Gambarannya gini Lo bikin web pake component, artinya website Lo itu di buat dari pretelan - pretelan block lego, nah terus pretelan itu Lo susun sampe jadi pretelan yang lebih gede sampe jadi suatu halaman. Kalo Lo bandingan pake native js, Lo kaya lagi bikin patung pake tanah liat cok, Lo basahin, poles - poles, basahin lagi, bentuk anuan sampe jadi, tapi itu Lo harus punya skill dewa dan kalo biasa - biasa aja bisa jadi malah bentuknya kaya jombie.
 
 Nah dekan pendekatan component, Lo harusnya bakal lebih mudah bikinnya.
 
 </details>
 
-<details open>
+<details>
 <summary><h2>Getting Started 📚</h2></summary>
 
 Biasa kalo Lo mau bikin aplikasi Lo perlu siapin beberapa sesajen dulu bro biar khusyuk.
@@ -201,10 +201,106 @@ Function `createApp` ini digunakan untuk membuat App Vue JS. Dimana aplikasi Vue
     <title>get-started-vue</title>
   </head>
   <body>
-    <div id="app"></div>
+    <div id="app"></div> <!-- elemen di panggil di file main.js -->
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>
 ```
+
+### Membuat Component Vue JS
+
+Sebeperti sebelumnya ketika membuat file dengan extention `.vue` maka file tersebut akan menjadi sebuah component. Okeh sekarang coba Lo buat beberapa file baru.
+- `src/components/HelloVue.vue`
+- `src/hello.js`
+- `hello.html`
+
+```html
+<!-- src/components/HelloVue.vue -->
+<script>
+    console.log('Hello Vue');
+</script>
+
+<template>
+    <h1>Hello Vue</h1>
+</template>
+```
+
+```js
+// src/hello.js
+import { createApp } from 'vue'
+import HelloVue from './components/HelloVue.vue'
+
+createApp(HelloVue).mount('#hello')
+```
+
+```html
+<!-- hello.html -->
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hello Vue</title>
+  </head>
+  <body>
+    <div id="hello"></div> <!-- elemen di panggil di file hello.js -->
+    <script type="module" src="/src/hello.js"></script>
+  </body>
+</html>
+```
+
+Nah sekarang coba Lo buka url http://localhost:5173/hello, Nah Lo udah bikin Hello Vue.
+
+<img src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/vue-js-dasar/assets/hello-vue.png" class="img-fluid" alt="hello-vue"/>
+
+Disini component gue ini tanpa tag `style` dan tapi jalan aman tanpa setup karena gue hanya pake code Javascript biasa, beda cerita kalo misalnya gue pake fitur - fitur dari Vue JS. Defaultnya 1 file `.vue` itu Single File Component (SFC) jadi componentnya akan mengikuti nama filenya, makanya di rekomendasikan menggunakan format PascalCase biar punya standarisasi.
+
+Kalo component di panggil di HTML maka akan jadi `<HelloVue />` seperti tag Html biasa.
+
+</details>
+
+<details open>
+<summary><h2>API Vue Style 📚</h2></summary>
+
+Di catatan gue ini sekarang Vue menyediakan 2 API Style yaitu Options API dan Composition API.
+
+### Options API
+
+Option API ini ada sejak Vue versi 2 dan masih stable sampai Vue 2, jadi kalo Lo pake style ini masih compatible asalkan jangan di campur dengan composition api.
+
+Disebut Options API karena Lo akan membuat Logic Component menggunakan Object Options, yang berisikan data, method dan mounted. Jadi nanti Lo bikin logic di scriptnya pake bentuk object. Keliatannya rapi ya karena didalan satu object nanti tinggal di panggil objectnya.
+
+Contoh:
+```html
+<script>
+export default {
+    // Define data atau state pake keyword data
+    data() {
+        return {
+            count: 0
+        }
+    },
+
+    // Define method
+    methods: {
+        increment() {
+            this.count++
+        }
+    },
+
+    // Define mounted atau lifecycle
+    mounted() {
+        console.log(`The initial count is ${this.count}.`)
+    }
+}
+</script>
+
+<template>
+  <button @click="increment">Count is: {{ count }}</button>
+</template>
+```
+
+Tapi kalo kasusnya makin gede kompleks gitu ini akan lebih ribet, misalnya ada banyak state itu Lo harus define keyword `data` nambah method juga sama.
 
 </details>
