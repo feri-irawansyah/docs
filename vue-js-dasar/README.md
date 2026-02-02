@@ -256,16 +256,20 @@ Nah sekarang coba Lo buka url http://localhost:5173/hello, Nah Lo udah bikin Hel
 
 Disini component gue ini tanpa tag `style` dan tapi jalan aman tanpa setup karena gue hanya pake code Javascript biasa, beda cerita kalo misalnya gue pake fitur - fitur dari Vue JS. Defaultnya 1 file `.vue` itu Single File Component (SFC) jadi componentnya akan mengikuti nama filenya, makanya di rekomendasikan menggunakan format PascalCase biar punya standarisasi.
 
-Kalo component di panggil di HTML maka akan jadi `<HelloVue />` seperti tag Html biasa.
+Kalo component di panggil di HTML maka akan jadi `<HelloVue />` seperti tag Html biasa. Untu tag `<script setup></script>` direkomendasikan pake atribut `setup` jadi gue bisa pake fitur khusus dari Vue JS.
 
 </details>
 
 <details open>
-<summary><h2>API Vue Style 📚</h2></summary>
+<summary><h2>Templating Engine 📚</h2></summary>
+
+Vue menggunakan Templating Engine berupa component base, nah didalam templating ini ada banyak fitur yang Vue sediain buat Lo pake.
+
+### Component API Style
 
 Di catatan gue ini sekarang Vue menyediakan 2 API Style yaitu Options API dan Composition API.
 
-### Options API
+#### Options API
 
 Option API ini ada sejak Vue versi 2 dan masih stable sampai Vue 2, jadi kalo Lo pake style ini masih compatible asalkan jangan di campur dengan composition api.
 
@@ -301,6 +305,123 @@ export default {
 </template>
 ```
 
-Tapi kalo kasusnya makin gede kompleks gitu ini akan lebih ribet, misalnya ada banyak state itu Lo harus define keyword `data` nambah method juga sama.
+Tapi kalo kasusnya makin gede kompleks gitu ini akan lebih ribet, misalnya ada banyak state itu Lo harus define keyword `data` nambah method juga sama. Code script mungkin bisa jadi akan lebih panjang kalo logicnya semakin banyak.
+
+#### Composition API
+
+Composition API ini ada sejak Vue versi 3 dan masih stable sampai Vue 3, jadi pake style composition ini Lo udah ga perlu bikin pake object options lagi. Vue udah nyediain beberapa api yang bisa Lo pake. Kurang lebihnya kaya gini untuk compotition api.
+
+```html
+<script setup>
+import { ref, onMounted } from 'vue'
+
+// reactive state
+const count = ref(0)
+
+// functions or methods
+function increment() {
+  count.value++
+}
+
+// lifecycle hooks
+onMounted(() => {
+  console.log(`The initial count is ${count.value}.`)
+})
+</script>
+
+<template>
+  <button @click="increment">Count is: {{ count }}</button>
+</template>
+```
+
+Codenya terlihat lebih sedikit meskipun tidak dibungkus dalam 1 object, tapi pada intinya sama. DI catatan ini gue bakal sering pake Vue 3 artinya bakal pake Composition API.
+
+### Template
+
+Sebelumnya Lo harusnya udah beberapa kali pake `template` tag, nah disinilah Lo bisa pake HTML di dalam tag `<template></template>`. Tapin sebenernya yang terjadi itu tidak langsung tampil di HTML, sebenernya Vue akan melakukan kompilasi dulu jadi code javascript, nah jadi element yang ditampilkan itu adalah element HTML yang dibuat pake Javascript, bukan langsung di tulis ke file html.
+
+```html
+<template>
+  <h1>Hello Vue</h1>
+  <p>Gue adalah Satria Baja Ringan</p>
+</template>
+```
+
+### Text Interpolation / Text Expression
+
+Salah satu feature yang ada di templating engine Vue adalah `text interpolation`, atau orang kadang menyebutnya `text expression`. Fitu ini berfungsi menampilkan suatu data ke element HTML. 
+
+- Text Interpolation menggunakan <a href="https://mustache.github.io/" target="_blank" rel="noopener noreferrer">Mustache</a> format yaitu `{{}}` pake kurung kurawal 2 kali.
+- Text Interpolation ini akan menampilkan data dalam bentuk plain text, jadi bukan code atau element html.
+
+```html
+<!-- src/components/HelloWorld.vue -->
+ <script setup>
+    const name = 'Satria Baja Ringan'
+    const heading = '<h1>Hello Vue</h1>'
+</script>
+
+<template>
+    {{ heading }}
+    <p>My name is {{ name }}</p>
+</template>
+```
+
+<img src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/vue-js-dasar/assets/text-interpolation.png" class="img-fluid" alt="text-interpolation"/>
+
+Nah dengan ini artinya aman dari serangan XSS (Cross Site Scripting.), jadi misalnya ada yang iseng gitu kirim kode text dalam bentuk HTML, Vue ga akan tuh nampilin dalam bentuk HTML, tetapi akan nampilin sebagai plain text.
+
+### Raw HTML
+
+Tapi kadang Lo juga mesti ada tuh perlu menampilkan suatu HTML text, tapi sayangnya di Text Interpolation ini ga bisa. Vue punya directive untuk menanganinya yaitu `v-html`. `v-html` ini menjadi atribut HTML, Jadi yang sebelumnya `{{ heading }}` yang isinya `<h1>Hello Vue</h1>` maka akan tampil.
+
+Di Vue atribut yang di awali dengan `v-` ini disebut directive, ada banyak directive yang bisa Lo pake. Nanti bakal kita coba satu-satu.
+
+```html
+<!-- src/components/HelloWorld.vue -->
+<script setup>
+    const name = 'Satria Baja Ringan'
+    const heading = '<h1>Hello Vue</h1>'
+</script>
+
+<template>
+    <div v-html="heading"></div>
+    <p>My name is {{ name }}</p>
+</template>
+```
+
+<img src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/vue-js-dasar/assets/v-html.png" class="img-fluid" alt="v-html"/>
+
+### Attributes Binding
+
+Mustache ga bisa digunakan pada attribute di Element kalo Lo pingin pake variable pada attribute di Element, Lo perlu menggunakan Directive `v-bind:nama-attribute`. Misalnya kaya Lo mau pake attribute `class` di Element HTML yang isinya itu variable.
+
+Nah ini mungkin bakal sering banget dipake jadi Vue ini nyediain shortcut untuk membuat attribute binding `v-bind:nama-attribute` jadi `:nama-attribute`.
+
+```html
+<!-- src/components/HelloWorld.vue -->
+<script setup>
+    const name = 'Satria Baja Ringan'
+    const heading = '<h1>Hello Vue</h1>'
+    const classHeading = 'heading'
+    const className = 'name'
+</script>
+
+<template>
+    <div v-html="heading" v-bind:class="classHeading"></div>
+    <p :class="className">My name is {{ name }}</p>
+</template>
+
+<style scoped>
+    .heading {
+        color: red;
+    }
+    .name {
+        color: green;
+    }
+</style>
+```
+
+<img src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/vue-js-dasar/assets/v-bind.png" class="img-fluid" alt="v-bind"/>
 
 </details>
