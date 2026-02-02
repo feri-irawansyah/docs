@@ -4,6 +4,7 @@ Kenapa si harus pake Framework pake HTML, CSS, JS juga kelar. Yaaa emng wkwkwk, 
 
 Kecuali Lo ini bener - bener suhunya dan Lo bisa guide 1 tim biar ngikutin cara Lo ngoding mungkin lain cerita, tapi realitanya kadang di tim yang udah kaya keluarga pun masih sruduk - srudukan kek orang abis kerasukan kuda lumping. Lo ngajarin eh taunya malah di kucilin😂. Nah disinilah perlu adanya Framework untuk `Standarisasi`. Jadi ga bisa tuh Lo senggol - senggolan atau `adu mekanik`, karena Lo wajib ngikutin standar si frameworknya.
 
+<details>
 <summary><h2>Salam Kenal Dari Vue JS 📚</h2></summary>
 
 ### Documentation Vue JS
@@ -32,6 +33,7 @@ Nah dekan pendekatan component, Lo harusnya bakal lebih mudah bikinnya.
 
 </details>
 
+<details open>
 <summary><h2>Getting Started 📚</h2></summary>
 
 Biasa kalo Lo mau bikin aplikasi Lo perlu siapin beberapa sesajen dulu bro biar khusyuk.
@@ -41,6 +43,7 @@ Biasa kalo Lo mau bikin aplikasi Lo perlu siapin beberapa sesajen dulu bro biar 
 - Tau fundamental HTML, CSS, JS. (Ini wajib, Lo harus tau 3 anuan ini dulu sebelum pake Framework)
 - <a href="https://nodejs.org/" target="_blank" rel="noopener noreferrer">NodeJS</a>
 - <a href="https://code.visualstudio.com/" target="_blank" rel="noopener noreferrer">VS Code</a> (Lo bisa pake code editor lain. Tapi menurut gue paling enak pake VS Code)
+- <a href="https://code.visualstudio.com/docs/nodejs/vuejs-tutorial#_vue-official-extension" target="_blank" rel="noopener noreferrer">Vue Official Extention</a>
 - <a href="https://vitejs.dev/" target="_blank" rel="noopener noreferrer">Vite</a> Fundamental.
 
 ### Membuat Project
@@ -113,5 +116,95 @@ o  Starting dev server...
 Nah sekarang coba Lo buka url http://localhost:5173, Nah Lo udah bikin Vite + Vue project.
 
 <img src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/vue-js-dasar/assets/get-started-vue.png" class="img-fluid" alt="get-started-vue"/>
+
+### Vite + Vue Project Structure
+
+Untuk Arsitektur projectnya akan seperti ini:
+
+<img src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/vue-js-dasar/assets/structure-vite.png" class="img-fluid" alt="structure-vite"/>
+
+Ini memang structure project yang Vite JS buat, untuk belajar dasar - dasar Vue JS. Nantinya ketika Lo mau bikin aplikasi Vue JS Lo ga bakal pake arsitektur ini, karena ada arsitektur khusus yang udah dibuatin sama tim Vue JS. Nanti bakal gue bahas.
+
+### Component Vue JS
+
+Kalo Lo buka file `App.vue` isinya harusnya gini:
+
+```html
+<script setup>
+import HelloWorld from './components/HelloWorld.vue'
+</script>
+
+<template>
+  <div>
+    <a href="https://vite.dev" target="_blank">
+      <img src="/vite.svg" class="logo" alt="Vite logo" />
+    </a>
+    <a href="https://vuejs.org/" target="_blank">
+      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
+    </a>
+  </div>
+  <HelloWorld msg="Vite + Vue" />
+</template>
+
+<style scoped>
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.vue:hover {
+  filter: drop-shadow(0 0 2em #42b883aa);
+}
+</style>
+```
+
+Ini adalah struktur component di Vue JS. Kalo Lo sebelumnya pake React Lo mesti harus bikin suatu function atau class untuk component. Nah di Vue engga bro, Lo hanya perlu bikin file dengan format `.vue` maka file itu udah jadi component. DIdalamnya wajib ada tag`<template>` dan `<script setup>`.
+
+```html
+<script setup>
+    // code Javascript
+</script>
+<template>
+  <!-- code HTML -->
+</template>
+```
+
+- Tag `<script setup></script>` ini wajib punya atribut `setup`. Untuk menandakan bahwa didalamnya Lo akan menuliskan fitur khusus punya Vue. Kalo Lo hapus maka fitur Vue tidak akan jalan dan akan di anggap tag `<script>` biasa.
+- Tag `<template>` ini wajib punya atribut `template`. Untuk menandakan bahwa didalamnya Lo akan menuliskan HTML. Kalo Lo hapus maka akan error. Karena Vue JS hanya mengenali element yang ada dalam tag `<template>`.
+- Tag `style` ini optional, bisa ada bisa tidak.
+
+### Create App Vue JS
+
+Kalo Lo buka file main.js isinya gini:
+
+```js
+import { createApp } from 'vue'
+import './style.css'
+import App from './App.vue'
+
+createApp(App).mount('#app')
+```
+
+Function `createApp` ini digunakan untuk membuat App Vue JS. Dimana aplikasi Vue JS Lo itu jalan di element dengan id `app`. Element itu ada di file `index.html`:
+
+```html
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>get-started-vue</title>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
+```
 
 </details>
