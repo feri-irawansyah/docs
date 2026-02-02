@@ -260,7 +260,7 @@ Kalo component di panggil di HTML maka akan jadi `<HelloVue />` seperti tag Html
 
 </details>
 
-<details open>
+<details>
 <summary><h2>Templating Engine 📚</h2></summary>
 
 Vue menggunakan Templating Engine berupa component base, nah didalam templating ini ada banyak fitur yang Vue sediain buat Lo pake.
@@ -371,6 +371,12 @@ Salah satu feature yang ada di templating engine Vue adalah `text interpolation`
 
 Nah dengan ini artinya aman dari serangan XSS (Cross Site Scripting.), jadi misalnya ada yang iseng gitu kirim kode text dalam bentuk HTML, Vue ga akan tuh nampilin dalam bentuk HTML, tetapi akan nampilin sebagai plain text.
 
+Lo juga bisa pake method - method Javascipt di dalam `{{}}`. Tapi ga semua method bro, cuma beberapa aja nah lebih detailnya Lo bisa check disini bro <a href="https://github.com/vuejs/core/blob/main/packages/shared/src/globalsAllowList.ts#L3" target="_blank" rel="noopener noreferrer">Javascript Expressions</a>. Ini benerapa code Javascript yang ga boleh dipake di dalam `{{}}`.
+
+```html
+<p>My name is {{ name.toUpperCase() }}</p>
+```
+
 ### Raw HTML
 
 Tapi kadang Lo juga mesti ada tuh perlu menampilkan suatu HTML text, tapi sayangnya di Text Interpolation ini ga bisa. Vue punya directive untuk menanganinya yaitu `v-html`. `v-html` ini menjadi atribut HTML, Jadi yang sebelumnya `{{ heading }}` yang isinya `<h1>Hello Vue</h1>` maka akan tampil.
@@ -398,6 +404,8 @@ Mustache ga bisa digunakan pada attribute di Element kalo Lo pingin pake variabl
 
 Nah ini mungkin bakal sering banget dipake jadi Vue ini nyediain shortcut untuk membuat attribute binding `v-bind:nama-attribute` jadi `:nama-attribute`.
 
+Termasuk juga untuk value yang berupa boolean. Misalnya kalo Lo mau pake attribute `disabled` di Element HTML, Lo bisa pake `v-bind:disabled` atau `:disabled` juga.
+
 ```html
 <!-- src/components/HelloWorld.vue -->
 <script setup>
@@ -405,11 +413,13 @@ Nah ini mungkin bakal sering banget dipake jadi Vue ini nyediain shortcut untuk 
     const heading = '<h1>Hello Vue</h1>'
     const classHeading = 'heading'
     const className = 'name'
+    const disabledButton = true
 </script>
 
 <template>
     <div v-html="heading" v-bind:class="classHeading"></div>
     <p :class="className">My name is {{ name }}</p>
+    <button :disabled="disabledButton">Submit</button>
 </template>
 
 <style scoped>
@@ -423,5 +433,20 @@ Nah ini mungkin bakal sering banget dipake jadi Vue ini nyediain shortcut untuk 
 ```
 
 <img src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/vue-js-dasar/assets/v-bind.png" class="img-fluid" alt="v-bind"/>
+
+Lo juga bisa bro pake 2 atribut bersamaan bro. Misanya pake `v-bind` dan `v-html` atau yang lainnya.
+
+```html
+<div v-html="heading" v-bind:class="classHeading"></div>
+```
+
+</details>
+
+<details>
+<summary><h2>Directives 📚</h2></summary>
+
+Sebelumnya Lo udah nyoba 2 directive Vue yaitu `v-html` sama `v-bind` selain itu masih banyak lagi bro, tapi atribut directive selalu berawalan `v-`. Directive ini bisa punya argument atau engga, kalo misalnya punya argument maka Lo bisa pake `:` tapi kalo ya ga punya argument kaya `v-html` itu ga boleh pake `:`.
+
+Selain itu Argument pada directive juga bisa menerima dynamic object atau data, misalnya Lo pingin isi atribut html `aria-label`, `class`, `href` dll dalam satu directive bisa caranya pake kurung kotak `[]`.
 
 </details>
