@@ -1,0 +1,1 @@
+Vue itu mudah dan menyenangkan
