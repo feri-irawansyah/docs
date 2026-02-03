@@ -911,14 +911,59 @@ Nah di beberapa kasus mungkin kita perlu melakukan clean up sebelum state beruba
 
 </details open>
 
-<details>
+<details open>
 <summary><h2>Directives 📚</h2></summary>
 
-Sebelumnya Lo udah pake beberapa directive Vue yaitu `v-html` sama `v-bind` selain itu masih banyak lagi bro, tapi atribut directive selalu berawalan `v-`. Directive ini bisa punya argument atau engga, kalo misalnya punya argument maka Lo bisa pake `:` tapi kalo ya ga punya argument kaya `v-html` itu ga boleh pake `:`.
+Sebelumnya Lo udah pake beberapa directive Vue yaitu `v-html` sama `v-bind` selain itu masih banyak lagi bro, tapi atribut directive selalu berawalan `v-`. Directive ini bisa punya argument atau engga, kalo misalnya punya argument maka Lo bisa pake `:` tapi kalo ya ga punya argument kaya `v-html` itu ga boleh pake `:`. Lebih detailnya Lo bisa kunjungi ini <a href="https://vuejs.org/api/built-in-directives.html" target="_blank" rel="noopener noreferrer">https://vuejs.org/api/built-in-directives.html</a>.
+
+### Directive Arguments
+
+Salah satu directive yang punya argument adalah `v-bind` atau `:`. Biasanya menerima argument berupa atribut tag HTML seperti `class`, `aria-label`, `href` dll. Selain itu ada `v-on` yang menerima argument berupa event seperti `click`, `keydown` dll.
 
 Selain itu Argument pada directive juga bisa menerima dynamic object atau data, misalnya Lo pingin isi atribut class `red`, `bold`, `uppercase` dll dalam satu directive bisa caranya pake kurung kotak `:class="['red', 'bold', 'uppercase']"` atau bisa menggunakan object `:class="{ red: red, bold: bold, uppercase: uppercase }"`.
 
+### Directive Modifiers
 
+Selain punya argument, beberapa directive juga bisa punya modifier seperti `v-on`. Contohnya Lo bikin function ini untuk form.
+
+```html
+<form v-on:submit.prevent="submit">
+    ....
+</form>
+```
+
+Kalo misal di Vanila JS begini
+
+```js
+const form = document.querySelector('form');
+form.addEventListener('submit', (event) => {
+    event.preventDefault();
+});
+```
+
+### Control Flow Directive `v-if`
+
+Kadang Kalo lo pingin menampilkan itu ga mentah - mentah Lo render bukan bro?, Misalnya jika count lebih besar dari 5 maka Lo pingin tampilin *sedang*, kalo lebih dari 9 *besar* dan sisanya *kecil*. Vue nyediain directive bernama `v-if` untuk itu.
+
+```html
+<div v-if="count > 5">sedang</div>
+
+<div v-else-if="count > 10">besar</div>
+
+<div v-else>kecil</div>
+```
+
+### Hide Directive `v-show`
+
+Ketika Lo pake control flow pake `v-if` artinya element yang tidak memenuhi kriteria tidak akan di tambahkan ke DOM, jadi hanya element yang memenuhi kriteria aja. Ada kalanya Lo juga pingin menambahkan elementnya ke DOM tapi hanya di hide aja. Vue juga nyediaiin directive bernama `v-show` untuk itu.
+
+```html
+<div v-show="count > 5">sedang</div>
+```
+
+Bedanya apa tuh? `v-show` tidak membuang element dari DOM, hanya di hide aja. Sedangkan `v-if` akan membuang element dari DOM. Biasanya `v-show` digunakan untuk animasi.
+
+### Iteration Directive `v-for`
 
 </details>
 
