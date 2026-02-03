@@ -9,7 +9,7 @@ Dan password adalah data pribadi seseorang yang ga boleh diketahui orang lain. K
 
 Untuk menghindari hal - hal yang ga Lo inginkan itu Lo perlu implementasi `Hash Password`. Ada banyak bro caranya Lo bisa bikin generate random dan kombinasi banyak karakter dan angka. Atau Lo bisa pake `Cryptograpics` seperti `MD5`, `SHA-1`, `SHA-256` atau Lo bisa pake alghoritma hashing khusus untuk password yang sudah di standarisasi dan di gunakan diseluruh dunia kaya `Bcrypt`, `Scrypt`, `Argon2`, dll. Semua tergantung kebutuhan Lo yang enting **PASSWORD USER TIDAK KELIHATAN**. 
 
-Di catatan ini gue bakal bahas tentang hashing password khususnya untuk `Bcrypt`. Ouh iya nanti gue juga ada contoh implementasinya pake `Rust`, `.Net` dan `NodeJS`.
+Di catatan ini gue bakal bahas tentang hashing password khususnya untuk `Bcrypt`. Ouh iya nanti gue juga ada contoh implementasinya pake `Rust`, `.Net` dan `NodeJS`. Kenapa di 3 bahasa ini ya karena ketiganya ini yang biasa gue pake dan familiar. Rust bahasa favorit, C# dipake di kantor dan JS ya mau ga mau harus bisa kan katanya Lo bisa javascript Lo adalah raja.
 
 <details>
 <summary><h2>Kenalan Sama Hash 📚</h2></summary>
@@ -330,7 +330,7 @@ Tapi buat apa ya? Wkwkwkwk. Ini biasanya digunakan untuk audit security dan migr
 
 Default karakter yang bisa di hash oleh Rust bcrypt adalah 72 bytes. Kalo lebih dari itu maka kepotong ya meski tidak mungkin ada orang masukin password panjannya lebih dari 72 bytes wkwkwk. Tapi ini paling man siapa tau aja ada orang yang lagi tidak sadarkan diri lakuin pendaftaran di aplikasi Lo.
 
-Nama functionnya dna parameternya sama seperti sebelumnya bedanya depannya ada `no_truncaing_`. 
+Nama functionnya dna parameternya sama seperti sebelumnya bedanya depannya ada `no_truncating_`. 
 
 ```rust
 // src/main.rs
@@ -427,7 +427,7 @@ Check: false
 
 Verification dengan function `verify_no_truncating` ini sama aja punya 2 parameter yaitu password dan hash. Result typenya juga sama. Bedanya verification ini bisa dipake untuk hash password yang kurang dari 72 bytes. aja. Misalnya hash yang simpen ke DB itu < 72 bytes maka Lo masih bisa pake function `verify_no_truncating`. Tapi ketika password yang di simpen ke DB di buat lebih dari 72 bytes maka akan error.
 
-Kalo Lo perhatiin ga ada proses melakukan decrypt atau menampilkan password dari hashnya. Yang ada bikin hash kemudian verify inilah alasan bcrypt sangat recomended untu hash password.
+Kalo Lo perhatiin ga ada proses melakukan decrypt atau me nampilkan password dari hashnya. Yang ada bikin hash kemudian verify inilah alasan bcrypt sangat recomended untu hash password.
 
 </details>
 
@@ -435,6 +435,16 @@ Kalo Lo perhatiin ga ada proses melakukan decrypt atau menampilkan password dari
 
 <summary><h2>Implementasi Bcrypt (.Net) 📚</h2></summary>
 
-Selanjutnya adalah implementasi di bahasa pemrograman enterprice buatan microsoft yaitu `C#` atau `.Net Framework`
+Selanjutnya adalah implementasi di bahasa pemrograman enterprice buatan microsoft yaitu `C#` atau `.Net Framework`. Kalo di dotnet package yang paling mature dan stabil adalah `BCrypt.Net-Next` <a href="https://www.nuget.org/packages/BCrypt.Net-Next" target="_blank" rel="noopener noreferrer">https://www.nuget.org/packages/BCrypt.Net-Next</a>.
+
+Di dotnet ini Lo bisa lakuin kaya di Rust juga bisa langsung hash, atau hash dengan truncate. Bedanya di dotnet Lo ga dikasih fungsi low levelnya. Jadi ini lebih mudah dan aman. Lo juga ga ribet harus memahami bcrypt lebih mendalam.
+
+### Funtions Hashing
+
+Meskipun di dotnet tidak memiliki banyak fitur ke low levelnya tapi Lo dikasih control flow yang baik dari beberapa fungsi yang bakal Lo butuhin di kasus - kasus di real world.
+
+#### Bcrypt.HashPassword
+
+Ini adalah function hash password yang umum digunakan, mengharapkan 2 parameter
 
 </details>
