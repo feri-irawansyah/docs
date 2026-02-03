@@ -250,6 +250,25 @@ createApp(HelloVue).mount('#hello')
 </html>
 ```
 
+```js
+// vite.config.js
+import { defineConfig } from 'vite'
+import vue from '@vitejs/plugin-vue'
+
+// https://vite.dev/config/
+export default defineConfig({
+  plugins: [vue()],
+  build: {
+    rollupOptions: {
+      input: {
+        main: 'index.html',
+        hello: 'hello.html',
+      }
+    }
+  }
+})
+```
+
 Nah sekarang coba Lo buka url http://localhost:5173/hello, Nah Lo udah bikin Hello Vue.
 
 <img src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/vue-js-dasar/assets/hello-vue.png" class="img-fluid" alt="hello-vue"/>
@@ -434,11 +453,152 @@ Termasuk juga untuk value yang berupa boolean. Misalnya kalo Lo mau pake attribu
 
 <img src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/vue-js-dasar/assets/v-bind.png" class="img-fluid" alt="v-bind"/>
 
-Lo juga bisa bro pake 2 atribut bersamaan bro. Misanya pake `v-bind` dan `v-html` atau yang lainnya.
+</details>
+
+<details open>
+<summary><h2>Reactive State 📚</h2></summary>
+
+Lo kalo bikin website mesti bakal nyimpen data, state atau keadaan di Javascript, misalnya Lo pingin bikin angka yang misalnya kalo Lo pencet tombol nanti angkanya nambah 1. Contohnya gini, coba Lo bikin halaman baru sama kaya sebelumnya bikin file `src/components/Counter.vue`, `src/counter.js`, `counter.html` terus daftarin di `vite.config.js`:
 
 ```html
-<div v-html="heading" v-bind:class="classHeading"></div>
+<!-- src/components/Counter.vue -->
+<script setup>
+    let count = 0;
+
+    function increment() {
+        count++;
+        document.getElementById("count").innerText = `Count: ${count}`;
+    }
+</script>
+
+<template>
+    <h1 id="count">Count: {{ count }}</h1>
+    <button v-on:click="increment">Increment</button>
+</template>
 ```
+
+### Ref API
+
+Cara kaya gini biasa di JavaScript jadi Lo bikin mutable variable terus Lo ubah pake JS DOM. Nah di Vue ada cara yang lebih baik dan Lo udah ga perlu lagi pake DOM Manipulation. Namanya adalah `Reactive State`. Nah terus apa bedanya sama DOM Manipulation? Bedanya ketika Lo pake Reactive State, Vue akan melakukan render ulang component nya, jadi componentnya kaya di refresh ketika terjadi perubahan data.
+
+Lo bisa pake keyword `ref` dari Vue untuk membuat reactive state. Kalo misalnya Lo mau bikin reactive state `count` maka bisa pake `const count = ref(0)`. Tapi ga itu doang, ada beberapa Reactive State yang bisa Lo pake, detaionya ada disini : <a href="https://vuejs.org/api/reactivity-core.html" target="_blank" rel="noopener noreferrer">https://vuejs.org/api/reactivity-core.html</a>.
+
+```html
+<!-- src/components/Counter.vue -->
+<script setup>
+  import { ref } from 'vue';
+
+  let count = ref(0);
+  console.log('Loaded Counter.vue', count);
+
+  function increment() {
+    count.value++;
+  }
+</script>
+
+<template>
+  <h1 id="count">Count: {{ count }}</h1>
+  <p>{{ Math.random() }}</p>
+  <button v-on:click="increment">Increment</button>
+</template>
+```
+
+<img src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/vue-js-dasar/assets/ref-state.png" class="img-fluid" alt="ref-state"/>
+
+Harusnya pak Lo klik maka `<p>{{ Math.random() }}</p>` juga akan berubah, ini karena Vue akan merender ulang component nya. Nah tapi hanya componentnya aja yaitu pada `<template></template>`, untuk `<style></style>` dan `<script></script>` tidak akan berubah hanya akan dirender sekali aja.
+
+Saat membuat state pake `ref` Vue akan membuat statenya menjadi object, jadi kalo Lo pingin mengubah nilai Lo bisa ubah object `value` tapi ada beberapa object lain nya. Tapi ketika statenya di render di element, maka ga perlu nyebutin objectnya, Lo cukup render statenya aja kaya `{{ count }}`. Disini Lo mesti bertanya, Kenapa si kok harus pake Reactive State? Pake DOM juga bisa kan?
+
+Jawaban simplenya ya ngapain Lo pake Vue😂. 
+
+Reactive state akan selalu di pantau sama Vue nya, jadi ketika ada perubahan di state Lo, Vue langsung tau. Vue menggunakan object dengan attribute value sebagai State, agar bisa meng-intercept perubahan data dari get dan set operations, sehingga dengan mudah Vue bisa mendeteksi State mana yang berubah, dan melakukan render ulang Component tersebut di DOM. <a href="https://javascript.info/property-accessors" target="_blank" rel="noopener noreferrer">https://javascript.info/property-accessors</a>
+
+Selain Lo pake single Value, Lo juga bisa lakuin ke Object, Array, atau Map misalnya gini:
+
+```html
+<!-- src/components/Counter.vue -->
+<script setup>
+    import { ref } from 'vue';
+
+    let counter = ref({
+        count: 0,
+        name: 'Satria'
+    });
+    console.log('Loaded Counter.vue', counter);
+
+    function increment() {
+        counter.value = {
+            ...counter.value,
+            count: counter.value.count + 1
+        }
+        
+    }
+</script>
+
+<template>
+    <h1 id="count">Count: {{ counter.name }} {{ counter.count }}</h1>
+    <p>{{ Math.random() }}</p>
+    <button v-on:click="increment">Increment</button>
+</template>
+```
+
+### Lifecycle DOM
+
+Kalo Lo ubah state di Vue, sebenernya Vue juga ga akan lakuin render saat itu juga bro. Jadi ada jadwalnya buat lakuin render, nah ini bagus misalnya ada anyak state dalam satu waktu berubah bareng Vue bakal nunggu sampai semua state selesai beruah, baru Vue akan melakukan render ulang.
+
+Jadwal Vue lakuin render ini di sebut `next tick`, Jadi ada keyword `nextTick()` lebih detailnya Lo bisa kunjungi ini <a href="https://vuejs.org/api/general.html#nexttick" target="_blank" rel="noopener noreferrer">https://vuejs.org/api/scheduler.html#nextTick</a>
+
+```js
+async function increment() {
+    console.log('increment');
+    counter.value = {
+        ...counter.value,
+        count: counter.value.count + 1
+    }
+    await nextTick();
+    console.log('Next tick render', counter);
+}
+```
+
+### Reactive Keyword
+
+Selain pake `ref` Lo juga bisa pake `reactive()` <a href="https://vuejs.org/api/reactivity-core.html#reactive" target="_blank" rel="noopener noreferrer">https://vuejs.org/api/reactivity-core.html#reactive</a>. Bedanya `reactive` itu dipake di kasus yang kompleks karena hasil dari `reactive` ini bukan object, melainkan Proxy dimana Proxy ini punya metadata. <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy" target="_blank" rel="noopener noreferrer">https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy</a>.
+
+Coba Lo bikin halaman baru namanya `src/components/Reactive.vue`, `src/reactive.js`, `reactive.html` terus daftarin di `vite.config.js`:
+
+```html
+<!-- src/components/Reactive.vue -->
+<script setup>
+    import { reactive } from 'vue';
+
+    const person = reactive({
+        firstName: '',
+        lastName: ''
+    });
+
+    function submit() {
+        person.firstName = document.getElementById('firstName').value;
+        person.lastName = document.getElementById('lastName').value;
+    }
+</script>
+
+<template>
+    <input type="text" id="firstName">
+    <input type="text" id="lastName">
+    <button v-on:click="submit">Submit</button>
+    <p>First Name: {{ person.firstName }}</p>
+    <p>Last Name: {{ person.lastName }}</p>
+</template>
+```
+
+<img src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/vue-js-dasar/assets/reactive.png" class="img-fluid" alt="reactive"/>
+
+Tapi perlu Lo garis bawahi bro, saat Lo pake `reactive` ada keterbatasan nya dianding `ref`.
+- Karena Proxy itu adalah objects type (object, array, collection) yang bisa dipake, jadi `reactive` ga punya primitive type kaya `string`, `number`, `boolean` dll.
+- Ga isa di replace semua objectnya. Karena Proxy bakal berubah ke Object baru jadi Vue bakal kehilangan kendali atas track nya.
+- Ga aman buat Destructuring Object, karena saat melakukan Destructuring Object secara otomatis hasil Destructuring tersebut keluar dari JavaScript Procy.
+
+### Computed Properties
 
 </details>
 
@@ -447,6 +607,8 @@ Lo juga bisa bro pake 2 atribut bersamaan bro. Misanya pake `v-bind` dan `v-html
 
 Sebelumnya Lo udah nyoba 2 directive Vue yaitu `v-html` sama `v-bind` selain itu masih banyak lagi bro, tapi atribut directive selalu berawalan `v-`. Directive ini bisa punya argument atau engga, kalo misalnya punya argument maka Lo bisa pake `:` tapi kalo ya ga punya argument kaya `v-html` itu ga boleh pake `:`.
 
-Selain itu Argument pada directive juga bisa menerima dynamic object atau data, misalnya Lo pingin isi atribut html `aria-label`, `class`, `href` dll dalam satu directive bisa caranya pake kurung kotak `[]`.
+Selain itu Argument pada directive juga bisa menerima dynamic object atau data, misalnya Lo pingin isi atribut class `red`, `bold`, `uppercase` dll dalam satu directive bisa caranya pake kurung kotak `:class="['red', 'bold', 'uppercase']"` atau bisa menggunakan object `:class="{ red: red, bold: bold, uppercase: uppercase }"`.
+
+
 
 </details>
