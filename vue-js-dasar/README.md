@@ -505,7 +505,7 @@ Lo bisa pake keyword `ref` dari Vue untuk membuat reactive state. Kalo misalnya 
 
 <img src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/vue-js-dasar/assets/ref-state.png" class="img-fluid" alt="ref-state"/>
 
-Harusnya pak Lo klik maka `<p>{{ Math.random() }}</p>` juga akan berubah, ini karena Vue akan merender ulang component nya. Nah tapi hanya componentnya aja yaitu pada `<template></template>`, untuk `<style></style>` dan `<script></script>` tidak akan berubah hanya akan dirender sekali aja.
+Harusnya pak Lo klik maka `<p>{{ Math.random() }}</p>` juga akan berubah, ini karena Vue akan merender ulang component nya. Nah tapi hanya componentnya aja yaitu pada `<template></template>`, untuk `<style></style>` dan `<script></script>` tidak akan berubah hanya akan dirender sekali aja. Untik directive `v-on:click` nanti gue bahas terpisah.
 
 Saat membuat state pake `ref` Vue akan membuat statenya menjadi object, jadi kalo Lo pingin mengubah nilai Lo bisa ubah object `value` tapi ada beberapa object lain nya. Tapi ketika statenya di render di element, maka ga perlu nyebutin objectnya, Lo cukup render statenya aja kaya `{{ count }}`. Disini Lo mesti bertanya, Kenapa si kok harus pake Reactive State? Pake DOM juga bisa kan?
 
@@ -600,6 +600,136 @@ Tapi perlu Lo garis bawahi bro, saat Lo pake `reactive` ada keterbatasan nya dia
 
 ### Computed Properties
 
+Saat merender suatu data di template, kurang di rekomendasikan bikin banyak Logic di HTML. Ya Lo bayangin aja misal banyak data Lo render tapi sekalian di bikin logic di HTML nya Lo mesti bakal susah maintain nya. Jadi lebih baik Lo taro di satu function atau method gitu. Contohnya gini
+
+```html
+<!-- src/components/Counter.vue -->
+<script setup>
+    import { reactive } from 'vue';
+
+    const person = reactive({
+        firstName: '',
+        lastName: ''
+    });
+
+    function submit() {
+        person.firstName = document.getElementById('firstName').value;
+        person.lastName = document.getElementById('lastName').value;
+    }
+
+    function fullName() {
+        console.log('fullName call');
+        return `${person.firstName} ${person.lastName}`
+    }
+</script>
+
+<template>
+    <input type="text" id="firstName">
+    <input type="text" id="lastName">
+    <button v-on:click="submit">Submit</button>
+    <p>Hello {{ fullName() }}</p>
+</template>
+```
+
+Lancar ya keliatannya, tapi sebenernya ga juga bro. Ini aman karena Vue ga lakuin render ulang, dan kebetulan `reactive` di render ketika tombolnya di click baru function fullName di jalanin. Nah coba Lo bikin reactive state pake `ref` misalnya count.
+
+```html
+<!-- src/components/Reactive.vue -->
+<script setup>
+    import { reactive, ref } from 'vue';
+
+    const person = reactive({
+        firstName: '',
+        lastName: ''
+    });
+
+    const count = ref(0);
+
+    function submit() {
+        person.firstName = document.getElementById('firstName').value;
+        person.lastName = document.getElementById('lastName').value;
+    }
+
+    function increment() {
+        console.log('increment');
+        count.value++;
+    }
+
+    function fullName() {
+        console.log('fullName call');
+        return `${person.firstName} ${person.lastName}`
+    }
+</script>
+
+<template>
+    <input type="text" id="firstName">
+    <input type="text" id="lastName">
+    <button v-on:click="submit">Submit</button>
+    <button v-on:click="increment">Increment {{ count }}</button>
+    <p>Hello {{ fullName() }}</p>
+</template>
+```
+
+<img src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/vue-js-dasar/assets/computed-1.png" class="img-fluid" alt="computed-1"/>
+
+Nah function jadi dipanggil berkali - kali kan. Nah untuk mengatasinya Vue punya keyword `computed` untuk membuat computed properties. <a href="https://vuejs.org/api/reactivity-core.html#computed" target="_blank" rel="noopener noreferrer">https://vuejs.org/api/reactivity-core.html#computed</a>. Dengan `computed` Vue bisa tau isi state yang dipake dalam `computed`, jadi ketika ada perubahan pada state yang ada didalam nya maka `computed` akan dipanggil ulang. Jadi kalo ada state diluarnya berubah, `computed` tidak akan dipanggil ulang.
+
+```html
+<!-- src/components/Reactive.vue -->
+ <script setup>
+    import { computed, reactive, ref } from 'vue';
+
+    const person = reactive({
+        firstName: '',
+        lastName: ''
+    });
+
+    const count = ref(0);
+
+    function submit() {
+        person.firstName = document.getElementById('firstName').value;
+        person.lastName = document.getElementById('lastName').value;
+    }
+
+    function increment() {
+        console.log('increment');
+        count.value++;
+    }
+
+    const fullName = computed(() => {
+        console.log('fullName call');
+        return `${person.firstName} ${person.lastName}`
+    })
+</script>
+
+<template>
+    <input type="text" id="firstName">
+    <input type="text" id="lastName">
+    <button v-on:click="submit">Submit</button>
+    <button v-on:click="increment">Increment {{ count }}</button>
+    <p>Hello {{ fullName }}</p>
+</template>
+```
+
+<img src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/vue-js-dasar/assets/computed-2.png" class="img-fluid" alt="computed-2"/>
+
+Nah dengan begini aman, ketika count berubah fullName ga akan dipanggil ulang. Return dari `computed` ini sama kaya `ref` yaitu object dan ada `value` yang merupakan nilai dari statenya.
+
+`Computed` ini punya parameter, dimana parameter ini berisi nilai sebelumnya. Misalnya sebelumnya `lastName` gue isi **baja Ringan** terus diganti ke **Baja Hitam**, maka `computed` akan menyimpan nilai sebelumnya `lastName` yaitu **Baja Ringan**.
+
+```js
+const fullName = computed((prev) => {
+    console.log('fullName call', prev);
+    return `${person.firstName} ${person.lastName}`
+})
+```
+
+### Watcher
+
+Vue memiliki fitur bernama `watch()` function, yang digunakan untuk reregistrasi callback function yang akan di trigger otomatis ketika sebuah state berubah. Di dalem watcher ini Lo bisa lakuin macam - macam kaya ubah DOM, Call API, dll ketika state berubah. Watcher ini sifatnya *lazy*, artinya callbacknya akan di trigger ketika state berubah.
+
+Watcher ini punya 3 parameter yaitu source, callback function dan opstions. Sourcenya ini berupa getter function, ref, reactive atau array yang berisi data tententu. Jadi watcher ini akan memantau source, ketika sourcenya ada perubahan, maka Lo bisa lakuin apa aja di callbacknya. Lebih lengkapnya Lo bisa liat di sini <a href="https://vuejs.org/api/reactivity-core.html#watch" target="_blank" rel="noopener noreferrer">https://vuejs.org/api/reactivity-core.html#watch</a>.
+
 </details>
 
 <details>
@@ -608,7 +738,5 @@ Tapi perlu Lo garis bawahi bro, saat Lo pake `reactive` ada keterbatasan nya dia
 Sebelumnya Lo udah nyoba 2 directive Vue yaitu `v-html` sama `v-bind` selain itu masih banyak lagi bro, tapi atribut directive selalu berawalan `v-`. Directive ini bisa punya argument atau engga, kalo misalnya punya argument maka Lo bisa pake `:` tapi kalo ya ga punya argument kaya `v-html` itu ga boleh pake `:`.
 
 Selain itu Argument pada directive juga bisa menerima dynamic object atau data, misalnya Lo pingin isi atribut class `red`, `bold`, `uppercase` dll dalam satu directive bisa caranya pake kurung kotak `:class="['red', 'bold', 'uppercase']"` atau bisa menggunakan object `:class="{ red: red, bold: bold, uppercase: uppercase }"`.
-
-
 
 </details>
