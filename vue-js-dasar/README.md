@@ -488,246 +488,6 @@ Untik directive `v-on:click` nanti gue bahas terpisah di materi tentang Directiv
 
 </details>
 
-<details open>
-<summary><h2>Temtang Component 📚</h2></summary>
-
-Sebelumnya Lo udah kenalan sama Component di Vue JS, sekarang gue mau bahas lebih spesifik tentang component.
-
-### SFC (Single File Component)
-
-Default component Vue JS itu adalah SFC atau Single File Component, jadi kalo Lo pake file `.vue` itu itu akan jadi SFC. Kemudian kalo Lo pingin bikin component baru, nanti Lo bikin file baru dengan extention `.vue` biar jadi SFC. Misalnya sekarang gue mau bikin component baru yaitu `src/components/Profile.vue` yang akan gue panggil di component HelloVue.
-
-```html
-<!-- src/components/Profile.vue -->
- <script setup>
-    const name = 'Satria Baja Ringan'
-
-</script>
-
-<template>
-    <p>My name is {{ name }}</p>
-</template>
-```
-
-```html
-<!-- src/components/HelloVue.vue -->
-<script setup>
-    import Profile from './Profile.vue';
-
-    const heading = '<h1>Hello Vue</h1>'
-</script>
-
-<template>
-    <div v-html="heading"></div>
-    <Profile/>
-</template>
-```
-
-Setiap component itu punya scopenya sendiri (isolated) baik itu data, function, state, bahkan style. Tapi untuk style ada perilaku sendiri nanti gue bahas lebih spesifik soal style. Lo juga bisa panggil component secara berulang.
-
-```html
-<!-- src/components/HelloVue.vue -->
-<script setup>
-    import Profile from './Profile.vue';
-
-    const heading = '<h1>Hello Vue</h1>'
-</script>
-
-<template>
-    <div v-html="heading"></div>
-    <Profile/>
-    <Profile/>
-    <Profile/>
-</template>
-```
-
-```html
-<!-- src/components/Profile.vue -->
-<script setup>
-    const name = 'Satria Baja Ringan'
-
-</script>
-
-<template>
-    <div>My name is {{ name }}</div>
-</template>
-
-<style scoped>
-    div {
-        color: green;
-    }
-</style>
-```
-
-<img src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/vue-js-dasar/assets/sfc.png" class="img-fluid" alt="sfc"/>
-
-Meskipun di child gue bikin warna hijau pada tag `div` tapi `HelloVue` tidak terpengaruh oleh stylenya, termasuk data juga, keduanya tidak bisa share data satu sama lain.
-
-### Props
-
-Ketika Lo render 3 kali component `Profile` Lo jadi punya text yang sama, nah gimana kalo misalya Lo pingin render 1 component secara berulang tapi datanya berbeda. Di Vue Lo bisa lakuin itu dengan `props`. 
-
-#### Define Props
-
-Ketika Lo pake props, nanti component Lo akan punya atribut kata tag HTML tapi dengan nama yang Lo atur sendiri. Lebih detailnya Lo bisa kunjungi ini bro <a href="https://vuejs.org/api/sfc-script-setup.html#defineprops-defineemits" target="_blank" rel="noopener noreferrer">https://vuejs.org/api/sfc-script-setup.html#defineprops-defineemits</a>.
-
-```html
-<!-- src/components/Profile.vue -->
- <script setup>
-    const props = defineProps(["name"]);
-</script>
-
-<template>
-    <div>My name is {{ props.name }}</div>
-</template>
-
-<style scoped>
-    div {
-        color: green;
-    }
-</style>
-```
-
-```html
-<!-- src/components/HelloVue.vue -->
- <script setup>
-    import Profile from './Profile.vue';
-
-    const heading = '<h1>Hello Vue</h1>'
-</script>
-
-<template>
-    <div v-html="heading"></div>
-    <Profile name="Satria Baja Ringan"/>
-    <Profile name="Tolak Misqueen"/>
-    <Profile name="Uchiha Versi Beta"/>
-</template>
-```
-
-<img src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/vue-js-dasar/assets/props.png" class="img-fluid" alt="props"/>
-
-#### Aturan Props
-
-Tapi props ini juga punya aturannya bro.
-- Saat Lo define Props, direkomendasikan pake format `camelCase` misal 2 atau lebih kata
-- Namun saat menambahkan attribute pada Component, Lo pake `kebab-case`
-- Saat pake attribute untuk mengubah value Props, Lo juga bisa pake Directive v-bind, sama seperti pada attribute biasanya di DOM element
-- Props bersifat One-Way Data Flow, artinya hanya jalan 1 arah dari parent ke child, tidak bisa dibalik.
-- Props bersifat readonly, artinya yang bisa ubah data hanya parent component saja.
-- Atribut props ini bersifat optional, jadi kalo Lo ga perlu pake atau ngirim data itu gpp.
-- Lo juga bisa ngasih nilai default ketika define propsnya
-
-```js
-const props = defineProps(["name", "totalCount"]);
-```
-
-#### Props Validation
-
-Nah sebelumnya Lo kasih parameter pada `defineProps` adalah array, itu okeh tapi ga ada validasinya, biar Lo bisa lakuin validasi Lo bisa kasih parameter object dan key nya bisa Lo kasih tipe data. Lebih detailnya Lo bisa kunjungi ini bro <a href="https://vuejs.org/guide/components/props.html#prop-validation" target="_blank" rel="noopener noreferrer">https://vuejs.org/guide/components/props.html#prop-validation</a>.
-
-```html
-<!-- src/components/Profile.vue -->
- <script setup>
-    const props = defineProps({
-        name: String,
-        totalCount: {
-            type: Number,
-            default: 0
-        }
-    })
-</script>
-
-<template>
-    <div>My name is {{ props.name }}, count {{ props.totalCount }}</div>
-</template>
-
-<style scoped>
-    div {
-        color: green;
-    }
-</style>
-```
-
-```html
-<!-- src/components/HelloVue.vue -->
- <script setup>
-    import Profile from './Profile.vue';
-
-    const heading = '<h1>Hello Vue</h1>'
-</script>
-
-<template>
-    <div v-html="heading"></div>
-    <Profile name="Satria Baja Ringan" total-count="100"/>
-    <Profile name="Tolak Misqueen" />
-    <Profile name="Uchiha Versi Beta" :total-count="300"/>
-</template>
-```
-
-<img src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/vue-js-dasar/assets/props-validate.png" class="img-fluid" alt="props-validate"/>
-
-Nah dengan validate props Lo bisa lakuin validasi, contohnya ada warning 
-
-```bash
-heck failed for prop "totalCount". Expected Number with value 100, got String with value "100". 
-  at <Profile name="Satria Baja Ringan" total-count="100" > 
-```
-
-Karena menggunakan string, agar menjadi number Lo perlu pake `v-bind` dengan `:total-count="100"` agar mendapatkan nilai sebenernya bukan plain text.
-
-#### Component Event (Emit)
-
-Selain mengirimkan data atau istilahnya Lo kaya bikin atribut HTML yang typenya itu readonly nah Lo juga bisa nambahin custom event handler di Component, caranya pake `defineEmits`. Implementasinya sama kaya props, Lo panggil `defineEmits` isi parameternya dengan array terus isi dengan nama handler yang Lo mau. Cara pakenya beda dikit karena Lo perlu pake `@nama-handler` untuk mengirim data.
-
-```html
-<!-- src/components/HelloVue.vue -->
-<Profile name="Tolak Misqueen" @tambah-data="(e) => console.log(e)"/>
-```
-
-```html
-<!-- src/components/Profile.vue -->
-<script setup>
-    const props = defineProps({
-        name: String,
-        totalCount: {
-            type: Number,
-            default: 0
-        }
-    })
-
-    const emits = defineEmits(['tambahData']); // custom event
-</script>
-
-<template>
-    <div>My name is {{ props.name }}, count {{ props.totalCount }}</div>
-    <button v-on:click="emits('tambahData', 10)">Tambah Data</button>
-</template>
-
-<style scoped>
-    div {
-        color: green;
-    }
-</style>
-```
-
-
-
-
-### Lifecycle Hooks
-
-Component itu punya alur hidupnya, jadi ketika di render suatu component juga bisa update dan bisa destroy juga sama kaya Lo bro, ada lahir tumbuh dan meninggoy. Nah flow tersebut di sebut Lifecycle Hooks di Vue JS. Lo bisa liat digram flow alur hidup suatu component di Vue JS disini bro <a href="https://vuejs.org/guide/essentials/lifecycle.html#lifecycle-diagram" target="_blank" rel="noopener noreferrer">https://vuejs.org/guide/essentials/lifecycle.html#lifecycle-diagram</a>.
-
-Untuk lebih Vue API detailnya Lo bisa kunjungi ini <a href="https://vuejs.org/api/composition-api-lifecycle.html" target="_blank" rel="noopener noreferrer">https://vuejs.org/api/composition-api-lifecycle.html</a>.
-
-- `onBeforeMount`: ketika component akan di render pertama kali
-- `onMounted`: ketika component di render pertama kali
-- `onUpdated`: Ketika component di render ulang
-- `onUnmounted`: Ketika component di destroy
-
-Mungkin gue akan jelasin ke 4 lifecycle hooks ini aja. Sisanya mungkin Lo bisa baca di documentasinya, karena ada beberapa yang intinya sama.
-
-</details>
-
 <details>
 <summary><h2>Reactive State 📚</h2></summary>
 
@@ -1149,15 +909,253 @@ Nah di beberapa kasus mungkin kita perlu melakukan clean up sebelum state beruba
 
 <img src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/vue-js-dasar/assets/watcher.png" class="img-fluid" alt="watcher"/>
 
-</details>
+</details open>
 
 <details>
 <summary><h2>Directives 📚</h2></summary>
 
-Sebelumnya Lo udah nyoba 2 directive Vue yaitu `v-html` sama `v-bind` selain itu masih banyak lagi bro, tapi atribut directive selalu berawalan `v-`. Directive ini bisa punya argument atau engga, kalo misalnya punya argument maka Lo bisa pake `:` tapi kalo ya ga punya argument kaya `v-html` itu ga boleh pake `:`.
+Sebelumnya Lo udah pake beberapa directive Vue yaitu `v-html` sama `v-bind` selain itu masih banyak lagi bro, tapi atribut directive selalu berawalan `v-`. Directive ini bisa punya argument atau engga, kalo misalnya punya argument maka Lo bisa pake `:` tapi kalo ya ga punya argument kaya `v-html` itu ga boleh pake `:`.
 
 Selain itu Argument pada directive juga bisa menerima dynamic object atau data, misalnya Lo pingin isi atribut class `red`, `bold`, `uppercase` dll dalam satu directive bisa caranya pake kurung kotak `:class="['red', 'bold', 'uppercase']"` atau bisa menggunakan object `:class="{ red: red, bold: bold, uppercase: uppercase }"`.
 
 
+
+</details>
+
+<details>
+<summary><h2>Temtang Component 📚</h2></summary>
+
+Sebelumnya Lo udah kenalan sama Component di Vue JS, sekarang gue mau bahas lebih spesifik tentang component.
+
+### SFC (Single File Component)
+
+Default component Vue JS itu adalah SFC atau Single File Component, jadi kalo Lo pake file `.vue` itu itu akan jadi SFC. Kemudian kalo Lo pingin bikin component baru, nanti Lo bikin file baru dengan extention `.vue` biar jadi SFC. Misalnya sekarang gue mau bikin component baru yaitu `src/components/Profile.vue` yang akan gue panggil di component HelloVue.
+
+```html
+<!-- src/components/Profile.vue -->
+ <script setup>
+    const name = 'Satria Baja Ringan'
+
+</script>
+
+<template>
+    <p>My name is {{ name }}</p>
+</template>
+```
+
+```html
+<!-- src/components/HelloVue.vue -->
+<script setup>
+    import Profile from './Profile.vue';
+
+    const heading = '<h1>Hello Vue</h1>'
+</script>
+
+<template>
+    <div v-html="heading"></div>
+    <Profile/>
+</template>
+```
+
+Setiap component itu punya scopenya sendiri (isolated) baik itu data, function, state, bahkan style. Tapi untuk style ada perilaku sendiri nanti gue bahas lebih spesifik soal style. Lo juga bisa panggil component secara berulang.
+
+```html
+<!-- src/components/HelloVue.vue -->
+<script setup>
+    import Profile from './Profile.vue';
+
+    const heading = '<h1>Hello Vue</h1>'
+</script>
+
+<template>
+    <div v-html="heading"></div>
+    <Profile/>
+    <Profile/>
+    <Profile/>
+</template>
+```
+
+```html
+<!-- src/components/Profile.vue -->
+<script setup>
+    const name = 'Satria Baja Ringan'
+
+</script>
+
+<template>
+    <div>My name is {{ name }}</div>
+</template>
+
+<style scoped>
+    div {
+        color: green;
+    }
+</style>
+```
+
+<img src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/vue-js-dasar/assets/sfc.png" class="img-fluid" alt="sfc"/>
+
+Meskipun di child gue bikin warna hijau pada tag `div` tapi `HelloVue` tidak terpengaruh oleh stylenya, termasuk data juga, keduanya tidak bisa share data satu sama lain.
+
+### Props
+
+Ketika Lo render 3 kali component `Profile` Lo jadi punya text yang sama, nah gimana kalo misalya Lo pingin render 1 component secara berulang tapi datanya berbeda. Di Vue Lo bisa lakuin itu dengan `props`. 
+
+#### Define Props
+
+Ketika Lo pake props, nanti component Lo akan punya atribut kata tag HTML tapi dengan nama yang Lo atur sendiri. Lebih detailnya Lo bisa kunjungi ini bro <a href="https://vuejs.org/api/sfc-script-setup.html#defineprops-defineemits" target="_blank" rel="noopener noreferrer">https://vuejs.org/api/sfc-script-setup.html#defineprops-defineemits</a>.
+
+```html
+<!-- src/components/Profile.vue -->
+ <script setup>
+    const props = defineProps(["name"]);
+</script>
+
+<template>
+    <div>My name is {{ props.name }}</div>
+</template>
+
+<style scoped>
+    div {
+        color: green;
+    }
+</style>
+```
+
+```html
+<!-- src/components/HelloVue.vue -->
+ <script setup>
+    import Profile from './Profile.vue';
+
+    const heading = '<h1>Hello Vue</h1>'
+</script>
+
+<template>
+    <div v-html="heading"></div>
+    <Profile name="Satria Baja Ringan"/>
+    <Profile name="Tolak Misqueen"/>
+    <Profile name="Uchiha Versi Beta"/>
+</template>
+```
+
+<img src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/vue-js-dasar/assets/props.png" class="img-fluid" alt="props"/>
+
+#### Aturan Props
+
+Tapi props ini juga punya aturannya bro.
+- Saat Lo define Props, direkomendasikan pake format `camelCase` misal 2 atau lebih kata
+- Namun saat menambahkan attribute pada Component, Lo pake `kebab-case`
+- Saat pake attribute untuk mengubah value Props, Lo juga bisa pake Directive v-bind, sama seperti pada attribute biasanya di DOM element
+- Props bersifat One-Way Data Flow, artinya hanya jalan 1 arah dari parent ke child, tidak bisa dibalik.
+- Props bersifat readonly, artinya yang bisa ubah data hanya parent component saja.
+- Atribut props ini bersifat optional, jadi kalo Lo ga perlu pake atau ngirim data itu gpp.
+- Lo juga bisa ngasih nilai default ketika define propsnya
+
+```js
+const props = defineProps(["name", "totalCount"]);
+```
+
+#### Props Validation
+
+Nah sebelumnya Lo kasih parameter pada `defineProps` adalah array, itu okeh tapi ga ada validasinya, biar Lo bisa lakuin validasi Lo bisa kasih parameter object dan key nya bisa Lo kasih tipe data. Lebih detailnya Lo bisa kunjungi ini bro <a href="https://vuejs.org/guide/components/props.html#prop-validation" target="_blank" rel="noopener noreferrer">https://vuejs.org/guide/components/props.html#prop-validation</a>.
+
+```html
+<!-- src/components/Profile.vue -->
+ <script setup>
+    const props = defineProps({
+        name: String,
+        totalCount: {
+            type: Number,
+            default: 0
+        }
+    })
+</script>
+
+<template>
+    <div>My name is {{ props.name }}, count {{ props.totalCount }}</div>
+</template>
+
+<style scoped>
+    div {
+        color: green;
+    }
+</style>
+```
+
+```html
+<!-- src/components/HelloVue.vue -->
+ <script setup>
+    import Profile from './Profile.vue';
+
+    const heading = '<h1>Hello Vue</h1>'
+</script>
+
+<template>
+    <div v-html="heading"></div>
+    <Profile name="Satria Baja Ringan" total-count="100"/>
+    <Profile name="Tolak Misqueen" />
+    <Profile name="Uchiha Versi Beta" :total-count="300"/>
+</template>
+```
+
+<img src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/vue-js-dasar/assets/props-validate.png" class="img-fluid" alt="props-validate"/>
+
+Nah dengan validate props Lo bisa lakuin validasi, contohnya ada warning 
+
+```bash
+heck failed for prop "totalCount". Expected Number with value 100, got String with value "100". 
+  at <Profile name="Satria Baja Ringan" total-count="100" > 
+```
+
+Karena menggunakan string, agar menjadi number Lo perlu pake `v-bind` dengan `:total-count="100"` agar mendapatkan nilai sebenernya bukan plain text.
+
+#### Component Event (Emit)
+
+Selain mengirimkan data atau istilahnya Lo kaya bikin atribut HTML yang typenya itu readonly nah Lo juga bisa nambahin custom event handler di Component, caranya pake `defineEmits`. Implementasinya sama kaya props, Lo panggil `defineEmits` isi parameternya dengan array terus isi dengan nama handler yang Lo mau. Cara pakenya beda dikit karena Lo perlu pake `@nama-handler` untuk mengirim data.
+
+```html
+<!-- src/components/HelloVue.vue -->
+<Profile name="Tolak Misqueen" @tambah-data="(e) => console.log(e)"/>
+```
+
+```html
+<!-- src/components/Profile.vue -->
+<script setup>
+    const props = defineProps({
+        name: String,
+        totalCount: {
+            type: Number,
+            default: 0
+        }
+    })
+
+    const emits = defineEmits(['tambahData']); // custom event
+</script>
+
+<template>
+    <div>My name is {{ props.name }}, count {{ props.totalCount }}</div>
+    <button v-on:click="emits('tambahData', 10)">Tambah Data</button>
+</template>
+
+<style scoped>
+    div {
+        color: green;
+    }
+</style>
+```
+
+
+### Lifecycle Hooks
+
+Component itu punya alur hidupnya, jadi ketika di render suatu component juga bisa update dan bisa destroy juga sama kaya Lo bro, ada lahir tumbuh dan meninggoy. Nah flow tersebut di sebut Lifecycle Hooks di Vue JS. Lo bisa liat digram flow alur hidup suatu component di Vue JS disini bro <a href="https://vuejs.org/guide/essentials/lifecycle.html#lifecycle-diagram" target="_blank" rel="noopener noreferrer">https://vuejs.org/guide/essentials/lifecycle.html#lifecycle-diagram</a>.
+
+Untuk lebih Vue API detailnya Lo bisa kunjungi ini <a href="https://vuejs.org/api/composition-api-lifecycle.html" target="_blank" rel="noopener noreferrer">https://vuejs.org/api/composition-api-lifecycle.html</a>.
+
+- `onBeforeMount`: ketika component akan di render pertama kali
+- `onMounted`: ketika component di render pertama kali
+- `onUpdated`: Ketika component di render ulang
+- `onUnmounted`: Ketika component di destroy
+
+Mungkin gue akan jelasin ke 4 lifecycle hooks ini aja. Sisanya mungkin Lo bisa baca di documentasinya, karena ada beberapa yang intinya sama.
 
 </details>
