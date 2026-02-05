@@ -941,6 +941,25 @@ form.addEventListener('submit', (event) => {
 });
 ```
 
+### Text Directive `v-text`
+
+Sebelumnya Lo sering pake pake text interpolation `{{ }}`, nah Vue nyediain directive bernama `v-text` secara fungsi sama, tapi mungkin beda implementasinya untuk beberapa kasus. Text Interpolation lebih cocok untuk data yang sifatnya bisa di lihat atau Lo langsung nulis logic misalnya text concatenation.
+
+```html
+<p>Hello {{ name }}</p> <!-- Hello + name -->
+```
+
+Kalo directive `v-text` Lo ga bisa lakuin text concatenation di dalam element html. Artinya Lo hanya melakukan render data dari JavaScript aja.
+
+```html
+<script setup>
+    const name = 'Satria Baja Ringan'
+    const greating = `Hello ${name}`
+</script>
+
+<p v-text="greating">Hello</p> <!-- name || Hello akan hilang -->
+```
+
 ### Control Flow Directive `v-if`
 
 Kadang Kalo lo pingin menampilkan itu ga mentah - mentah Lo render bukan bro?, Misalnya jika count lebih besar dari 5 maka Lo pingin tampilin *sedang*, kalo lebih dari 9 *besar* dan sisanya *kecil*. Vue nyediain directive bernama `v-if` untuk itu.
@@ -965,10 +984,92 @@ Bedanya apa tuh? `v-show` tidak membuang element dari DOM, hanya di hide aja. Se
 
 ### Iteration Directive `v-for`
 
+Terkadang ketika dalam sebuah website biasanya ada melakukan render beberapa list seperti list data product, list data user, list data blog dll. Untuk itu Vue nyediain directive bernama `v-for` untuk membuat iterasi.
+
+#### Array/List Iteration
+
+Mulai dari bagian ini ceritanya kita akan membuat sebuah website e-commerce penjualan sepatu gue bakal pake halaman main entry ubah kodenya kaya gini:
+
+```html
+<!-- src/components/App.vue -->
+<script setup>
+const products = [
+  {
+    id: 1,
+    title: 'Product 1',
+    description: 'Description for Product 1',
+    price: 19.99
+  },
+  {
+    id: 2,
+    title: 'Product 2',
+    description: 'Description for Product 2',
+    price: 20.99
+  },
+  {
+    id: 3,
+    title: 'Product 3',
+    description: 'Description for Product 3',
+    price: 14.99
+  }
+]
+</script>
+
+<template>
+  <h1>E - Shoes</h1>
+
+  <div v-for="product in products">
+    <h2>{{ product.title }}</h2>
+    <p>{{ product.description }}</p>
+    <p>{{ product.price }}</p>
+  </div>
+</template>
+```
+
+<img src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/vue-js-dasar/assets/iteration.png" class="img-fluid" alt="iteration"/>
+
+#### Object Iteration
+
+Selain array/list Lo juga bisa pake `v-for` untuk iterasi object, Misalnya Lo pingin bikin list sebelumnya ada id, title, description, price dll. Dari pada Lo tulis manual key dari objectnya Lo bisa langsung destructuring.
+
+```html
+<div v-for="product in products">
+    <div v-for="(value, key) in product">
+      <p>{{ key }}: {{ value }}</p>
+    </div>
+</div>
+```
+
+Harusnya tampilannya akan `title: Product 1`, `description: Description for Product 1`, `price: 19.99` dll.
+
+#### Iteration in Range
+
+Selain Lo bisa loop sebuah object Lo juga bisa lakuin pada range tertentu misalnya Lo pingin render suatu element sebanyak 10 kali, maka Lo bisa lakuin seperti ini:
+
+```html
+<div v-for="n in 10">
+    <p>{{ n }}</p>
+</div>
+```
+
+#### Iteration With Key
+
+By Default ketika ada perubahan pada state Vue akan melakukan render ulang pada component, dan ketika Lo pake pake iteration Vue akan melakukan strategi `in-place-patch`. Artinya kalo urutan element berubah, dibandingkan memindahkan element pada DOM, Vue akan menimpa setiap element pake data element yang baru.
+
+Strategi ini mungkin bagus kalo element yang ditampilkan sederhana, tapi kalo element nya kompleks beda cerita, bisa jadi lambat karena setiap ada perubahan Vue akan *me-replace* ulang element. Lo bisa lakuin biar ga lagi replace element, tapi nanti bisa di pindah atau di ubah ke element tertentu yang berubah aja. Caranya Lo bisa nambahin atribut `key` pake `v-bind` pada element dan isi attribut nya pake nilai yang unik.
+
+```html
+<div v-for="product in products" :key="product.id">
+    <div v-for="(value, key) in product">
+      <p>{{ key }}: {{ value }}</p>
+    </div>
+</div>
+```
+
 </details>
 
 <details>
-<summary><h2>Temtang Component 📚</h2></summary>
+<summary><h2>Tentang Component 📚</h2></summary>
 
 Sebelumnya Lo udah kenalan sama Component di Vue JS, sekarang gue mau bahas lebih spesifik tentang component.
 
