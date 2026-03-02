@@ -1066,6 +1066,16 @@ Strategi ini mungkin bagus kalo element yang ditampilkan sederhana, tapi kalo el
 </div>
 ```
 
+### Binding Directive `v-bind`
+
+Untuk `v-bind` atu `:` Sebelumnya Lo udah sering pake, pda intinya directive ini untuk melakukan binding ke semua taribut HTML. Misalnya kalo Lo mau pake attribute `class` di Element HTML, Lo bisa pake `v-bind:class` atau `:class` juga.
+
+```html
+<div v-bind:class="classHeading"></div>
+```
+
+### Model Directive `v-model`
+
 </details>
 
 <details>
