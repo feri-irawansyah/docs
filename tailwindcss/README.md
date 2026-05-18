@@ -222,5 +222,6 @@ Nanti gue pake Play CDN tapi nanti bakal gue contohin pake Sveltekit. Coba sekar
 
 <img class="img-fluid" alt="play-cdn" src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/tailwindcss/assets/play-cdn.png">
 
+Play cdn adalah cara yang paling simple
 
 </details>
