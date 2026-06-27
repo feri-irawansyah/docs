@@ -14,7 +14,7 @@ Perlu gue akui 2 benda itu bagus 👍, modern technology 🤖 dan bisa buat full
 
 Dikutip dari <a href="https://en.wikipedia.org/wiki/Svelte" target="_blank">Wikipedia</a> Svelte ini dibuat oleh Bapak - Bapak yang namanya <a href="https://x.com/rich_harris" target="_blank">Rich Harris</a> dan Kroco - Kroconya tentunya Svelte Team. Dan Svelte ini langsung di compile ke **JS DOM**, tanpa Runtime, Hasil Kompilasi **Mini Size** dan ga kaya **React** atau **Vue** yang pake Virtual DOM katanya. Serasa bikin murni javascript? Tapi Declarative? Dan tanpa cari-cari class atau id bahkan elemen?. Wow minimalis sekali tapi apakah sepowerfull itu? Okeh kita coba sekarang.
 
-<details>
+<details open>
 <summary><h2>Svelte Frontend Framework 📚</h2></summary>
 
 ### Kenapa Butuh Framework
@@ -91,7 +91,7 @@ Kekurangannya ekosistemnya kecil. Karena hanya internal tim svelte yang mengamba
 
 </details>
 
-<details>
+<details  open>
 <summary><h2>Get Started Svelte 📚</h2></summary>
 
 Sebelum Lo mulai membuat Svete Project, Lo perlu beberapa hal yang harus dipenuhi dulu
@@ -357,7 +357,7 @@ export default defineConfig({
 
 </details>
 
-<details>
+<details open>
 <summary><h2>Template HTML 📚</h2></summary>
 
 File Svelte atai `.svelte` sebenarnya sama seperti HTML biasa Lo bisa mmenuliskan tag html terserah Lo ga ada aturan harus di bungkus pake `<></>` atau ada component khusus seperti `<Fragment></Fragment>` engga bro, file Svelte sama kaya file HTML. Bedanya ada fitur - fitur tambahan buat mempermudah hidup Lo.
@@ -458,7 +458,7 @@ Di Svelte untuk Text Expression atau menampilkan suatu data di HTML ini sudah am
 
 </details>
 
-<details>
+<details open>
 <summary><h2>Rune 📚</h2></summary>
 
 `Rune` adalah suatu simbol atau keyword di Svelte yang akan mengontrol Svelte Compiler seperti di awal catatan bahwa Svelte akan melakukan kompilasi code nya ke Javascript DOM murni tanpa Runtime seperti Virtual DOM. Oleh karena itu Rune itu sangat penting untuk mengontrol Svelte Compiler saat menggunakan suatu data, state atau elemen.
@@ -1103,7 +1103,7 @@ Sebelumnya semua reactive state biasanya dibuat dalam variable seperti `let coun
 
 </details>
 
-<details>
+<details open>
 
 <summary><h2>Syntax Templating 📚</h2></summary>
 
@@ -1623,7 +1623,7 @@ Ada tombol untuk next, jadi ketika jalan maka akan masuk ke debug mode, jadi bro
 Masih ada beberapa lagi templating syntax di Svelte seperti `{@attach ...}` (nanti gue bahas setelah 2 way binding), `{@const ...}`, dan `{#key ...}` ini jarang dipake, tapi Lo bisa baca baca di dokumentasinya Svelte.
 </details>
 
-<details>
+<details open>
 <summary><h2>Event Handler 📚</h2></summary>
 
 ### Normal Event
@@ -1899,7 +1899,7 @@ Selain action yang akan dijalankan ketika ada event handler, svelte juga menyedi
 
 </details>
 
-<details>
+<details open>
 <summary><h2>Binding 📚</h2></summary>
 
 ### Two Way Binding
@@ -2122,7 +2122,7 @@ Nah dengan begitu ketika ada anggota tim Lo yang ingin membuat input yang sama d
 
 </details>
 
-<details>
+<details open>
 
 <summary><h2>Style & Animation 📚</h2></summary>
 
@@ -2447,7 +2447,7 @@ Selain transisi Lo juga bisa pake animation. Tapi sayangnya di Svelte 5 ini baru
 
 </details>
 
-<details>
+<details open>
 
 <summary><h2>Reactivity 📚</h2></summary>
 
@@ -2549,7 +2549,7 @@ Ini akan berubah menjadi angka 1 kalo Lo klik.
 
 </details>
 
-<details>
+<details open>
 
 <summary><h2>State Management 📚</h2></summary>
 
@@ -3208,7 +3208,7 @@ Sebenarnya masih ada banyak lagi untuk store di Svelte tapi yang paling sering d
 
 </details>
 
-<details>
+<details open>
 <summary><h2>Lifecycle Hooks (Alur Hidup Component) 📚</h2></summary>
 
 Ini adalah topik pembahasan terakhir di catatan Svelte ini yaitu tentang alur hidup component. Ketika Lo panggil component misalnya `<User/>` artinya apapun code yang di dalamnya itu akan di init dan di render. Misalnya Lo panggil tag `<script></script>` maka code di dalamnya akan di init dan di render.
@@ -3393,7 +3393,7 @@ Kalo Lo klik maka di console akan `null`. Kenapa bisa terjadi? Karena DOM nya be
 
 </details>
 
-<details>
+<details open>
 <summary><h2>Referensi 📚</h2></summary>
 
 Catatannya udah nyampe sini, sebenarnya masih ada beberapa yang belum gue bahas tentang Svelte. Tapi casenya lebih advance dan jarang digunakan. Di catatan ini hanya fokus ke fitur yang ada di Svelte 5 yang sering digunakan. Kalo Lo pingin lebih detail bisa lihat di referensi ini.
