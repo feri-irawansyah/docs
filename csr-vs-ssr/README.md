@@ -42,7 +42,7 @@ Aplikasi dengan data yang dinamis berubah setiap detiknya misalnya ada banyak ta
 
 Soal performance gimana bro? Tergantung juga bro. Balik lagi ke use case nya gue kasih contoh website gue ini. Ini gue buat pake SSR kenapa? Karena suka - suka gue dong wkwkwk.
 
-<h3>Performance SSR</h3>
+### Performance SSR
 
 Kaga bro gue bikin SSR karena di website ini gue banyak artikel dan catatan - catatan receh dan murah meriah gue banyak render text, data statis bahkan text panjang, dan biar SEO friendly juga jadi kalo di buat pake SSR ini lebih oke. Tapi keliatan dinamis dan ga reload dan dinamis? Ini karena gue pake fitur hydration dan fine grained reactivity milik `Leptos` jadi keliatan kaya CSR tapi sebenarnya ini SSR.
 
@@ -58,13 +58,13 @@ Tapi beda bro kalo Lo pake SSR untuk website dengan data dinamis misalnya untuk 
 
 <img src="https://raw.githubusercontent.com/feri-irawansyah/docs/refs/heads/main/csr-vs-ssr/static/ssr-flow.png" class="img-fluid" alt="ssr-flow"/>
 
-<h3>Performance CSR</h3>
+### Performance CSR
 
 Kalo use case Lo itu aplikasi yang dinamis CSR lebih cocok untuk itu karena UI akan di render di client, server hanya akan merender file html polos dan beberapa asset lain ke browser kemudian javascript akan membuat UI nya secara interaktif di browser. Jika ada perubahan pada data maka javascript CSR juga akan melakukan render ulang tanpa melakukan request lagi ke server. Performa CSR ini stabil bro, kecepatan render akan mengikuti response time dari api yang dipake. Tapi untuk load awal CSR mungkin akan terasa lebih berat karena semua file akan di download ke browser kemudian javascript akan membentuk UI nya ini akan membutuhkan beberapa waktu.
 
 Tapi untuk SEO friendly CSR ini kurang bagus karena yang dikirim oleh server ke browser itu html kosong belum ada content nya, jadi `google bot` atau `bing` akan menganggap content nya tidak ada karena belum di render karena CSR memerlukan waktu untuk membuat UI nya.
 
-<h3>Biaya Infrastruktur CSR</h3>
+### Biaya Infrastruktur CSR
 
 Karena rendering UI di lakukan di browser artinya server tidak perlu banyak bekerja karena server hanya akan mengurus request/response dari backend saja dan tidak perlu bekerja untuk render document. Ini akan sangat murah untuk servernya semua proses render atau pembuatan UI di lakukan di browser.
 
@@ -174,11 +174,11 @@ Notes: Backend disini maksud gue itu `Optional` terpisah. Sveltekit SSR itu jala
 
 Jadi ga semua aplikasi itu harus di pukul rata **POKOKNYA HARUS SSR** atau **POKOKNYA HARUS CSR** pakelah teknologi sesuai kebutuhan dan diskusi dengan tim untuk menentukan keputusan bersama. Mungkin kalo misal Lo bikin aplikasi sendiri itu terserah Lo bro, mau pake apa aja itu terserah Lo. Tapi kalo Lo kerja secara tim di perusahaan atau ada project dimana yang mengerjakan bukan Lo dan Ego Lo sendiri, itu harus dengan kesepakatan bersama.
 
-<h3>Category Aplikasi CSR</h3>
+### Category Aplikasi CSR
 
 Aplikasi CSR umumnya di design untuk aplikasi private page yang muncul ketika user login. Berikut beberapa contoh aplikasi CSR:
 
-<h4> SaaS (Software as a Service) </h4>
+#### SaaS (Software as a Service)
 
 Kenapa `SaaS` cocok dengan CSR?  
 1. Aplikasi SaaS biasanya memiliki banyak UI yang kompleks
@@ -204,7 +204,7 @@ Contohnya seperti `Notion`, `Jira`, `Slack Web` dan sebagainya.
   </div>
 </div>
 
-<h4> Back Office, ERP & CRM </h4>
+#### Back Office, ERP & CRM
 
 Fitur pada back office biasanya kurang lebih mirip dengan SaaS yaitu banyak event dan data dinamis. Selain itu aplikasi back office juga memiliki penggunaan data dengan jumlah yang banyak. Bisa memiliki banyak table yang sering diupdate tiap detik. Jadi aplikasi back office cocok dengan CSR.
 
@@ -221,7 +221,7 @@ Conohnya seperti `Mekari`, `Odoo UI` `Admin Dashboard` dan sebagainya.
   </div>
 </div>
 
-<h4> Realtime & Collaborative App </h4>
+#### Realtime & Collaborative App
 
 Aplikasi dengan realtime update biasanya menggunakan koneksi dua arah seperti WebSocket, WebRTC, WebTrasport dan sebagainya. Jadi aplikasi realtime cocok dengan CSR. Karena perubahan data dilakukan secara realtime dan akan langsung ke pengguna lainnya. Jika menggunakan SSR akan menambahkan beban yang tinggi ke server dan bahkan bisa berbahaya untuk aplikasi yang menggunakan WebTransport karena menggunakan streaming video atau audio dalam mengirimkan event atau data.
 
@@ -246,7 +246,7 @@ Contohnya seperti `Zoom`, `Google Meet` `Google Docs`, `WhatsApp` dan sebagainya
   </div>
 </div>
 
-<h4> Data Analytics & Visualization Tools </h4>
+#### Data Analytics & Visualization Tools
 
 Website dengan fitur menampilkan grafik dan visualisasi biasanya akan menggunakan data yang cukup besar, penggunaan logika agregation membutuhkan event handler dan data yang dinamis. Jadi aplikasi ini cocok jika menggunakan rendering CSR karena akan banyak action di sisi client.
 
@@ -267,7 +267,7 @@ Contohnya seperti `Google Data Studio`, `Power BI`, `Grafana` dan sebagainya.
   </div>
 </div>
 
-<h4>Email & Productivity</h4>
+#### Email & Productivity
 
 Untuk aplikasi productivity ini tidak memerlukan SEO, selain itu aplikasi ini tergolong `Private content` jadi content pada aplikasi ini sangat sensitif dan tidak bisa dishare ke orang lain bahkan ke `google bot` atau `bing`. Interaktifitasnya juga sangat cepat dan sering mengubah halaman. Jadi aplikasi ini cocok dengan CSR.
 
@@ -288,7 +288,7 @@ Contohnya seperti `Gmail`, `Outlook`, `Google Calendar` dan sebagainya.
   </div>
 </div>
 
-<h4>Online Store</h4>
+#### Online Store
 
 Aplikasi online store menggunakan CSR ? Jawabannya tidak sepenuhnya bro, jadi aplikasi online store ini di buat hybrid CSR + SSR. Karena online store ini sangat membutuhkan SEO untuk memasarkan penjualan tapi memiliki UI yang kompleks dan realtime update juga. 
 
@@ -311,11 +311,11 @@ Jadi aplikasi online store cocok dengan CSR + SSR. Contohnya seperti `Shopee`, `
   </div>
 </div>
 
-<h3>Category Aplikasi SSR</h3>
+### Category Aplikasi SSR
 
 SSR biasanya digunakan untuk aplikasi yang cendering memiliki kontent statis, event handler sedikit, branding dan sebagainya.
 
-<h4> Online Store (Product Page)</h4>
+#### Online Store (Product Page)
 
 Seperti yang gue bahas sebelumnya pada website online store itu menggunakan hybrid yaitu CSR dan SSR. Khususnya pada product page karena product page membutuhkan SEO untuk pemasaran product. 
 
@@ -340,7 +340,7 @@ Contohnya seperti `Amazon`, `Shopee`, `Tokopedia`, `Blibli` dan sebagainya.
   </div>
 </div>
 
-<h4> News & Media </h4>
+#### News & Media
 
 Aplikasi berita ini banyak menggunakan SSR bahkan seperti diharuskan kenapa? Karena berita ini bersifat text content dan harus sesegera mungkin dipublikasikan ke halayak umum. Jadi memerlukan performa SEO yang tinggi untuk memasarkan konten makanya menggunakan SSR sebagai renderingnya.
 
@@ -361,7 +361,7 @@ Contohnya seperti `Wikipedia`, `Detik`, `Kompas` dan sebagainya.
   </div>
 </div>
 
-<h4>Blog</h4>
+#### Blog
 
 Aplikasi blog ini mirip seperti website news yaitu memuat konten text yang panjang bedanya secara penyampaian kontennya. Kontent blog lebih ke personal notes yaitu catatan dan opini pribadi seseorang bukan suatu berita yang ada di internet. Nah aplikasi yang merender kontent text ini memerlukan SEO juga agar dapat di crawl oleh `google bot` atau `bing` agar mudah dicari dicari di mesin pencarian.
 
@@ -382,7 +382,7 @@ Contohnya seperti `Medium`, `Blogger`, `Ghost` dan sebagainya.
   </div>
 </div>
 
-<h4> Corporate & Company Profile </h4>
+#### Corporate & Company Profile
 
 Aplikasi company profile biasanya memuat konten statis berupa informasi perusahaan seperti deskripsi, kontak, laporan keuangan atau CSR (Corporate Social Responsibility) dan sebagainya. Company profile juga membantu menjelaskan identitas, visi misi, produk/layanan, dan pencapaian perusahaan kepada klien, investor, dan calon karyawan. Namun untuk website company profile tidak sekompleks seperti website news dan blog. Ada juga beberapa website company profile yang menggunakan static html render karena hanya sebagai identitas aja ga perlu database, state management, atau bahkan backend.
 
@@ -403,7 +403,7 @@ Contohnya seperti `Google`, `Microsoft`, `Apple` dan sebagainya.
   </div>
 </div>
 
-<h4> Forum / Community </h4>
+#### Forum / Community
 
 Forum - forum diskusi online yang publik biasanya juga menggunakan SSR sebagai rendering nya karena memuat konten text argument dan komentar yang membutuhkan SEO. Biasanya pada website forum ini tidak menggunakan realtime update atau koneksi dua arah. Kenapa? Karena forum diskusi ini bersifat public discussion dan disediakan oleh community non provit yang tidak memiliki sumber untuk menyediakan server yang besar untuk menghandle realtime update. Jadi penyedia hanya menggunakan SSR sebagai renderingnya + backend 1 arah agar tetep mendapatkan SEO yang baik tapi performa stabil.
 
@@ -433,11 +433,11 @@ Ini adalah penghujung catatan CSR + SSR gue buat ini. Untuk Dev Exp atau pengala
 
 Gue kasih contoh dan implementasi dari 2 framework frontend favorit gue yaitu Svelte dan Leptos.
 
-<h3  class="title-code"> <img src="https://vjwknqthtunirowwtrvj.supabase.co/storage/v1/object/public/feri-irawansyah.my.id/assets/svg/skills/svelte.svg" class="img-code" alt="svelte"/> <span>Svelte</span> </h3>
+### Svelte
 
 Svelte ini bisa gue bilang framework minimalis tapi lengkap dan gue ga perlu nambah - nambah third party banyak udah bisa bikin aplikasi web yang lumayan compleks. Buat catatan tentang svelte Lo bisa baca di sini bro <a href="https://feri-irawansyah.my.id/catatan/frontend/catatan-ringan-ini-tentang-svelte-frontend-framework-yang-minimalis" target="_blank" rel="noopener noreferrer">Catatan Ringan Ini Tentang Svelte - Frontend Framework Yang Minimalis</a>. 
 
-<h4> Svelte CSR App </h4>
+#### Svelte CSR App
 
 Kalo Lo mau bikin CSR app pake Svelte ada beberapa skil yang harus Lo tau yaitu:
 
@@ -454,15 +454,15 @@ Kalo Lo mau bikin CSR app pake Svelte ada beberapa skil yang harus Lo tau yaitu:
 - Fetch (Axios atau Fetch API) dan Asynchronous JavaScript
 - Skill lain (aksesibilitas, component design, animation, styling, semanitik html dan lain-lain)
 
-<h4> Svelte SSR App </h4>
+#### Svelte SSR App
 
 Kalo Lo mau bikin SSR app pake Svelte Lo wajib punya mainset seorang full-stack developer karena aplikasi frontend Lo udah ga jalan di client lagi, sekarang dia jalan di server. Nah ada beberapa skill lanjutan dari Svelte yang haru Lo tau yaitu:
 
-<h5> 1. Full Web Fundamentals </h5> 
+##### 1. Full Web Fundamentals 
 
 Kalo Lo mau buat SSR app Lo wajib banget punya pemahaman tentang Full Web Development seperti HTML Semantik, CSS, Js (DOM + Async), Http protocol, Cookies, Headers dan Lo juga harus paham tentang data yang akan dikirim ke halaman sebelum sampe ke user.
 
-<h5> 2. Sveltekit (Core) </h5>
+##### 2. Sveltekit (Core)
 
 Kalo Lo mau buat SSR pake svelte Lo harus paham tentang Sveltekit seperti Routing (File based), Load function (Meskipun bisa di CSR tapi beda perilaku), Server Action, Streaming SSR dan Error Handling.
 
@@ -484,7 +484,7 @@ export async function load() {
 
 Seperti contohnya load function ini. Load function akan di jalankan sebelum page ditampilkan ke browser.
 
-<h5> 3. Authentication & Authorization </h5>
+##### 3. Authentication & Authorization
 
 Di svelte CSR mungkin Lo hanya bisa ngasih batasan user masuk ke halaman tententu. Di svelte SSR Lo harus paham tentang session store dan cookies (httponly). Meskipun menggunakan API terpisah untuk Auth, tapi SSR punya cookies dan http sendiri. Jadi Lo perlu handle session store dan cookies di server apakah bisa join ke API atau tidak. Kalo bisa join Lo juga harus hati - hati jangan sampai aplikasi lain juga bisa mengakses API yang Lo consume di SSR app.
 
@@ -506,7 +506,7 @@ export function handle({ event, resolve }) {
 }
 ```
 
-<h5>4. Deployment & Infrastructure</h5>
+##### 4. Deployment & Infrastructure
 
 Deployment SSR tidak semudah deployment kaya CSR yang tinggal upload static file kemudian jalankan web server. SSR itu tidak di render di browser, tidak ada file html. Svelte SSR itu full javascript. Jadi javacsript akan membuat document html nya kemudian kirim ke browser.
 
@@ -516,7 +516,7 @@ Alternative lain kalo Lo ga mau install runtime di server Lo bisa pake `Bun` aga
 
 Kemudian setelah menjalankan Svelte SSR nanti ada port default misal 3000 nah kemudian Lo perlu reverse proxy kaya Nginx/Caddy agar port 3000 jangan di expose di internet. Kalo Lo pingin lebih scallable Lo bisa run di background pake PM2 atau Docker tapi balik lagi itu membutuhkan resource server yang cukup.
 
-<h5> Management Performance & Streaming SSR </h5>
+##### Management Performance & Streaming SSR
 
 Kalo di frontend misal Lo pingin nampilin data dari api Lo tinggal fetch => dapet response => lalu buat UI dari data api, sesimple itu. Kalo response time cepat maka UI Lo akan cepat di render, kalo api lambat maka UI akan lambat dirender cara mengatasinya biasanya menggunakan lazy loading atau placeholder. 
 
@@ -530,7 +530,7 @@ Selain itu untuk memaksimalkannya Lo juga perlu paham tentang TTFB (Time to Firs
 - Lazy data loading
 - Jika server backend terpisah dan lokasinya jauh optimasi akan sulit.
 
-<h5> Testing & Debug </h5>
+##### Testing & Debug
 
 Svelte SSR debuging tidal di UI atau DOM jadi kalo Lu `console.log("halo")` itu akan muncul di CLI aau terminal yang Lo pake, karena halaman bersifat server bukan browser. Selain itu di Svelte SSR tidak ada `window` object karena server tidak tau window di browser.
 
@@ -555,11 +555,11 @@ Response {url: 'https://jsonplaceholder.typicode.com/posts', status: 200, status
 
 Selain itu untuk Unitest kaya `Vitest` atau `Jest` akan beda perilaku, ketika Lo pake unitest untuk frontend CSR maka Vites atau Jest akan melakukan testing Debug UI, Mock API, Component dan Performance Lighthouse. Vites atau Jest akan melakukan testing untuk Debug Server Load, Server logic test, Playwright atau Integration api test, Performance TTFB, Query dan Cache serta Security.
 
-<h3 class="title-code"><img class="img-code" src="https://vjwknqthtunirowwtrvj.supabase.co/storage/v1/object/public/feri-irawansyah.my.id/assets/img/skills/leptos.png" alt="leptos"/> <span>Leptos</span></h3>
+### Leptos
 
 Contoh kedua ini rada mainstream karena bikin frontend pake bahasa pemrograman yang terkenal galak😅. Iya Leptos adalah framework frontend yang dibangun untuk ekosistem Rust dan framework frontend yang paling gue suka karena type safety nya bikin gue tidak sembarangan nulisin code jadi kemungkinan bug itu kecil. Leptos ini sebenernya di design khusus untuk SSR. Tapi bisa juga untuk CSR hanya saja fitur partial hydration nya tidak berguna dan jadi aplikasi CSR biasa.
 
-<h4> Leptos CSR App </h4>
+#### Leptos CSR App
 
 Untuk bangun aplikasi pake Leptos CSR Lo bener - bener ga perlu pemahaman tentang Rust backend serius, karena meskipun pada dasarnya Rust itu untuk backend karena berada di low level programming language, tapi Leptos ini bener - bener ngasih Lo jadi Frontend Dev. Nah ada beberapa hal yang perlu dipahami:
 
@@ -576,35 +576,35 @@ Untuk bangun aplikasi pake Leptos CSR Lo bener - bener ga perlu pemahaman tentan
 
 Kurang lebih sama kaya Frontend modern prerequisite frontend biasnaya berkaitan dengan build tool, component, state dan routing. Gue juga ada catatan tentang Leptos di sini <a href="https://feri-irawansyah.my.id/catatan/frontend/frontend-web-single-page-aplication-pake-rust-leptos-csr" target="_blank" rel="noopener noreferrer">Frontend Web Single Page Aplication Pake Rust (Leptos CSR)</a>.
 
-<h4> Leptos SSR App </h4>
+#### Leptos SSR App
 
 Sama seperti Svelte SSR, Leptos SSR juga membutuhkan pemahaman tentang Rust backend. Nah ada beberapa hal yang perlu dipahami:
 
-<h5> 1. Full Web Fundamentals </h5>
+##### 1. Full Web Fundamentals
 
 Seperti Svelte SSR app, Leptos SSR app juga Lo wajib banget punya pemahaman tentang Full Web Development seperti HTML Semantik, CSS, Js (DOM), Http protocol, Cookies, Headers dan Lo juga harus paham tentang data yang akan dikirim ke halaman sebelum sampe ke user. Meskipun Lo nantinya pake Rust tapi pemahaman Js (DOM) ini dibutuhkan, karena yang ngerti DOM cuma javascript.
 
-<h5> 2. Authentication & Authorization </h5>
+##### 2. Authentication & Authorization
 
 Auth di Leptos pada dasarnya sama seperti teknologi lainnya. Jika dibandingkan dengan Sveltekit Leptos ini bukan file base routing. Jadi buat authorize suatu halaman di SSR, Lo harus lakukan di backend.
 
-<h5> 3. Deployment & Infrastructure </h5>
+##### 3. Deployment & Infrastructure
 
 Seperti yang gue bilang di awal Leptos ini memang di design untuk SSR (server app) jadi berbeda dengan Sveltekit untuk deployment Leptos SSR ini sedikit lebih murah dibanding CSR. Kok bisa?
 
-<h6> - Leptos compile ke wasm </h6>
+###### - Leptos compile ke wasm
 
 Web Asembly (wasm) biasanya ukurannya besar. Default compile pake Trunk build tools tanpa minify bisa 5MB untuk aplikasi hello world aja. Jadi untuk CSR mungkin akan lambat untuk load pertama karen browser akan download file wasm yang besar. Kalo pake leptos SSR server function akan dicompile ke native binary file. Dan binary file Rust ukurannya sangat kecil sehingga akan mengurangi beban di file wasm sehingga ukuran wasm akan jauh lebih kecil karena hanya dipake buat hydration aja bukan untuk runtime.
 
-<h6> - Rust low level programming </h6>
+###### - Rust low level programming
 
 Rust native binary ini native file tidak ada runtime tambahan dan bener - bener murni machine code dan siap di jalankan tanpa runtime. Selain itu Rust tidak punya garbage collector dan tidak membutuhkan garbage collector. Jadi meskipun requestnya banyak tidak ada ada proses stop the world untuk menghapus data di memory. Tapi Rust tidak mudah dipelajari konsep borrow checker dan ownership serta syntax yang sulit di baca menjadi bottleneck terhadap skill issue.
 
-<h6> - Perlu HTTP server </h6>
+###### - Perlu HTTP server
 
 Leptos bisa digunakan langsung di Rust dengan HTTP server rust/tokio (async runtime rust). Tapi buat integrasinya tidak mudah namun Leptos sudah suport dengan Framework HTTP besar di ekosistem rust terutama Actix dan Axum. Keduanya masih menduduki peringkat 10 besar framework tercepat di Techempower benchmark dunia. Inilah alasan kenapa SSR Leptos itu kuat bahkan cocok untuk game server yang latensi nya tinggi.
 
-<h6> - Partial Hydration tidak mudah digunakan </h6>
+###### - Partial Hydration tidak mudah digunakan
 
 Di Leptos ketika load website untuk pertamakalinya, browser akan download aset yang diperlukan termasuk wasm file yang akan digunakan untuk hydration. Leptos punya partial/lazy hydration jadi hydration dilakukan secara paralel ke UI terkecil yang benar-benar ada action atau perubahan. Nah proses hydration ini tidak semudah hydration di javascrpt. Di Leptos ketika semantik HTML tidak sesuai bisa menyebabkan hydrartion gagal. Contohnya seperti membuat tag `<li></li>` tanpa dibungkus `<ul></ul>` atau `<ol></ol>`.
 
@@ -634,7 +634,7 @@ fn List() -> impl IntoView {
 }
 ```
 
-<h6> - Pake `cargo_leptos` untuk mempermudah hidup </h6>
+###### - Pake `cargo_leptos` untuk mempermudah hidup
 
 Ketika membuat CSR Leptos pake Trunk Lo cukup jalankan `trunk server` udah bisa hot reload. Di Leptos SSR tidak ada trunk, karena pake http server. Nah untuk menjalankan project Leptos SSR perlu banyak mantra dan ritual bro. Dengan pake cargo_leptos akan mempermudah hidup Lo.
 
