@@ -14,7 +14,7 @@ Di catatan gue kali ini gue mau bahas tentang salah satu framework didunia Java 
 
 Tapi sebelum Lo baca kebawah gue merekomendasikan buat Lo baca dulu catatan tentang Svelte biar ga kaya bocah TK di ajak main biliar. Dan juga mingkin Lo perlu baca catatan gue tentang [Pilih CSR (Client Side Render) Atau SSR (Server Side Render) Untuk Website?](https://feri-irawansyah.my.id/catatan/frontend/pilih-csr-client-side-render-atau-server-side-render-untuk-frontend). Karena pada catatan tentang Sveltekit ini bakal membahas tentang CSR dan SSR. Tapi kalo Lo udah paham dan gue rasa Lo juga udah jago skip aja atau dari pada Lo baca tulisan gue mending chattingan sama gebetan.
 
-<details>
+<details open>
 <summary><h2>Kenalan Sama Sveltekit 📚</h2></summary>
 
 Sebelumnya gue bilang Sveltekit adalah framework dari Svelte. Iyes bro karena di Svelte ini Lo udah buatin fitur - fitur sakti untuk bikin website dan udah ada architecturenya. Jadi Lo dan tim Lo ga bisa bikin website tanpa overthingking dan adu argument, adu ketangkasan, adu mekanik sampe gelut dah gelut wkwkwk.
@@ -168,7 +168,7 @@ Karena Sveltekit ini bisa bikin fullstack web, jadi Sveltekit sudah lengkap untu
 
 </details>
 
-<details>
+<details open>
 
 <summary><h2>Get Started Sveltekit 📚</h2></summary>
 
@@ -279,7 +279,7 @@ Kalo udah tinggal masuk ke foldernya lalu jalanin `npm run dev -- --open` lalu k
 
 </details>
 
-<details>
+<details open>
 
 <summary><h2>Routing 📚</h2></summary>
 
@@ -573,7 +573,7 @@ Page information ini sifatnya reactive. Jadi ketika Lo pindah halaman maka akan 
 
 </details>
 
-<details>
+<details open>
 
 <summary><h2>Load Parameter 📚</h2></summary>
 
@@ -852,7 +852,7 @@ Tapi Lo juga bisa custom errornya misalnya ketika Lo melakukan render data tapi 
 
 </details>
 
-<details>
+<details open>
 
 <summary><h2>Server Load Parameter 📚</h2></summary>
 
@@ -955,7 +955,7 @@ Sekarang coba Lo pindah halaman ke `/login` harsunya Lo akan di redirect ke `/da
 
 </details>
 
-<details>
+<details open>
 
 <summary><h2>REST API Route 📚</h2></summary>
 
@@ -1336,7 +1336,7 @@ Harusnya sekarang udah ga bakal keliatan lagi halaman dashboardnya kalo session 
 
 </details>
 
-<details>
+<details open>
 
 <summary><h2>Form Action 📚</h2></summary>
 
@@ -1698,7 +1698,7 @@ Jadi di `page.svelte` Lo bisa ambil error dengan mengunakan `form` dari `$props`
 
 </details>
 
-<details>
+<details open>
 
 <summary><h2>Advance Routing 📚</h2></summary>
 
@@ -1949,7 +1949,7 @@ Dengan gini maka messagenya akan Not Found atau 404 ini yang bener karena params
  
 </details>
 
-<details>
+<details open>
 
 <summary><h2>Hooks 📚</h2></summary>
 
@@ -2048,7 +2048,7 @@ export const reroute = async ({url}) => {
 
 </details>
 
-<details>
+<details open>
 
 <summary><h2>Deployment 📚</h2></summary>
 
