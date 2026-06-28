@@ -4,7 +4,7 @@ Lo harusnya dah tau kan soal `Tailwind CSS` yang katanya lagi viral di dunia per
 
 Catatan gue ini buat dokumentasi belajar gue sebelumnya, dan beberapa kali gue pake di project - project yang butuh styling compleks. Tapi disini gue ga jualan ya, ga di endors juga ini ikhlas murni dari programmer kampung.
 
-<details>
+<details open>
 <summary><h2>Kenalan Sama Tailwind CSS 📚</h2></summary>
 
 ### Sejarah Tailwind CSS
