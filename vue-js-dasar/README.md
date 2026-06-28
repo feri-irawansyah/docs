@@ -4,7 +4,7 @@ Kenapa si harus pake Framework pake HTML, CSS, JS juga kelar. Yaaa emng wkwkwk, 
 
 Kecuali Lo ini bener - bener suhunya dan Lo bisa guide 1 tim biar ngikutin cara Lo ngoding mungkin lain cerita, tapi realitanya kadang di tim yang udah kaya keluarga pun masih sruduk - srudukan kek orang abis kerasukan kuda lumping. Lo ngajarin eh taunya malah di kucilin😂. Nah disinilah perlu adanya Framework untuk `Standarisasi`. Jadi ga bisa tuh Lo senggol - senggolan atau `adu mekanik`, karena Lo wajib ngikutin standar si frameworknya.
 
-<details>
+<details open>
 <summary><h2>Salam Kenal Dari Vue JS 📚</h2></summary>
 
 ### Documentation Vue JS
@@ -279,7 +279,7 @@ Kalo component di panggil di HTML maka akan jadi `<HelloVue />` seperti tag Html
 
 </details>
 
-<details>
+<details open>
 <summary><h2>Templating Engine 📚</h2></summary>
 
 Vue menggunakan Templating Engine berupa component base, nah didalam templating ini ada banyak fitur yang Vue sediain buat Lo pake.
@@ -488,7 +488,7 @@ Untik directive `v-on:click` nanti gue bahas terpisah di materi tentang Directiv
 
 </details>
 
-<details>
+<details open>
 <summary><h2>Reactive State 📚</h2></summary>
 
 Lo kalo bikin website mesti bakal nyimpen data, state atau keadaan di Javascript, misalnya Lo pingin bikin angka yang misalnya kalo Lo pencet tombol nanti angkanya nambah 1. Contohnya gini, coba Lo bikin halaman baru sama kaya sebelumnya bikin file `src/components/Counter.vue`, `src/counter.js`, `counter.html` terus daftarin di `vite.config.js`:
@@ -1078,7 +1078,7 @@ Untuk `v-bind` atu `:` Sebelumnya Lo udah sering pake, pda intinya directive ini
 
 </details>
 
-<details>
+<details open>
 <summary><h2>Tentang Component 📚</h2></summary>
 
 Sebelumnya Lo udah kenalan sama Component di Vue JS, sekarang gue mau bahas lebih spesifik tentang component.
